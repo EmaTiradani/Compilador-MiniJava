@@ -13,6 +13,6 @@ public class AnalizadorLexico {
     }
 
     public Token getToken(){
-        return new Token(new TokenId(), "nice", 3);
+        return new Token(new TokenId(), "nice", 5);
     }
 }
