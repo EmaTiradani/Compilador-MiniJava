@@ -71,15 +71,32 @@ public class AnalizadorLexico {
                 actualizarCaracterActual();
                 return e4(); // TODO aca va lo de los comentarios
             }
+            case '&' : {
+                actualizarLexema();
+                actualizarCaracterActual();
+                return e15();
+            }
+            case '|' : {
+                actualizarLexema();
+                actualizarCaracterActual();
+                return e16();
+            }
+            case '%' : {
+                actualizarLexema();
+                actualizarCaracterActual();
+                return e17();
+            }
 
 
 
 
-            case '"' : return e12();
+            case '"' : return sl_1();
 
             default: throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
         }
     }
+
+
 
     private Token e4() throws IOException, ExcepcionLexica {
         actualizarLexema();
@@ -139,7 +156,7 @@ public class AnalizadorLexico {
         else throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn()); //TODO está bien esta crotada de los distintos return?
     }
 
-    private  Token e12() throws IOException, ExcepcionLexica {
+    private  Token sl_1() throws IOException, ExcepcionLexica {
 
        actualizarLexema();
        actualizarCaracterActual();
@@ -149,7 +166,7 @@ public class AnalizadorLexico {
         }*/
 
         if(caracterActual == '\\'){
-            return e13();
+            return sl_2();
         }/*else{
             if(caracterActual == '\n' || caracterActual == '\u001a') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
             else
@@ -159,11 +176,11 @@ public class AnalizadorLexico {
         return null;
     }
 
-    private Token e13() throws IOException, ExcepcionLexica {
+    private Token sl_2() throws IOException, ExcepcionLexica {
         actualizarLexema();
         actualizarCaracterActual();
         if(caracterActual == '\\'){
-            e13();
+            sl_2();
         }
         else{
             if(caracterActual == '\n') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
@@ -172,6 +189,23 @@ public class AnalizadorLexico {
             }
         }
         return null;
+    }
+
+    private Token e15() throws IOException, ExcepcionLexica{
+        actualizarLexema();
+        actualizarCaracterActual();
+        if(caracterActual == '&')
+            return new Token(TokenId.op_and, lexema, fileManager.getLineNumber());
+        else
+            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+    }
+    private Token e16() throws IOException, ExcepcionLexica{
+        actualizarLexema();
+        actualizarCaracterActual();
+        if(caracterActual == '|')
+            return new Token(TokenId.op_or, lexema, fileManager.getLineNumber());
+        else
+            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
     }
 
     private void actualizarLexema(){
