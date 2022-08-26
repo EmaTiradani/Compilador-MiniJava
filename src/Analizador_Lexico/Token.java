@@ -7,9 +7,9 @@ public class Token {
     int linea;
 
     public Token (TokenId tokenId, String lexema, int linea){
-        tokenId = tokenId;
-        lexema = lexema;
-        linea = linea;
+        this.tokenId = tokenId;
+        this.lexema = lexema;
+        this.linea = linea;
     }
     public TokenId getTokenId(){
         return tokenId;

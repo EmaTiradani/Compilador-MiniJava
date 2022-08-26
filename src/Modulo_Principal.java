@@ -19,13 +19,12 @@ public class Modulo_Principal {
             //System.out.println(fileManager.reachedEndOfFile());
             Token token = new Token(null, "", 0);
             try {
-                System.out.print("hola\n");
                 token = analizadorLexico.getToken();
                 System.out.print("hola\n");
-                //System.out.print("" + token.getTokenId().toString() + "," + token.getLexema() + "," + token.getLinea() + "\n");
-                System.out.print(token.getTokenId().toString() + "\n");
+                System.out.print("" + token.getTokenId().toString() + "," + token.getLexema() + "," + token.getLinea() + "\n");
+                /*System.out.print(token.getTokenId().toString() + "\n");
                 System.out.print(token.getLexema() + "\n");
-                System.out.print(token.getLinea() + "\n");
+                System.out.print(token.getLinea() + "\n");*/
             } catch (ExcepcionLexica e){
                 System.out.print(e.getMessage());
                 //analizadorLexico.actualizarCaracterActual();
