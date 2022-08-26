@@ -11,4 +11,13 @@ public class Token {
         lexema = lexema;
         linea = linea;
     }
+    public TokenId getTokenId(){
+        return tokenId;
+    }
+    public String getLexema(){
+        return lexema;
+    }
+    public int getLinea(){
+        return linea;
+    }
 }
