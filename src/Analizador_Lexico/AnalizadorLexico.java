@@ -25,11 +25,13 @@ public class AnalizadorLexico {
 
         switch(caracterActual){
 
+            //Whitespaces
             case ' ' : {
                 actualizarCaracterActual();
                 return e0();
             }
 
+            //Operators
             case '>' : {
                 actualizarLexema();
                 actualizarCaracterActual();
@@ -87,6 +89,13 @@ public class AnalizadorLexico {
                 return e17();
             }
 
+            //Punctuation
+            case '(' : {
+                actualizarLexema();
+                actualizarCaracterActual();
+                return e18();
+            }
+
 
 
 
@@ -97,21 +106,29 @@ public class AnalizadorLexico {
     }
 
 
-
     private Token e4() throws IOException, ExcepcionLexica {
         actualizarLexema();
         actualizarCaracterActual();
         if(caracterActual == '/'){
             actualizarCaracterActual();
+            return e5();
             if(caracterActual == '\n') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
             else{
                 return e0();
             }
-            return e4();
         }
         if(caracterActual == '*')
             return e6(); //Comentario multilinea, deberia limpiar la barra '/' del lexema, no?
         return new Token(TokenId.op_division, lexema, fileManager.getLineNumber());
+    }
+
+    private Token e5() throws IOException, ExcepcionLexica {
+        actualizarLexema();
+        actualizarCaracterActual();
+        if(caracterActual == '\n')
+            return e0();
+        else
+            return e5();
     }
 
     private Token e6() throws IOException, ExcepcionLexica{ //Comentario multilinea
@@ -145,6 +162,18 @@ public class AnalizadorLexico {
         return new Token(TokenId.punt_punto, lexema, fileManager.getLineNumber());
     }
 
+    private  Token e10() throws IOException, ExcepcionLexica {
+        actualizarLexema();
+        actualizarCaracterActual();
+        if(caracterActual == '='){
+            actualizarLexema();
+            actualizarCaracterActual();
+            return new Token(TokenId.op_distinto, lexema, fileManager.getLineNumber());
+        }else{
+            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+        }
+
+    }
 
     private  Token e11() throws IOException, ExcepcionLexica {
         actualizarLexema();
@@ -156,41 +185,16 @@ public class AnalizadorLexico {
         else throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn()); //TODO está bien esta crotada de los distintos return?
     }
 
-    private  Token sl_1() throws IOException, ExcepcionLexica {
-
-       actualizarLexema();
-       actualizarCaracterActual();
-
-        /*if(caracterActual != '\n'){
-            return
-        }*/
-
-        if(caracterActual == '\\'){
-            return sl_2();
-        }/*else{
-            if(caracterActual == '\n' || caracterActual == '\u001a') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
-            else
-                return
-        }*/
-
-        return null;
+    private  Token e12() {
+        return new Token(TokenId.op_suma, lexema, fileManager.getLineNumber());
     }
 
-    private Token sl_2() throws IOException, ExcepcionLexica {
-        actualizarLexema();
-        actualizarCaracterActual();
-        if(caracterActual == '\\'){
-            sl_2();
-        }
-        else{
-            if(caracterActual == '\n') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
-            else{
-                return null;
-            }
-        }
-        return null;
+    private  Token e13() throws IOException, ExcepcionLexica{
+        return new Token(TokenId.op_resta, lexema, fileManager.getLineNumber());
     }
-
+    private  Token e14() throws IOException, ExcepcionLexica{
+        return new Token(TokenId.op_multiplicacion, lexema, fileManager.getLineNumber());
+    }
     private Token e15() throws IOException, ExcepcionLexica{
         actualizarLexema();
         actualizarCaracterActual();
@@ -207,6 +211,46 @@ public class AnalizadorLexico {
         else
             throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
     }
+    private  Token e17() throws IOException, ExcepcionLexica{
+        return new Token(TokenId.op_modulo, lexema, fileManager.getLineNumber());
+    }
+
+    private  Token sl_1() throws IOException, ExcepcionLexica {
+
+       actualizarLexema();
+       actualizarCaracterActual();
+
+        if(caracterActual == '\\'){
+            return sl_2();
+        }else{
+            if(caracterActual == '\n' || caracterActual == '\u001a') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+            else
+                if(caracterActual == '"')
+                    return sl_3();
+                else
+                    return sl_1();
+        }
+    }
+    private Token sl_3() throws IOException, ExcepcionLexica {
+        return new Token(TokenId.stringLiteral, lexema, fileManager.getLineNumber());
+    }
+
+    private Token sl_2() throws IOException, ExcepcionLexica {
+        actualizarLexema();
+        actualizarCaracterActual();
+        if(caracterActual == '\\'){
+            sl_2();
+        }
+        else{
+            if(caracterActual == '\n') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+            else{
+                return sl_1(); //Char != de enter o /
+            }
+        }
+        return null;
+    }
+
+
 
     private void actualizarLexema(){
         lexema = lexema + caracterActual;
