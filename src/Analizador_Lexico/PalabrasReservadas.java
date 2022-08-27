@@ -35,4 +35,8 @@ public class PalabrasReservadas {
 
     }
 
+    public TokenId getTokenId(String token){
+        return map.get(token);
+    }
+
 }

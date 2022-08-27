@@ -9,10 +9,12 @@ public class AnalizadorLexico {
     String lexema;
     char caracterActual;
     FileManager fileManager;
+    PalabrasReservadas tokenIdentifier;
 
     public AnalizadorLexico(FileManager fileManager) throws IOException {
         this.fileManager = fileManager;
         actualizarCaracterActual();
+        tokenIdentifier = new PalabrasReservadas();
     }
 
     public Token getToken() throws ExcepcionLexica, IOException {
@@ -21,12 +23,13 @@ public class AnalizadorLexico {
     }
 //    /t es para tabs
     public Token e0() throws ExcepcionLexica, IOException {
-        System.out.print(caracterActual);
+        //System.out.print(caracterActual);
 
         switch(caracterActual){
 
             //Whitespaces
-            case ' ' : {
+            case ' ' :
+            case '\n' : {
                 actualizarCaracterActual();
                 return e0();
             }
@@ -125,34 +128,74 @@ public class AnalizadorLexico {
                 actualizarCaracterActual();
                 return e24();
             }
-            case 'a' :
-            case 'b' :
-            case 'c' :
-
-                    {
-
-            }
-
 
             case '"' : return sl_1();
 
             default:
                 if(Character.isUpperCase(caracterActual)){
+                    actualizarLexema();
+                    actualizarCaracterActual();
                     return e3();
                 }else{
                     if(Character.isLowerCase(caracterActual)){
+                        actualizarLexema();
+                        actualizarCaracterActual();
                         return e1();
+                    }else{
+                        if(Character.isDigit(caracterActual)){
+                            actualizarLexema();
+                            actualizarCaracterActual();
+                            return e2();
+                        }else{
+                            actualizarLexema();
+                            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+                        }
                     }
                 }
-                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+
         }
     }
 
     private Token e1() throws IOException, ExcepcionLexica{
         actualizarLexema();
         actualizarCaracterActual();
-
-
+        if(Character.isDigit(caracterActual) || Character.isLetter(caracterActual) || caracterActual == '_'){
+            actualizarLexema();
+            actualizarCaracterActual();
+            return e1();
+        }else{
+            TokenId id = tokenIdentifier.getTokenId(lexema);
+            if(id == null){
+                return new Token(TokenId.idMetVar, lexema, fileManager.getLineNumber());
+            }else{
+                return new Token(id, lexema, fileManager.getLineNumber());
+            }
+        }
+    }
+    private Token e2() throws IOException, ExcepcionLexica{//Digitos
+        if(Character.isDigit(caracterActual)){
+            actualizarLexema();
+            actualizarCaracterActual();
+            return e2();
+        }else{
+            if(lexema.length() > 9) throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+            else
+                return new Token(TokenId.intLiteral, lexema, fileManager.getLineNumber());
+        }
+    }
+    private Token e3() throws IOException, ExcepcionLexica{
+        if(Character.isLetter(caracterActual) || Character.isDigit(caracterActual) || caracterActual == '_'){
+            actualizarLexema();
+            actualizarCaracterActual();
+            return e3();
+        }else{
+            TokenId id = tokenIdentifier.getTokenId(lexema);
+            if(id == null){
+                return new Token(TokenId.idClase, lexema, fileManager.getLineNumber());
+            }else{
+                return new Token(id, lexema, fileManager.getLineNumber());
+            }
+        }
     }
 
     private Token e4() throws IOException, ExcepcionLexica { //Arreglar esto que rompi todo
@@ -207,8 +250,13 @@ public class AnalizadorLexico {
             }
         }
     }
-    private Token e8() throws IOException {
-        return new Token(TokenId.punt_punto, lexema, fileManager.getLineNumber());
+    private Token e8() throws IOException, ExcepcionLexica {
+        actualizarLexema();
+        if(caracterActual == '=') {
+            actualizarLexema();
+            return new Token(TokenId.op_mayorIgual, lexema, fileManager.getLineNumber());
+        }
+        else throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
     }
     private Token e9() {
         return new Token(TokenId.punt_punto, lexema, fileManager.getLineNumber());
@@ -234,7 +282,7 @@ public class AnalizadorLexico {
             actualizarLexema();
             return new Token(TokenId.op_igual, lexema, fileManager.getLineNumber());
         }
-        else throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn()); //TODO está bien esta crotada de los distintos return?
+        else throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
     }
 
     private  Token e12() {
