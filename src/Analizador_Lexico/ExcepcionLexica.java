@@ -7,6 +7,11 @@ public class ExcepcionLexica extends Exception{
     }
 
     private static String errorConstructor(String lexema, int nroLinea, int nroColumna, String tipoDeError, String linea){ //Estatico para que me deje usar el super
-        return ("Error Léxico en linea " + nroLinea + ": " + lexema + " " + tipoDeError +"\n");
+        String cosito = "";
+        for(int i=0; i < nroColumna + 8; i++){
+            cosito += " ";
+        }
+
+        return ("Error Léxico en linea " + nroLinea + ": " + lexema + " " + tipoDeError +"\nDetalle: " + linea + "\n" + cosito + "^\n");
     }
 }

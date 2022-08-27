@@ -5,6 +5,7 @@ import java.io.*;
 public class FileManager {
 
     String line;
+    String previousLine;
     int lineNumber;
     int posCharActual;
     char charActual;
@@ -26,6 +27,7 @@ public class FileManager {
     }
 
     public void getNextLine() throws IOException {
+        previousLine = line;
         line = br.readLine();
         //System.out.println(line);
         lineNumber++;
@@ -80,5 +82,8 @@ public class FileManager {
 
     public String getLine(){
         return line;
+    }
+    public String getPreviousLine(){
+        return previousLine;
     }
 }
