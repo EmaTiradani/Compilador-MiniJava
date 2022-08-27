@@ -302,7 +302,7 @@ public class AnalizadorLexico {
         if(caracterActual == '&')
             return new Token(TokenId.op_and, lexema, fileManager.getLineNumber());
         else
-            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "& no es una simbolo valido, se esperaba la combinacion &&", fileManager.getLine());
     }
     private Token e16() throws IOException, ExcepcionLexica{
         actualizarLexema();
@@ -310,7 +310,7 @@ public class AnalizadorLexico {
         if(caracterActual == '|')
             return new Token(TokenId.op_or, lexema, fileManager.getLineNumber());
         else
-            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "| no es un simbolo valido, se esperaba ||", fileManager.getLine());
     }
     private  Token e17() throws IOException, ExcepcionLexica{
         return new Token(TokenId.op_modulo, lexema, fileManager.getLineNumber());
@@ -345,15 +345,17 @@ public class AnalizadorLexico {
         if(caracterActual == '\\'){
             return sl_2();
         }else{
-            if(caracterActual == '\n' || caracterActual == '\u001a') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+            if(caracterActual == '\n' || caracterActual == '\u001a') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "StringLiteral sin cerrar, se esperaba un \" ", fileManager.getLine());
             else
-                if(caracterActual == '"')
+                if(caracterActual == '"') {
                     return sl_3();
-                else
+                }else
                     return sl_1();
         }
     }
     private Token sl_3() throws IOException, ExcepcionLexica {
+        actualizarLexema();
+        actualizarCaracterActual();
         return new Token(TokenId.stringLiteral, lexema, fileManager.getLineNumber());
     }
 
@@ -364,7 +366,7 @@ public class AnalizadorLexico {
             sl_2();
         }
         else{
-            if(caracterActual == '\n') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn());
+            if(caracterActual == '\n') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "StringLiteral sin cerrar, se esperaba un \" ", fileManager.getLine());
             else{
                 return sl_1(); //Char != de enter o /
             }

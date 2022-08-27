@@ -5,22 +5,21 @@ import java.io.*;
 public class FileManager {
 
     String line;
-    String nextLine;
     int lineNumber;
     int posCharActual;
     char charActual;
-    File sourceCode = new File(
+    File sourceCode;/* = new File(
             "C:\\Users\\ema_c\\Desktop\\Compiladores\\Etapa 1\\Compilador\\MiniJavaSourceCode.txt"
-    );
+    );*/
     boolean reachedEOF;
 
     BufferedReader br;
 
     public FileManager(String fileRoute) throws IOException {
         posCharActual = 0;
-        lineNumber = 0;
+        lineNumber = -1;
         //System.out.print(sourceCode);
-        //sourceCode = new File(fileRoute);
+        sourceCode = new File(fileRoute);
         reachedEOF = false;
         br = new BufferedReader(new FileReader(sourceCode));
         getNextLine();
@@ -77,5 +76,9 @@ public class FileManager {
 
     public boolean reachedEndOfFile(){
         return reachedEOF;
+    }
+
+    public String getLine(){
+        return line;
     }
 }
