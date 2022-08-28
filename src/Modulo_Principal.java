@@ -13,7 +13,7 @@ public class Modulo_Principal {
         boolean sinErrores = true;
 
         //FileManager fileManager = new FileManager(args[0]);
-        FileManager fileManager = new FileManager("C:\\Users\\ema_c\\Desktop\\Compiladores\\Etapa 1\\Compilador\\MiniJavaSourceCode.txt");
+        FileManager fileManager = new FileManager("C:\\Users\\ema_c\\Desktop\\Compiladores\\Etapa 1\\Compilador\\MiniJavaSourceCode.txt"); //Cable
         //C:\Users\ema_c\Desktop\Compiladores\Etapa 1\MiniJavaSourceCode.txt
         AnalizadorLexico analizadorLexico = new AnalizadorLexico(fileManager);
 

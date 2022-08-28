@@ -130,7 +130,7 @@ public class AnalizadorLexico {
             }
             case '\'': {
                 actualizarLexema();
-                actualizarCaracterActual();
+                //actualizarCaracterActual();
                 return ec_1();
             }
 
@@ -231,8 +231,12 @@ public class AnalizadorLexico {
     private Token e6() throws IOException, ExcepcionLexica{ //Comentario multilinea
         actualizarCaracterActual();
         if(caracterActual == '\n' || caracterActual != '*'){
-            actualizarCaracterActual();
-            return e6();
+            if(caracterActual == '\u001a'){
+                return e0();
+            }else{
+                actualizarCaracterActual();
+                return e6();
+            }
         }else{
             return e7();
         }
@@ -343,12 +347,35 @@ public class AnalizadorLexico {
     private  Token e24() throws IOException, ExcepcionLexica{
         return new Token(TokenId.punt_punto, lexema, fileManager.getLineNumber());
     }
-    private Token ec_1() throws IOException, ExcepcionLexica {
+    private Token ec_1() throws IOException, ExcepcionLexica {//TODO Probar haciendo esto en un solo metodo y que despues vuelva a e0
+        //actualizarLexema();
+        actualizarCaracterActual();
+        /*if(caracterActual == '\'' || caracterActual == '\\') //Ver bien, porque '\' es valido.
+            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter mal cerrado, se esperaba un '", fileManager.getLine());
+        return null;*/
+        if(caracterActual == '\'')
+            throw new ExcepcionLexica(lexema, fileManager.getLineNumber()+1, fileManager.getColumn(), "Caracter vacio", fileManager.getLine());
+        else{
+            if(caracterActual == '\n' || caracterActual == '\u001a'){
+                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter mal cerrado", fileManager.getPreviousLine());
+            }
+            else
+                return ec_2();
+        }
+    }
+    private Token ec_2() throws IOException, ExcepcionLexica{
         actualizarLexema();
         actualizarCaracterActual();
-        if(caracterActual == '\'' || caracterActual == '\\')
+        if(caracterActual == '\''){
+            actualizarLexema();
+            actualizarCaracterActual();
+            return new Token(TokenId.charLiteral, lexema, fileManager.getLineNumber());
+        }
+        else {
+            //actualizarLexema();
+            //actualizarCaracterActual();
             throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter mal cerrado, se esperaba un '", fileManager.getLine());
-        return null;
+        }
     }
 
     private  Token sl_1() throws IOException, ExcepcionLexica {
@@ -373,12 +400,15 @@ public class AnalizadorLexico {
         return new Token(TokenId.stringLiteral, lexema, fileManager.getLineNumber());
     }
 
-    private Token sl_2() throws IOException, ExcepcionLexica {
+    private Token sl_2() throws IOException, ExcepcionLexica {//Estado donde me como las barras
         actualizarLexema();
         actualizarCaracterActual();
         if(caracterActual == '\n') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "StringLiteral sin cerrar, se esperaba un \" ", fileManager.getPreviousLine());
         else{
-            return sl_1(); //Char != de enter
+            if(caracterActual != '\\')
+                return sl_1();
+            else
+                return sl_2();
         }
 
     }

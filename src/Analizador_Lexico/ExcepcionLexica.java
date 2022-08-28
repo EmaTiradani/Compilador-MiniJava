@@ -12,6 +12,6 @@ public class ExcepcionLexica extends Exception{
             cosito += " ";
         }
 
-        return ("Error Léxico en linea " + nroLinea + ", columna " + nroColumna + ": " + lexema + " " + tipoDeError +"\nDetalle: " + linea + "\n" + cosito + "^\n" + "[Error: " + lexema + "|" + nroLinea + "]\n");
+        return ("Error Léxico en linea " + nroLinea + ", columna " + nroColumna + ": " + lexema + " " + tipoDeError +"\nDetalle: " + linea + "\n" + cosito + "^\n" + "[Error:" + lexema + "|" + nroLinea + "]\n");
     }
 }

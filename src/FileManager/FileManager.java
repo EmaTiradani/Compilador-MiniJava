@@ -54,17 +54,7 @@ public class FileManager {
             }
         }
 
-        if(reachedEOF) charActual = '\u001a';
-        /*
-        if(line!=null){
-            if(posCharActual == line.length())
-                getNextLine();
-
-        }
-
-        charActual = line.charAt(posCharActual);
-        posCharActual++;
-*/
+        //if(reachedEOF) charActual = '\u001a';
         return charActual;
     }
 
