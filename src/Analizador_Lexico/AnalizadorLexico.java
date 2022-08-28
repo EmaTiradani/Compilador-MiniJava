@@ -25,108 +25,113 @@ public class AnalizadorLexico {
     public Token e0() throws ExcepcionLexica, IOException {
         //System.out.print(caracterActual);
 
-        switch(caracterActual){
+        switch(caracterActual) {
 
             //Whitespaces
-            case ' ' :
-            case '\n' : {
+            case ' ':
+            case '\n': {
                 actualizarCaracterActual();
                 return e0();
             }
 
             //Operators
-            case '>' : {
+            case '>': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e8(); //Tiene que ver si es un >=
             }
 
-            case '<' : {
+            case '<': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e9(); //Tiene que ver si es un <=
             }
-            case '!' : {
+            case '!': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e10(); //Tiene que ver si es un !=, pero ! tambien es aceptado
             }
-            case '=' : {
+            case '=': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e11(); //Tiene que ver si es un ==
             }
-            case '+' : {
+            case '+': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e12();
             }
-            case '-' : {
+            case '-': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e13();
             }
-            case '*' : {
+            case '*': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e14();
             }
-            case '/' : {
+            case '/': {
                 //actualizarLexema();
                 //actualizarCaracterActual();
                 return e4(); // TODO aca va lo de los comentarios o a la division
             }
-            case '&' : {
+            case '&': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e15();
             }
-            case '|' : {
+            case '|': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e16();
             }
-            case '%' : {
+            case '%': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e17();
             }
 
             //Punctuation
-            case '(' : {
+            case '(': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e18();
             }
-            case ')' : {
+            case ')': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e19();
             }
-            case '{' : {
+            case '{': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e20();
             }
-            case '}' : {
+            case '}': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e21();
             }
-            case ';' : {
+            case ';': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e22();
             }
-            case ',' : {
+            case ',': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e23();
             }
-            case '.' : {
+            case '.': {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return e24();
+            }
+            case '\'': {
+                actualizarLexema();
+                actualizarCaracterActual();
+                return ec_1();
             }
 
             case '"' : return sl_1();
@@ -201,7 +206,6 @@ public class AnalizadorLexico {
     }
 
     private Token e4() throws IOException, ExcepcionLexica {
-        //actualizarLexema();
         actualizarCaracterActual();
         if(caracterActual == '/') { //Comments single line
             actualizarCaracterActual();
@@ -214,27 +218,17 @@ public class AnalizadorLexico {
                 return new Token(TokenId.op_division, lexema, fileManager.getLineNumber());
             }
         }
-
-        /*}
-        if(caracterActual == '*')
-            return e6(); //Comentario multilinea, deberia limpiar la barra '/' del lexema, no?
-        return new Token(TokenId.op_division, lexema, fileManager.getLineNumber());*/
     }
 
     private Token e5() throws IOException, ExcepcionLexica { //Comentario single line
-        //actualizarLexema();
         actualizarCaracterActual();
         if(caracterActual == '\n')
             return e0();
         else
-            if(caracterActual == '\u001a'){
-                return e0();
-            }else
-                return e5();
+            return e5();
     }
 
     private Token e6() throws IOException, ExcepcionLexica{ //Comentario multilinea
-        actualizarLexema();
         actualizarCaracterActual();
         if(caracterActual == '\n' || caracterActual != '*'){
             actualizarCaracterActual();
@@ -244,13 +238,13 @@ public class AnalizadorLexico {
         }
     }
     private Token e7() throws IOException, ExcepcionLexica{
-        actualizarLexema();
         actualizarCaracterActual();
         if(caracterActual == '*'){
             actualizarCaracterActual();
             return e7();
         }else{
             if(caracterActual == '/'){
+                actualizarCaracterActual();
                 return e0();
             }else{
                 return e6(); //Si no es / ni * vuelvo a e6
@@ -294,7 +288,6 @@ public class AnalizadorLexico {
             return new Token(TokenId.asignacion, lexema, fileManager.getLineNumber());
         }
         else{
-            //throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), );
             return new Token(TokenId.op_igual, lexema, fileManager.getLineNumber());
         }
     }
@@ -350,6 +343,13 @@ public class AnalizadorLexico {
     private  Token e24() throws IOException, ExcepcionLexica{
         return new Token(TokenId.punt_punto, lexema, fileManager.getLineNumber());
     }
+    private Token ec_1() throws IOException, ExcepcionLexica {
+        actualizarLexema();
+        actualizarCaracterActual();
+        if(caracterActual == '\'' || caracterActual == '\\')
+            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter mal cerrado, se esperaba un '", fileManager.getLine());
+        return null;
+    }
 
     private  Token sl_1() throws IOException, ExcepcionLexica {
 
@@ -369,23 +369,18 @@ public class AnalizadorLexico {
     }
     private Token sl_3() throws IOException, ExcepcionLexica {
         actualizarLexema();
-       actualizarCaracterActual();
+        actualizarCaracterActual();
         return new Token(TokenId.stringLiteral, lexema, fileManager.getLineNumber());
     }
 
     private Token sl_2() throws IOException, ExcepcionLexica {
         actualizarLexema();
         actualizarCaracterActual();
-        if(caracterActual == '\\'){
-            sl_2();
-        }
+        if(caracterActual == '\n') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "StringLiteral sin cerrar, se esperaba un \" ", fileManager.getPreviousLine());
         else{
-            if(caracterActual == '\n') throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "StringLiteral sin cerrar, se esperaba un \" ", fileManager.getPreviousLine());
-            else{
-                return sl_1(); //Char != de enter o /
-            }
+            return sl_1(); //Char != de enter
         }
-        return null;
+
     }
 
     private Token e30() {
