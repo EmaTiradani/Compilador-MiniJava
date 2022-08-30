@@ -11,6 +11,10 @@ public class AnalizadorLexico {
     FileManager fileManager;
     PalabrasReservadas tokenIdentifier;
 
+    String lineaComienzoComment;
+    int nroLineaComienzoComment;
+    int columnaComienzoComment;
+
     public AnalizadorLexico(FileManager fileManager) throws IOException {
         this.fileManager = fileManager;
         actualizarCaracterActual();
@@ -212,6 +216,9 @@ public class AnalizadorLexico {
             return e5();
         }else {
             if(caracterActual == '*'){ //Comments multiple line
+                lineaComienzoComment = fileManager.getLine();
+                nroLineaComienzoComment = fileManager.getLineNumber();
+                columnaComienzoComment = fileManager.getColumn();
                 return e6();
             } else{ //Division token
                 //actualizarLexema();
@@ -231,7 +238,7 @@ public class AnalizadorLexico {
     private Token e6() throws IOException, ExcepcionLexica{ //Comentario multilinea
         if(caracterActual != '*'){
             if(caracterActual == '\u001a'){
-                throw new ExcepcionLexica("/*", fileManager.getLineNumber(), fileManager.getColumn(), "Comentario multilinea sin cerrar", fileManager.getPreviousLine());
+                throw new ExcepcionLexica("/*", nroLineaComienzoComment, columnaComienzoComment, "Comentario multilinea sin cerrar", lineaComienzoComment);
             }else{
                 actualizarCaracterActual();
                 return e6();
@@ -306,19 +313,21 @@ public class AnalizadorLexico {
         //actualizarCaracterActual();
         if(caracterActual == '&')
             return new Token(TokenId.op_and, lexema, fileManager.getLineNumber());
-        else
-            if(caracterActual == '\n' || caracterActual == '\u001a')
-                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getPreviousLine().length()+1, "& no es un simbolo valido, se esperaba la combinacion &&", fileManager.getPreviousLine());
+        else {
+            if (caracterActual == '\n' || caracterActual == '\u001a')
+                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getPreviousLine().length() + 1, "& no es un simbolo valido, se esperaba la combinacion &&", fileManager.getPreviousLine());
             else
-                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "& no es un simbolo valido, se esperaba la combinacion &&", fileManager.getPreviousLine());
+                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "& no es un simbolo valido, se esperaba la combinacion &&", fileManager.getLine());
+        }
     }
     private Token e16() throws IOException, ExcepcionLexica{
-        /*actualizarLexema();
-        actualizarCaracterActual();*/
         if(caracterActual == '|')
             return new Token(TokenId.op_or, lexema, fileManager.getLineNumber());
         else
-            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "| no es un simbolo valido, se esperaba ||", fileManager.getPreviousLine());
+        if(caracterActual == '\n' || caracterActual == '\u001a')
+            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getPreviousLine().length()+1, "| no es un simbolo valido, se esperaba la combinacion ||", fileManager.getPreviousLine());
+        else
+            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "| no es un simbolo valido, se esperaba la combinacion ||", fileManager.getLine());
     }
     private  Token e17() throws IOException, ExcepcionLexica{
         return new Token(TokenId.op_modulo, lexema, fileManager.getLineNumber());
@@ -351,24 +360,53 @@ public class AnalizadorLexico {
             actualizarCaracterActual();
             return ec_3();
         }else
-            if(caracterActual == '\n' || caracterActual == '\u001a' || caracterActual == '\'')
-                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter mal cerrado", fileManager.getPreviousLine());
-            else
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                if(caracterActual == '\'')
+                    throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter vacio no es valido", fileManager.getLine());
+                else
+                    throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getPreviousLine().length()+1, "Caracter mal cerrado", fileManager.getPreviousLine());
+            else{
+                actualizarLexema();
+                actualizarCaracterActual();
                 return ec_2();
+            }
+
     }
 
     private Token ec_3() throws ExcepcionLexica, IOException {
-        if(caracterActual == '\n' || caracterActual == '\u001a' || caracterActual == '\'' || caracterActual == '\\')
+        if(caracterActual == '\n' || caracterActual == '\u001a')
             throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter mal cerrado", fileManager.getPreviousLine());
-        else
-            if(caracterActual == 'u') {
+        else {
+            /*if (caracterActual == '\'' || caracterActual == '\\') {
+                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter mal cerrado", fileManager.getLine());
+            } else*/ if (caracterActual == 'u') {
                 actualizarLexema();
                 actualizarCaracterActual();
                 return uni_1();
-            }
-            else
+            } else
+                actualizarLexema();
+                actualizarCaracterActual();
                 return ec_2();
+        }
+    }
 
+    private Token ec_2() throws IOException, ExcepcionLexica{
+        /*actualizarLexema();
+        actualizarCaracterActual();*/
+        if(caracterActual == '\''){
+            actualizarLexema();
+            actualizarCaracterActual();
+            return ec_4();
+        }
+        else {
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getPreviousLine().length()+1, "Caracter mal cerrado, se esperaba un '", fileManager.getPreviousLine());
+            else
+                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter mal cerrado, se esperaba un '", fileManager.getLine());
+        }
+    }
+    private Token ec_4() throws IOException, ExcepcionLexica{
+        return new Token(TokenId.charLiteral, lexema, fileManager.getLineNumber());
     }
 
     private Token uni_1() throws IOException, ExcepcionLexica {
@@ -409,21 +447,7 @@ public class AnalizadorLexico {
         }
     }
 
-    private Token ec_2() throws IOException, ExcepcionLexica{
-        actualizarLexema();
-        actualizarCaracterActual();
-        if(caracterActual == '\''){
-            actualizarLexema();
-            actualizarCaracterActual();
-            return ec_4();
-        }
-        else {
-            throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter mal cerrado, se esperaba un '", fileManager.getLine());
-        }
-    }
-    private Token ec_4() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.charLiteral, lexema, fileManager.getLineNumber());
-    }
+
 
     private  Token sl_1() throws IOException, ExcepcionLexica {
        actualizarLexema();

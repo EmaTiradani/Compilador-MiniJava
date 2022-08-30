@@ -18,7 +18,7 @@ public class FileManager {
 
     public FileManager(String fileRoute) throws IOException {
         posCharActual = 0;
-        lineNumber = -1;
+        lineNumber = 0;
         //System.out.print(sourceCode);
         sourceCode = new File(fileRoute);
         reachedEOF = false;
@@ -29,7 +29,7 @@ public class FileManager {
     public void getNextLine() throws IOException {
         previousLine = line;
         line = br.readLine();
-        lineNumber++;
+        //lineNumber++;
         if(line == null){
             reachedEOF = true;
         }else {
@@ -44,6 +44,7 @@ public class FileManager {
         }else {
             if (posCharActual == line.length()){
                 getNextLine();
+                lineNumber++;
                 return '\n';
             }
             else{
