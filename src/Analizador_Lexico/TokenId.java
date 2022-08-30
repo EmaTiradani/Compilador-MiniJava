@@ -33,8 +33,6 @@ public enum TokenId {
     charLiteral,
     stringLiteral,
 
-    bool_true,
-    bool_false,
 
     punt_parentIzq,
     punt_parentDer,
@@ -60,8 +58,6 @@ public enum TokenId {
     op_modulo,
 
     asignacion,
-    incremento,
-    decremento,
 
     EOF
 

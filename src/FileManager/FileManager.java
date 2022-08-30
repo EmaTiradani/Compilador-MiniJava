@@ -29,12 +29,10 @@ public class FileManager {
     public void getNextLine() throws IOException {
         previousLine = line;
         line = br.readLine();
-        //System.out.println(line);
         lineNumber++;
         if(line == null){
             reachedEOF = true;
         }else {
-            //line = br.readLine(); //Aca nunca entra creo
             posCharActual = 0;
         }
     }
