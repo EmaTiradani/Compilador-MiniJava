@@ -175,10 +175,18 @@ public class AnalizadorLexico {
             return e1();
         }else{
             TokenId id = tokenIdentifier.getTokenId(lexema);
-            if(id == null){
-                return new Token(TokenId.idMetVar, lexema, fileManager.getLineNumber());
+            if(caracterActual == '\n' || caracterActual == '\u001a'){
+                if(id == null){
+                    return new Token(TokenId.idMetVar, lexema, fileManager.getLineNumber()-1);
+                }else{ // Si es una palabra reservada retorna el id de la misma
+                    return new Token(id, lexema, fileManager.getLineNumber()-1);
+                }
             }else{
-                return new Token(id, lexema, fileManager.getLineNumber());
+                if(id == null){
+                    return new Token(TokenId.idMetVar, lexema, fileManager.getLineNumber());
+                }else{ // Si es una palabra reservada retorna el id de la misma
+                    return new Token(id, lexema, fileManager.getLineNumber());
+                }
             }
         }
     }
@@ -188,10 +196,17 @@ public class AnalizadorLexico {
             actualizarCaracterActual();
             return e2();
         }else{
-            if(lexema.length() < 9)
-                return new Token(TokenId.intLiteral, lexema, fileManager.getLineNumber());
-            else
-                throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Digito mayor a 9 cifras ", fileManager.getLine());
+            if(caracterActual == '\n' || caracterActual == '\u001a'){
+                if(lexema.length() <= 9)
+                    return new Token(TokenId.intLiteral, lexema, fileManager.getLineNumber()-1);
+                else
+                    throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Digito mayor a 9 cifras ", fileManager.getPreviousLine());
+            }else{
+                if(lexema.length() <= 9)
+                    return new Token(TokenId.intLiteral, lexema, fileManager.getLineNumber());
+                else
+                    throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Digito mayor a 9 cifras ", fileManager.getLine());
+            }
         }
     }
     private Token e3() throws IOException, ExcepcionLexica{
@@ -200,12 +215,16 @@ public class AnalizadorLexico {
             actualizarCaracterActual();
             return e3();
         }else{
-            TokenId id = tokenIdentifier.getTokenId(lexema);
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.idClase, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.idClase, lexema, fileManager.getLineNumber());
+            /*TokenId id = tokenIdentifier.getTokenId(lexema);
             if(id == null){
                 return new Token(TokenId.idClase, lexema, fileManager.getLineNumber());
             }else{
                 return new Token(id, lexema, fileManager.getLineNumber());
-            }
+            }*/
         }
     }
 
@@ -266,23 +285,47 @@ public class AnalizadorLexico {
         if(caracterActual == '=') {
             actualizarLexema();
             actualizarCaracterActual();
-            return new Token(TokenId.op_mayorIgual, lexema, fileManager.getLineNumber());
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.op_mayorIgual, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.op_mayorIgual, lexema, fileManager.getLineNumber());
         }
         else{
-            return new Token(TokenId.op_mayor, lexema, fileManager.getLineNumber());
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.op_mayor, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.op_mayor, lexema, fileManager.getLineNumber());
         }
     }
-    private Token e9() {
-        return new Token(TokenId.punt_punto, lexema, fileManager.getLineNumber());
+    private Token e9() throws IOException {
+        if(caracterActual == '='){
+            actualizarLexema();
+            actualizarCaracterActual();
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.op_menorIgual, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.op_menorIgual, lexema, fileManager.getLineNumber());
+        }else{
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.op_menor, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.op_menor, lexema, fileManager.getLineNumber());
+        }
     }
 
     private  Token e10() throws IOException, ExcepcionLexica {
         if(caracterActual == '='){
             actualizarLexema();
             actualizarCaracterActual();
-            return new Token(TokenId.op_distinto, lexema, fileManager.getLineNumber());
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.op_distinto, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.op_distinto, lexema, fileManager.getLineNumber());
         }else{
-            return new Token(TokenId.op_negacion, lexema, fileManager.getLineNumber());
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.op_negacion, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.op_negacion, lexema, fileManager.getLineNumber());
         }
 
     }
@@ -290,29 +333,65 @@ public class AnalizadorLexico {
     private  Token e11() throws IOException, ExcepcionLexica {
         if(caracterActual == '=') {
             actualizarLexema();
-            return new Token(TokenId.asignacion, lexema, fileManager.getLineNumber());
+            actualizarCaracterActual();
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.op_igual, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.op_igual, lexema, fileManager.getLineNumber());
         }
         else{
-            return new Token(TokenId.op_igual, lexema, fileManager.getLineNumber());
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.asignacion, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.asignacion, lexema, fileManager.getLineNumber());
         }
     }
 
-    private  Token e12() {
-        Token token = new Token(TokenId.op_suma, lexema, fileManager.getLineNumber());
-        return token;
+    private  Token e12() throws IOException {
+        if(caracterActual == '=') {
+            actualizarLexema();
+            actualizarCaracterActual();
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.incremento, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.incremento, lexema, fileManager.getLineNumber());
+        }else
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.op_suma, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.op_suma, lexema, fileManager.getLineNumber());
     }
 
     private  Token e13() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.op_resta, lexema, fileManager.getLineNumber());
+        if(caracterActual == '=') {
+            actualizarLexema();
+            actualizarCaracterActual();
+            if(caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.decremento, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.decremento, lexema, fileManager.getLineNumber());
+        }else
+        if(caracterActual == '\n' || caracterActual == '\u001a')
+            return new Token(TokenId.op_resta, lexema, fileManager.getLineNumber()-1);
+        else
+            return new Token(TokenId.op_resta, lexema, fileManager.getLineNumber());
     }
     private  Token e14() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.op_multiplicacion, lexema, fileManager.getLineNumber());
+        if(caracterActual == '\n' || caracterActual == '\u001a')
+            return new Token(TokenId.op_multiplicacion, lexema, fileManager.getLineNumber()-1);
+        else
+            return new Token(TokenId.op_multiplicacion, lexema, fileManager.getLineNumber());
     }
     private Token e15() throws IOException, ExcepcionLexica{
-        //actualizarLexema();
-        //actualizarCaracterActual();
-        if(caracterActual == '&')
-            return new Token(TokenId.op_and, lexema, fileManager.getLineNumber());
+
+        if(caracterActual == '&'){
+            actualizarLexema();
+            actualizarCaracterActual();
+            if (caracterActual == '\n' || caracterActual == '\u001a')
+                return new Token(TokenId.op_and, lexema, fileManager.getLineNumber()-1);
+            else
+                return new Token(TokenId.op_and, lexema, fileManager.getLineNumber());
+        }
         else {
             if (caracterActual == '\n' || caracterActual == '\u001a')
                 throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getPreviousLine().length() + 1, "& no es un simbolo valido, se esperaba la combinacion &&", fileManager.getPreviousLine());
@@ -330,28 +409,52 @@ public class AnalizadorLexico {
             throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "| no es un simbolo valido, se esperaba la combinacion ||", fileManager.getLine());
     }
     private  Token e17() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.op_modulo, lexema, fileManager.getLineNumber());
+        if (caracterActual == '\n' || caracterActual == '\u001a')
+            return new Token(TokenId.op_modulo, lexema, fileManager.getLineNumber()-1);
+        else
+            return new Token(TokenId.op_modulo, lexema, fileManager.getLineNumber());
     }
     private  Token e18() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.punt_parentIzq, lexema, fileManager.getLineNumber());
+        if (caracterActual == '\n' || caracterActual == '\u001a')
+            return new Token(TokenId.punt_parentIzq, lexema, fileManager.getLineNumber()-1);
+        else
+            return new Token(TokenId.punt_parentIzq, lexema, fileManager.getLineNumber());
     }
     private  Token e19() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.punt_parentDer, lexema, fileManager.getLineNumber());
+        if (caracterActual == '\n' || caracterActual == '\u001a')
+            return new Token(TokenId.punt_parentDer, lexema, fileManager.getLineNumber()-1);
+        else
+            return new Token(TokenId.punt_parentDer, lexema, fileManager.getLineNumber());
     }
     private  Token e20() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.punt_llaveIzq, lexema, fileManager.getLineNumber());
+        if (caracterActual == '\n' || caracterActual == '\u001a')
+            return new Token(TokenId.punt_llaveIzq, lexema, fileManager.getLineNumber()-1);
+        else
+            return new Token(TokenId.punt_llaveIzq, lexema, fileManager.getLineNumber());
     }
     private  Token e21() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.punt_llaveDer, lexema, fileManager.getLineNumber());
+        if (caracterActual == '\n' || caracterActual == '\u001a')
+            return new Token(TokenId.punt_llaveDer, lexema, fileManager.getLineNumber()-1);
+        else
+            return new Token(TokenId.punt_llaveDer, lexema, fileManager.getLineNumber());
     }
     private  Token e22() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.punt_puntoYComa, lexema, fileManager.getLineNumber());
+        if (caracterActual == '\n' || caracterActual == '\u001a')
+            return new Token(TokenId.punt_puntoYComa, lexema, fileManager.getLineNumber()-1);
+        else
+            return new Token(TokenId.punt_puntoYComa, lexema, fileManager.getLineNumber());
     }
     private  Token e23() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.punt_coma, lexema, fileManager.getLineNumber());
+        if (caracterActual == '\n' || caracterActual == '\u001a')
+            return new Token(TokenId.punt_coma, lexema, fileManager.getLineNumber()-1);
+        else
+            return new Token(TokenId.punt_coma, lexema, fileManager.getLineNumber());
     }
     private  Token e24() throws IOException, ExcepcionLexica{
-        return new Token(TokenId.punt_punto, lexema, fileManager.getLineNumber());
+        if (caracterActual == '\n' || caracterActual == '\u001a')
+            return new Token(TokenId.punt_punto, lexema, fileManager.getLineNumber()-1);
+        else
+            return new Token(TokenId.punt_punto, lexema, fileManager.getLineNumber());
     }
     private Token ec_1() throws IOException, ExcepcionLexica {
 
@@ -391,8 +494,6 @@ public class AnalizadorLexico {
     }
 
     private Token ec_2() throws IOException, ExcepcionLexica{
-        /*actualizarLexema();
-        actualizarCaracterActual();*/
         if(caracterActual == '\''){
             actualizarLexema();
             actualizarCaracterActual();

@@ -29,7 +29,7 @@ public class FileManager {
     public void getNextLine() throws IOException {
         previousLine = line;
         line = br.readLine();
-        //lineNumber++;
+        lineNumber++;
         if(line == null){
             reachedEOF = true;
         }else {
@@ -44,8 +44,9 @@ public class FileManager {
         }else {
             if (posCharActual == line.length()){
                 getNextLine();
-                lineNumber++;
-                return '\n';
+                //lineNumber++;
+                charActual ='\n';
+                return charActual;
             }
             else{
                 charActual = line.charAt(posCharActual);
@@ -58,7 +59,10 @@ public class FileManager {
     }
 
     public int getLineNumber(){
-        return lineNumber;
+        if(charActual == '\n' || charActual == '\u001a')
+            return lineNumber-1;
+        else
+            return lineNumber;
     }
 
     public int getColumn(){

@@ -58,6 +58,8 @@ public enum TokenId {
     op_modulo,
 
     asignacion,
+    incremento,
+    decremento,
 
     EOF
 
