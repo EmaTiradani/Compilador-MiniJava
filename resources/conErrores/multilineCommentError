@@ -1,0 +1,7 @@
+///[Error:/*|5]
+
+
+
+/*
+
+    Comentario multilinea con error, la unica forma de hacer que falle es si se encuentra EOF antes de asterisco barra (* / junto) ***+   //// /*

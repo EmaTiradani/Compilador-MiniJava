@@ -9,9 +9,7 @@ public class FileManager {
     int lineNumber;
     int posCharActual;
     char charActual;
-    File sourceCode;/* = new File(
-            "C:\\Users\\ema_c\\Desktop\\Compiladores\\Etapa 1\\Compilador\\MiniJavaSourceCode.txt"
-    );*/
+    File sourceCode;
     boolean reachedEOF;
 
     BufferedReader br;
@@ -19,7 +17,6 @@ public class FileManager {
     public FileManager(String fileRoute) throws IOException {
         posCharActual = 0;
         lineNumber = 0;
-        //System.out.print(sourceCode);
         sourceCode = new File(fileRoute);
         reachedEOF = false;
         br = new BufferedReader(new FileReader(sourceCode));
@@ -44,7 +41,6 @@ public class FileManager {
         }else {
             if (posCharActual == line.length()){
                 getNextLine();
-                //lineNumber++;
                 charActual ='\n';
                 return charActual;
             }
@@ -54,7 +50,6 @@ public class FileManager {
             }
         }
 
-        //if(reachedEOF) charActual = '\u001a';
         return charActual;
     }
 
@@ -68,11 +63,9 @@ public class FileManager {
     public int getColumn(){
         return posCharActual;
     }
-
     public boolean reachedEndOfFile(){
         return reachedEOF;
     }
-
     public String getLine(){
         return line;
     }

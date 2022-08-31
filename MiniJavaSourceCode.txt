@@ -1,13 +1,1 @@
-// Hi, this is a single line comment
-
-// Another single line comment
-
-    /*
-
-
-Multiline comment
-
-
-
-
-            */  //More single line comment
+'\u1ABC
