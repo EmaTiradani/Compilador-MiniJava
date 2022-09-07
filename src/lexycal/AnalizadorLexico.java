@@ -1,4 +1,4 @@
-package Analizador_Lexico;
+package lexycal;
 
 import FileManager.FileManager;
 
@@ -196,7 +196,6 @@ public class AnalizadorLexico {
                 else
                     throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Digito mayor a 9 cifras ", fileManager.getLine());
             }
-                //throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Digito mayor a 9 cifras ", fileManager.getPreviousLine());
         }
     }
 
@@ -442,7 +441,6 @@ public class AnalizadorLexico {
                         throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getColumn(), "Caracter unicode incorrecto", fileManager.getLine());
                     }
                 }
-                //if(caracterActual == '\n' || caracterActual == '\u001a'){
                 if(caracterActual != '\''){
                     if(caracterActual == '\n' || caracterActual == '\u001a'){
                         throw new ExcepcionLexica(lexema, fileManager.getLineNumber(), fileManager.getPreviousLine().length()+1, "Caracter unicode incorrecto", fileManager.getPreviousLine());
@@ -490,7 +488,6 @@ public class AnalizadorLexico {
             else
                 return sl_2();
         }
-
     }
 
     private Token e30() {

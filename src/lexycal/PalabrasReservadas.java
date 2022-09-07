@@ -1,9 +1,9 @@
-package Analizador_Lexico;
+package lexycal;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static Analizador_Lexico.TokenId.*;
+import static lexycal.TokenId.*;
 
 public class PalabrasReservadas {
 

@@ -1,4 +1,4 @@
-package Analizador_Lexico;
+package lexycal;
 
 public class Token {
 

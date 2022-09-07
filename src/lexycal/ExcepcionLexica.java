@@ -1,4 +1,4 @@
-package Analizador_Lexico;
+package lexycal;
 
 public class ExcepcionLexica extends Exception{
 
@@ -7,14 +7,14 @@ public class ExcepcionLexica extends Exception{
     }
 
     private static String errorConstructor(String lexema, int nroLinea, int nroColumna, String tipoDeError, String linea){ //Estatico para que me deje usar el super
-        String cosito = "         ";
+        String puntero = "         ";
         for(int i=0; i < nroColumna - 1; i++){
             if(linea.charAt(i) == '\t')
-                cosito += '\t';
+                puntero += '\t';
             else
-                cosito += ' ';
+                puntero += ' ';
         }
 
-        return ("Error Léxico en linea " + nroLinea + ", columna " + nroColumna + ": " + lexema + " " + tipoDeError +"\nDetalle: " + linea + "\n" + cosito + "^\n" + "[Error:" + lexema + "|" + nroLinea + "]\n");
+        return ("Error Léxico en linea " + nroLinea + ", columna " + nroColumna + ": " + lexema + " " + tipoDeError +"\nDetalle: " + linea + "\n" + puntero + "^\n" + "[Error:" + lexema + "|" + nroLinea + "]\n");
     }
 }

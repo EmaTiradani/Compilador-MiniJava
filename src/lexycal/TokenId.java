@@ -1,6 +1,4 @@
-package Analizador_Lexico;
-
-import java.util.Dictionary;
+package lexycal;
 
 public enum TokenId {
 

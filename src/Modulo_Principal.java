@@ -1,6 +1,6 @@
-import Analizador_Lexico.AnalizadorLexico;
-import Analizador_Lexico.ExcepcionLexica;
-import Analizador_Lexico.Token;
+import lexycal.AnalizadorLexico;
+import lexycal.ExcepcionLexica;
+import lexycal.Token;
 import FileManager.FileManager;
 
 import java.io.IOException;
