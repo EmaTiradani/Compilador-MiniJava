@@ -74,3 +74,8 @@
 <EncadenadoOpt> ::= <VarEncadenada> | <MetodoEncadenado> | 
 <VarEncadenada> ::= . idMetVar <EncadenadoOpt>
 <MetodoEncadenado> ::= . idMetVar <ArgsActuales> <EncadenadoOpt>
+
+
+
+Primeros(<Expresion> ::= <ExpresionUnaria> <ExpresionRec>
+Primeros(<ExpresionRec> ::= <OperadorBinario> <ExpresionUnaria> <ExpresionRec> | EOF
