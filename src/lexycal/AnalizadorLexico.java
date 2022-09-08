@@ -1,5 +1,6 @@
 package lexycal;
 
+import Exceptions.ExcepcionLexica;
 import FileManager.FileManager;
 
 import java.io.IOException;

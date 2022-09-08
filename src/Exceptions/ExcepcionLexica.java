@@ -1,4 +1,4 @@
-package lexycal;
+package Exceptions;
 
 public class ExcepcionLexica extends Exception{
 

@@ -1,5 +1,5 @@
 import lexycal.AnalizadorLexico;
-import lexycal.ExcepcionLexica;
+import Exceptions.ExcepcionLexica;
 import lexycal.Token;
 import FileManager.FileManager;
 
