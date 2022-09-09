@@ -76,6 +76,14 @@
 <MetodoEncadenado> ::= . idMetVar <ArgsActuales> <EncadenadoOpt>
 
 
+<Expresion> ::= <ExpresionUnaria> <ExpresionRec>
+<ExpresionRec> ::= <OperadorBinario> <ExpresionUnaria> <ExpresionRec> | EOF
 
-Primeros(<Expresion> ::= <ExpresionUnaria> <ExpresionRec>
-Primeros(<ExpresionRec> ::= <OperadorBinario> <ExpresionUnaria> <ExpresionRec> | EOF
+ListaTipoReferencia, ListaDecAtrs,  ListaArgsFormales, Sentencia, If, Primario, ListaExps, EncabezadoOpt
+
+ListaTipoReferencia
+
+<ListaTipoReferencia> ::= idClase <ListaTipoReferenciaFact>
+<ListaTipoReferenciaFact> ::= , <ListaTipoReferencia> | ε
+
+

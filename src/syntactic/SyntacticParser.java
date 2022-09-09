@@ -4,29 +4,39 @@ import Exceptions.SyntacticException;
 import lexycal.AnalizadorLexico;
 import Exceptions.ExcepcionLexica;
 import lexycal.Token;
+import lexycal.TokenId;
 
 import java.io.IOException;
 
 import static lexycal.TokenId.EOF;
+
 
 public class SyntacticParser {
 
     AnalizadorLexico analizadorLexico;
     boolean sinErrores = true;
     Token tokenActual;
-    public SyntacticParser(AnalizadorLexico analizadorLexico) {
+    Firsts firsts;
+    public SyntacticParser(AnalizadorLexico analizadorLexico) throws ExcepcionLexica, IOException {
         this.analizadorLexico = analizadorLexico;
+        firsts = new Firsts();
+        tokenActual = analizadorLexico.getToken();
+        //inicial();
     }
 
-    public void match(String nombreToken) throws ExcepcionLexica, IOException, SyntacticException {
-        if(nombreToken.equals(tokenActual.getTokenId()))
+    public void match(String expectedToken) throws ExcepcionLexica, IOException, SyntacticException {
+        if(expectedToken.equals(tokenActual.getTokenId()))
             tokenActual = analizadorLexico.getToken();
         else
-            throw new SyntacticException();
+            throw new SyntacticException(expectedToken, tokenActual);
+    }
+
+    public void startAnalysis(){
+        inicial();
     }
 
 
-    public void startAnalysis() throws IOException {
+    /*public void startAnalysis() throws IOException {
         do{
             tokenActual = new Token(null, "", 0);
             try {
@@ -39,10 +49,14 @@ public class SyntacticParser {
             };
         }while(!(tokenActual.getTokenId() == EOF));
         //while(!fileManager.reachedEndOfFile()); //Cuando llega al EOF el lexico tiene que tirar EOF constante, ahi corta
+    }*/
 
-
-
+    private void inicial() throws ExcepcionLexica, SyntacticException, IOException {
+        listaClases();
+        match("EOF");
     }
 
+    private void listaClases(){
 
+    }
 }

@@ -1,3 +1,4 @@
+import Exceptions.ExcepcionLexica;
 import FileManager.FileManager;
 import lexycal.AnalizadorLexico;
 import syntactic.SyntacticParser;
@@ -10,7 +11,13 @@ public class MainSyntactic {
 
         FileManager fileManager = new FileManager(args[0]);
         AnalizadorLexico analizadorLexico = new AnalizadorLexico(fileManager);
-        SyntacticParser syntacticParser = new SyntacticParser(analizadorLexico);
+
+        SyntacticParser syntacticParser = null;
+        try {
+            syntacticParser = new SyntacticParser(analizadorLexico);
+        } catch (ExcepcionLexica e) {
+            System.out.println(e.getMessage());
+        }
 
         syntacticParser.startAnalysis();
 
