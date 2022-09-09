@@ -1,5 +1,6 @@
 package syntactic;
 
+import lexycal.Token;
 import lexycal.TokenId;
 
 import java.util.*;
@@ -183,7 +184,7 @@ public class Firsts {
 
     }
 
-    public boolean isFirst(String production, TokenId tokenId){
-        return map.get(production).contains(tokenId);
+    public boolean isFirst(String production, Token token){
+        return map.get(production).contains(token.getTokenId());
     }
 }

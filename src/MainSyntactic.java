@@ -1,4 +1,5 @@
 import Exceptions.ExcepcionLexica;
+import Exceptions.SyntacticException;
 import FileManager.FileManager;
 import lexycal.AnalizadorLexico;
 import syntactic.SyntacticParser;
@@ -19,7 +20,11 @@ public class MainSyntactic {
             System.out.println(e.getMessage());
         }
 
-        syntacticParser.startAnalysis();
+        try {
+            syntacticParser.startAnalysis();//Puede producir null pointer
+        } catch (ExcepcionLexica | SyntacticException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 }
