@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import static lexycal.TokenId.EOF;
 
-
 public class SyntacticParser {
     AnalizadorLexico analizadorLexico;
     boolean sinErrores = true;
@@ -30,51 +29,36 @@ public class SyntacticParser {
         else
             throw new SyntacticException(expectedToken, tokenActual);
     }
+    //public void matchFirsts()
 
     private void nextToken() throws ExcepcionLexica, IOException {
         tokenActual = analizadorLexico.getToken();
     }
 
-
     public void startAnalysis() throws ExcepcionLexica, SyntacticException, IOException {
         inicial();
     }
-
-
-    /*public void startAnalysis() throws IOException {
-        do{
-            tokenActual = new Token(null, "", 0);
-            try {
-                tokenActual = analizadorLexico.getToken();
-                //System.out.print("(" + token.getTokenId().toString() + "," + token.getLexema() + "," + token.getLinea() + ") \n");
-            } catch (ExcepcionLexica e){
-                sinErrores = false;
-                System.out.print(e.getMessage());
-                analizadorLexico.actualizarCaracterActual();
-            };
-        }while(!(tokenActual.getTokenId() == EOF));
-        //while(!fileManager.reachedEndOfFile()); //Cuando llega al EOF el lexico tiene que tirar EOF constante, ahi corta
-    }*/
 
     private void inicial() throws ExcepcionLexica, SyntacticException, IOException {
         listaClases();
         match("EOF");
     }
 
-    private void listaClases(){
+    private void listaClases() throws ExcepcionLexica, SyntacticException, IOException {
         //if(firsts.isFirst("ListaClases", tokenActual))
         clase();
         listaClases();
     }
 
-    private void clase(){
+    private void clase() throws ExcepcionLexica, SyntacticException, IOException {
         //Try?
         claseConcreta();
-        interface();
+        interface_();
     }
     private void claseConcreta() throws ExcepcionLexica, SyntacticException, IOException {
-        matchFirsts("ClaseConcreta");
-        matchFirsts("Clase");
+        /*matchFirsts("ClaseConcreta");
+        matchFirsts("Clase");*/
+        firsts.isFirst("ClaseConcreta", tokenActual);
         heredaDe();
         implementaA();
         match("{"); //Deberia funcionar con un solo coso, arreglarlo
@@ -82,7 +66,8 @@ public class SyntacticParser {
         match("}"); //rt
     }
     private void interface_() throws ExcepcionLexica, SyntacticException, IOException {
-        matchFirsts("Interface");
+        //matchFirsts("Interface");
+        firsts.isFirst("Interface", tokenActual);
         match("IdClase");
         extiendeA();
         match("{");
@@ -90,7 +75,7 @@ public class SyntacticParser {
         match("}");
     }
     private void heredaDe() throws ExcepcionLexica, SyntacticException, IOException {
-        if(firsts.isFirst(tokenActual)){
+        if(firsts.isFirst("HeredaDe", tokenActual)){
              match("idClase");
         } else{
           //No hago nada por ahora porque va a ε
@@ -146,11 +131,11 @@ public class SyntacticParser {
             atributo();
         }else if(firsts.isFirst("Metodo", tokenActual)){
             //nextToken();
-            metodo();
+            //metodo();
         }
     }
     private void atributo(){
-        visibilidad();
+        //visibilidad();
 
     }
 }
