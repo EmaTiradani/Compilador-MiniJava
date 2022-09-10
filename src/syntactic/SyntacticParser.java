@@ -24,12 +24,18 @@ public class SyntacticParser {
     }
 
     public void match(String expectedToken) throws ExcepcionLexica, IOException, SyntacticException {
-        if(expectedToken.equals(tokenActual.getTokenId()))
+        if(expectedToken.equals(tokenActual.getLexema()))
             nextToken();
         else
             throw new SyntacticException(expectedToken, tokenActual);
     }
-    //public void matchFirsts()
+
+    public void matchFirsts(String head) throws SyntacticException, ExcepcionLexica, IOException {
+        if(firsts.isFirst(head, tokenActual))
+            nextToken();
+        else
+            throw new SyntacticException(head, tokenActual);
+    }
 
     private void nextToken() throws ExcepcionLexica, IOException {
         tokenActual = analizadorLexico.getToken();
@@ -58,7 +64,10 @@ public class SyntacticParser {
     private void claseConcreta() throws ExcepcionLexica, SyntacticException, IOException {
         /*matchFirsts("ClaseConcreta");
         matchFirsts("Clase");*/
-        firsts.isFirst("ClaseConcreta", tokenActual);
+        //firsts.isFirst("ClaseConcreta", tokenActual);
+        //nextToken();
+        matchFirsts("ClaseConcreta");
+        matchFirsts("IdClase");
         heredaDe();
         implementaA();
         match("{"); //Deberia funcionar con un solo coso, arreglarlo
