@@ -130,7 +130,7 @@ public class Firsts {
         //map.get("ExpresionOpt",);
         map.get("If").add(kw_if);
         map.get("While").add(kw_while);
-        map.get("Expresion").add();
+        //map.get("Expresion").add();
         //map.get("ExpresionRec", );
         map.get("OperadorBinario").add(op_or);
         map.get("OperadorBinario").add(op_and);

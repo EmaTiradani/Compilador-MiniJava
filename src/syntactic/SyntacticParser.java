@@ -8,7 +8,7 @@ import lexycal.TokenId;
 
 import java.io.IOException;
 
-import static lexycal.TokenId.EOF;
+import static lexycal.TokenId.*;
 
 public class SyntacticParser {
     AnalizadorLexico analizadorLexico;
@@ -23,11 +23,11 @@ public class SyntacticParser {
         //inicial();
     }
 
-    public void match(String expectedToken) throws ExcepcionLexica, IOException, SyntacticException {
-        if(expectedToken.equals(tokenActual.getLexema()))
+    public void match(TokenId expectedToken) throws ExcepcionLexica, IOException, SyntacticException {
+        if(expectedToken.equals(tokenActual.getTokenId()))
             nextToken();
         else
-            throw new SyntacticException(expectedToken, tokenActual);
+            throw new SyntacticException(expectedToken.toString(), tokenActual);
     }
 
     public void matchFirsts(String head) throws SyntacticException, ExcepcionLexica, IOException {
@@ -47,19 +47,26 @@ public class SyntacticParser {
 
     private void inicial() throws ExcepcionLexica, SyntacticException, IOException {
         listaClases();
-        match("EOF");
+        match(EOF);
     }
 
     private void listaClases() throws ExcepcionLexica, SyntacticException, IOException {
         //if(firsts.isFirst("ListaClases", tokenActual))
-        clase();
-        listaClases();
+        if(firsts.isFirst("ClaseConcreta", tokenActual) || firsts.isFirst("Interface", tokenActual)){
+            clase();
+            listaClases();
+        }else{
+            //No hago nada, epsilon
+        }
+
     }
 
     private void clase() throws ExcepcionLexica, SyntacticException, IOException {
-        //Try?
-        claseConcreta();
-        interface_();
+        if(firsts.isFirst("ClaseConcreta", tokenActual)){
+            claseConcreta();
+        }else{
+            interface_();
+        }
     }
     private void claseConcreta() throws ExcepcionLexica, SyntacticException, IOException {
         /*matchFirsts("ClaseConcreta");
@@ -67,25 +74,25 @@ public class SyntacticParser {
         //firsts.isFirst("ClaseConcreta", tokenActual);
         //nextToken();
         matchFirsts("ClaseConcreta");
-        matchFirsts("IdClase");
+        match(idClase);
         heredaDe();
         implementaA();
-        match("{"); //Deberia funcionar con un solo coso, arreglarlo
+        match(punt_llaveIzq); //Deberia funcionar con un solo coso, arreglarlo
         listaEncabezados();
-        match("}"); //rt
+        match(punt_llaveDer); //rt
     }
     private void interface_() throws ExcepcionLexica, SyntacticException, IOException {
         //matchFirsts("Interface");
         firsts.isFirst("Interface", tokenActual);
-        match("IdClase");
+        match(idClase);
         extiendeA();
-        match("{");
+        match(punt_llaveIzq);
         listaEncabezados();
-        match("}");
+        match(punt_llaveDer);
     }
     private void heredaDe() throws ExcepcionLexica, SyntacticException, IOException {
         if(firsts.isFirst("HeredaDe", tokenActual)){
-             match("idClase");
+             match(idClase);
         } else{
           //No hago nada por ahora porque va a ε
         }
@@ -105,7 +112,7 @@ public class SyntacticParser {
         }
     }
     private void listaTipoReferencia() throws ExcepcionLexica, SyntacticException, IOException {
-        match("idClase");
+        match(idClase);
         listaTipoReferenciaFact();
     }
     private void listaTipoReferenciaFact() throws ExcepcionLexica, SyntacticException, IOException {
@@ -128,23 +135,94 @@ public class SyntacticParser {
     private void listaEncabezados() throws ExcepcionLexica, IOException, SyntacticException {
         if(firsts.isFirst("EncabezadoMetodo",tokenActual)){
             nextToken();
-            match(";");
+            match(punt_puntoYComa);
             listaEncabezados();
         }else{
             //No hago nada por ahora porque va a ε
         }
     }
-    private void miembro(){
+    private void miembro() throws ExcepcionLexica, SyntacticException, IOException {
         if(firsts.isFirst("Atributo", tokenActual)){
             //nextToken();//No se si sera necesario, depende de el body de atributo()
             atributo();
         }else if(firsts.isFirst("Metodo", tokenActual)){
-            //nextToken();
-            //metodo();
+            metodo();
         }
     }
-    private void atributo(){
-        //visibilidad();
 
+    private void atributo() throws ExcepcionLexica, SyntacticException, IOException {
+        visibilidad();
+        tipo();
+        listaDecAtrs();
+        match(punt_puntoYComa);
+    }
+
+    private void metodo() throws ExcepcionLexica, SyntacticException, IOException {
+        encabezadoMetodo();
+        bloque();
+    }
+
+    private void bloque() throws ExcepcionLexica, SyntacticException, IOException {
+        match(punt_llaveIzq);
+        listaSentencias();
+        match(punt_llaveDer);
+    }
+
+    private void listaSentencias() {
+        if(firsts.isFirst("Sentencia", tokenActual)){
+            sentencia();
+            listaSentencias();
+        }else{
+            // Epsilon
+        }
+    }
+
+    private void sentencia() throws ExcepcionLexica, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == punt_puntoYComa){
+            match(punt_puntoYComa);
+        }else if(tokenActual.getTokenId() == kw_var){
+            varLocal();
+        }else if(tokenActual.getTokenId() == kw_return){
+            return_();
+        }else if(tokenActual.getTokenId() == kw_if){
+            if_();
+        }else if(tokenActual.getTokenId() == kw_while){
+            while_();
+        }else if(tokenActual.getTokenId() == punt_llaveIzq){
+            bloque();
+        }else if(firsts.isFirst("Acceso", tokenActual)){
+            acceso();
+            asignacionOLlamada();
+        }
+    }
+
+    private void asignacionOLlamada() {
+    }
+
+    private void acceso() {
+    }
+
+    private void while_() {
+    }
+
+    private void if_() {
+    }
+
+    private void return_() {
+    }
+
+    private void varLocal() {
+    }
+
+    private void encabezadoMetodo() {
+    }
+
+    private void listaDecAtrs() {
+    }
+
+    private void tipo() {
+    }
+
+    private void visibilidad() {
     }
 }
