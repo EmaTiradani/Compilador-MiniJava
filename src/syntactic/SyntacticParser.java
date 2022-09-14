@@ -18,9 +18,7 @@ public class SyntacticParser {
     public SyntacticParser(AnalizadorLexico analizadorLexico) throws ExcepcionLexica, IOException {
         this.analizadorLexico = analizadorLexico;
         firsts = new Firsts();
-        //tokenActual = analizadorLexico.getToken();
         nextToken();
-        //inicial();
     }
 
     public void match(TokenId expectedToken) throws ExcepcionLexica, IOException, SyntacticException {
@@ -51,7 +49,6 @@ public class SyntacticParser {
     }
 
     private void listaClases() throws ExcepcionLexica, SyntacticException, IOException {
-        //if(firsts.isFirst("ListaClases", tokenActual))
         if(firsts.isFirst("ClaseConcreta", tokenActual) || firsts.isFirst("Interface", tokenActual)){
             clase();
             listaClases();
@@ -68,17 +65,13 @@ public class SyntacticParser {
         }
     }
     private void claseConcreta() throws ExcepcionLexica, SyntacticException, IOException {
-        /*matchFirsts("ClaseConcreta");
-        matchFirsts("Clase");*/
-        //firsts.isFirst("ClaseConcreta", tokenActual);
-        //nextToken();
         matchFirsts("ClaseConcreta");
         match(idClase);
         heredaDe();
         implementaA();
-        match(punt_llaveIzq); //Deberia funcionar con un solo coso, arreglarlo
+        match(punt_llaveIzq);
         listaMiembros();
-        match(punt_llaveDer); //rt
+        match(punt_llaveDer);
     }
     private void interface_() throws ExcepcionLexica, SyntacticException, IOException {
         if(firsts.isFirst("Interface", tokenActual)) {
@@ -203,7 +196,7 @@ public class SyntacticParser {
     }
 
     private void asignacionOLlamada() throws ExcepcionLexica, SyntacticException, IOException {
-        if(firsts.isFirst("AsignacionOLlamada",tokenActual)){
+        if(firsts.isFirst("TipoDeAsignacion",tokenActual)){
             tipoDeAsignacion();
             expresion();
         }

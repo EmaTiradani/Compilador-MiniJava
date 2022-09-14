@@ -1,4 +1,8 @@
 class Pepe implements Jose{
 
-   public int var pepe = 3;
+   public int pepe, jose, maria;
+
+     static boolean funcionCopada(){
+        var funcionzarpada = 3;
+    }
 }

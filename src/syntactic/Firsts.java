@@ -96,12 +96,20 @@ public class Firsts {
         map.get("Miembro").add(kw_char);
         map.get("Miembro").add(kw_int);
         map.get("Miembro").add(idClase);
-
+        map.get("Atributo").add(kw_public);
+        map.get("Atributo").add(kw_private);
         //map.get("ListaMiembros", )
         //map.get("ListaEncabezados", )
         //map.get("Miembro", )
         //map.get("Atributo", )
-        //map.get("Metodo", )
+        map.get("Metodo").add(kw_static);
+        map.get("Metodo").add(kw_void);
+        map.get("Metodo").add(idClase);
+        map.get("Metodo").add(kw_boolean);
+        map.get("Metodo").add(kw_char);
+        map.get("Metodo").add(kw_int);
+
+
         //map.get("EncabezadoMetodo", );firsts.isFirst("HeredaDe", tokenActual)
         //map.get("TipoMetodo", );
         map.get("Visibilidad").add(kw_public);
@@ -134,7 +142,6 @@ public class Firsts {
         map.get("Sentencia").add(kw_while);
         map.get("Sentencia").add(punt_llaveIzq);
 
-        //map.get("Asignacion", );
         map.get("TipoDeAsignacion").add(asignacion);
         map.get("TipoDeAsignacion").add(incremento);
         map.get("TipoDeAsignacion").add(decremento);
