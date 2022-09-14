@@ -87,12 +87,22 @@ public class Firsts {
         map.get("Interface").add(kw_interface);
         map.get("HeredaDe").add(kw_extends);
         map.get("ListaTipoReferencia").add(idClase);
+        map.get("ImplementaA").add(kw_implements);
+        map.get("Miembro").add(kw_public);
+        map.get("Miembro").add(kw_private);
+        map.get("Miembro").add(kw_static);
+        map.get("Miembro").add(kw_void);
+        map.get("Miembro").add(kw_boolean);
+        map.get("Miembro").add(kw_char);
+        map.get("Miembro").add(kw_int);
+        map.get("Miembro").add(idClase);
+
         //map.get("ListaMiembros", )
         //map.get("ListaEncabezados", )
         //map.get("Miembro", )
         //map.get("Atributo", )
         //map.get("Metodo", )
-        //map.get("EncabezadoMetodo", );
+        //map.get("EncabezadoMetodo", );firsts.isFirst("HeredaDe", tokenActual)
         //map.get("TipoMetodo", );
         map.get("Visibilidad").add(kw_public);
         map.get("Visibilidad").add(kw_private);
@@ -113,7 +123,17 @@ public class Firsts {
         map.get("ArgFormal").add(kw_private);
         map.get("Bloque").add(punt_llaveIzq);
         //map.get("ListaSentencias", )
-        //map.get("Sentencia", );
+        map.get("Sentencia").add(kw_this);
+        map.get("Sentencia").add(idMetVar);
+        map.get("Sentencia").add(kw_new);
+        map.get("Sentencia").add(idClase);
+        map.get("Sentencia").add(punt_parentIzq);
+        map.get("Sentencia").add(kw_var);
+        map.get("Sentencia").add(kw_return);
+        map.get("Sentencia").add(kw_if);
+        map.get("Sentencia").add(kw_while);
+        map.get("Sentencia").add(punt_llaveIzq);
+
         //map.get("Asignacion", );
         map.get("TipoDeAsignacion").add(asignacion);
         map.get("TipoDeAsignacion").add(incremento);

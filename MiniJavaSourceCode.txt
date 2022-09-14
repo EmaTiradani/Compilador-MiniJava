@@ -1,3 +1,4 @@
-class Pepe {
+class Pepe implements Jose{
 
+   public int var pepe = 3;
 }
