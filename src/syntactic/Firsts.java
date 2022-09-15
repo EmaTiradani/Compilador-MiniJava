@@ -219,6 +219,8 @@ public class Firsts {
         map.get("Operando").add(idClase);
         map.get("Operando").add(punt_parentIzq);
 
+        //map.get("Expresion").add()
+
 
 
         map.get("OperadorUnario").add(op_suma);

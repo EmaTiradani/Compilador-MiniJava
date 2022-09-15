@@ -376,7 +376,7 @@ public class SyntacticParser {
     }
 
     private void expresionOpt() throws ExcepcionLexica, SyntacticException, IOException {
-        if(firsts.isFirst("Expresion", tokenActual)){
+        if(firsts.isFirst("ExpresionUnaria", tokenActual)){
             expresion();
         }else{
             // Epsilon

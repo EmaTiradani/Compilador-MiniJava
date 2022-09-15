@@ -1,3 +1,5 @@
+// Clase que prueba las Sentencias if y while
+
 class ClaseQueImplementaOtrasClases implements Jkasjd, JKajkska{
 
     //Sentencia puntoycoma

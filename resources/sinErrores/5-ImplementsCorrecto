@@ -1,3 +1,5 @@
 // Prueba una clase que implementa otra
 
-class implements
+class ClaseQueImplementaOtrasClases implements Clase1, Clase2, Clase3 {
+
+}

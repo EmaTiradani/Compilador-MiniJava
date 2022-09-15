@@ -1,0 +1,38 @@
+// Prueba una clase que implementa otra
+
+class ClaseQueImplementaOtrasClases implements Clase1, Clase2, Clase3 {
+
+    static int metodo1(){
+        x = 3;
+    }
+
+    char metodo2(){
+
+    }
+
+    void metodo3(){
+
+    }
+
+    boolean metodo4(){
+        cosas += 6;
+    }
+
+    static RetornoUnaclase metodo5(){
+        return retorno;
+    }
+
+    static char metodo6ConParametros(int hola,boolean a2,char a4){
+
+    }
+
+    boolean metodoConMetodosYBloquesAnidados(int x, boolean y){
+        hola();
+        {
+            i = x;
+            {
+                pepe = jose;
+            }
+        }
+    }
+}
