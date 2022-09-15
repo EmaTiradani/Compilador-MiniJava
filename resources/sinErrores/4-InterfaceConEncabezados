@@ -4,8 +4,12 @@ interface SoyUnaInterface extends Herencia42 {
 
     static int metodo1();
 
-    void  metodo2();
+    void metodo2();
 
-    MousePad metodo3();
+    static char metodo3(char plantita, Pepe cajon);
+
+    MousePad metodo4();
+
+    static Camara metodo5(int hola);
 
 }

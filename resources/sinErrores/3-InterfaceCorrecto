@@ -1,0 +1,7 @@
+// Prueba una declaracion de  interface que extiende una clase
+
+interface SoyUnaInterface extends Herencia42 {
+
+
+
+}

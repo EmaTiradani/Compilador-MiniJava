@@ -1,0 +1,24 @@
+// Prueba varias clases definidas
+
+class Nombre{
+
+
+        int metodo(){
+            // Soy un comment
+        }
+}
+
+class Nombre extends Mouse{
+
+
+        int metodo(){
+            // Soy un comment
+        }
+}
+class Nombre extends Mouse{
+
+
+        int metodo(){
+            // Soy un comment
+        }
+}

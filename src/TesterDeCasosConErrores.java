@@ -15,7 +15,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class TesterDeCasosConErrores {
     
     //TODO: el tipo de esta variable init tiene que ser la clase que tiene el main
-    private static final Modulo_Principal init = null;
+    private static final MainSyntactic init = null;
     
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;

@@ -1,3 +1,0 @@
-// Test string literals working fine
-"Hi"        "  "  nice
-"""" " \ "  " ' " "\\ "

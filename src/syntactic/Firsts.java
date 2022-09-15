@@ -98,6 +98,10 @@ public class Firsts {
         map.get("Miembro").add(idClase);
         map.get("Atributo").add(kw_public);
         map.get("Atributo").add(kw_private);
+        map.get("ListaArgsFormales").add(kw_boolean);
+        map.get("ListaArgsFormales").add(kw_char);
+        map.get("ListaArgsFormales").add(kw_int);
+        map.get("ListaArgsFormales").add(idClase);
         //map.get("ListaMiembros", )
         //map.get("ListaEncabezados", )
         //map.get("Miembro", )
@@ -108,6 +112,13 @@ public class Firsts {
         map.get("Metodo").add(kw_boolean);
         map.get("Metodo").add(kw_char);
         map.get("Metodo").add(kw_int);
+
+        map.get("EncabezadoMetodo").add(kw_static);
+        map.get("EncabezadoMetodo").add(kw_void);
+        map.get("EncabezadoMetodo").add(kw_boolean);
+        map.get("EncabezadoMetodo").add(kw_char);
+        map.get("EncabezadoMetodo").add(kw_int);
+        map.get("EncabezadoMetodo").add(idClase);
 
 
         //map.get("EncabezadoMetodo", );firsts.isFirst("HeredaDe", tokenActual)
@@ -131,6 +142,7 @@ public class Firsts {
         map.get("ArgFormal").add(kw_private);
         map.get("Bloque").add(punt_llaveIzq);
         //map.get("ListaSentencias", )
+        map.get("Sentencia").add(punt_puntoYComa);
         map.get("Sentencia").add(kw_this);
         map.get("Sentencia").add(idMetVar);
         map.get("Sentencia").add(kw_new);
@@ -186,7 +198,7 @@ public class Firsts {
         map.get("ExpresionUnaria").add(asignacion);
         //map.get("ExpresionUnaria", )
         //*map.get("Operando", asignacion);
-        map.get("Operando").add(op_suma);
+        /*map.get("Operando").add(op_suma);
         map.get("Operando").add(op_resta);
         map.get("Operando").add(op_negacion);
         map.get("Operando").add(kw_this);
@@ -194,10 +206,21 @@ public class Firsts {
         map.get("Operando").add(kw_new);
         map.get("Operando").add(punt_parentIzq);
         map.get("Operando").add(asignacion);
-        map.get("Operando").add(asignacion);//* //Flashe y lo puse 2 veces con 2 cosas distintas, ver que onda
+        map.get("Operando").add(asignacion);*/
+        map.get("Operando").add(kw_null);// Los de literal
+        map.get("Operando").add(kw_true);
+        map.get("Operando").add(kw_false);
+        map.get("Operando").add(intLiteral);
+        map.get("Operando").add(charLiteral);
+        map.get("Operando").add(stringLiteral);
+        map.get("Operando").add(idMetVar); //Los de acceso
+        map.get("Operando").add(kw_this);
+        map.get("Operando").add(kw_new);
+        map.get("Operando").add(idClase);
+        map.get("Operando").add(punt_parentIzq);
 
 
-        map.get("OperadorUnario").add(asignacion);
+
         map.get("OperadorUnario").add(op_suma);
         map.get("OperadorUnario").add(op_resta);
         map.get("OperadorUnario").add(op_negacion);
@@ -208,6 +231,10 @@ public class Firsts {
         map.get("Literal").add(charLiteral);
         map.get("Literal").add(stringLiteral);
         map.get("Acceso").add(idMetVar); //Los de primario
+        map.get("Acceso").add(kw_this);
+        map.get("Acceso").add(kw_new);
+        map.get("Acceso").add(idClase);
+        map.get("Acceso").add(punt_parentIzq);
 
         map.get("Primario").add(kw_this);
         map.get("Primario").add(idMetVar);
@@ -245,6 +272,7 @@ public class Firsts {
     }
 
     public boolean isFirst(String production, Token token){
+        if(map.get(production).size() == 0) System.out.println("TE OLVIDASTE LOS PRIMEROS DE "+ production +"  BOLUDO");
         return map.get(production).contains(token.getTokenId());
     }
 }

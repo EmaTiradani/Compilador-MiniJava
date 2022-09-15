@@ -102,7 +102,8 @@ public class SyntacticParser {
         }
     }
     private void extiendeA() throws ExcepcionLexica, SyntacticException, IOException {
-        if(firsts.isFirst("ExtiendeA",tokenActual)){
+        if(tokenActual.getTokenId() == kw_extends){
+            match(kw_extends);
             listaTipoReferencia();
         }else{
             //No hago nada por ahora porque va a ε
@@ -131,7 +132,8 @@ public class SyntacticParser {
     }
     private void listaEncabezados() throws ExcepcionLexica, IOException, SyntacticException {
         if(firsts.isFirst("EncabezadoMetodo",tokenActual)){
-            nextToken();
+            //nextToken();
+            encabezadoMetodo();
             match(punt_puntoYComa);
             listaEncabezados();
         }else{
@@ -192,6 +194,7 @@ public class SyntacticParser {
         }else if(firsts.isFirst("Acceso", tokenActual)){
             acceso();
             asignacionOLlamada();
+            match(punt_puntoYComa);
         }else throw new SyntacticException("; o sentencia", tokenActual);
     }
 
@@ -199,6 +202,8 @@ public class SyntacticParser {
         if(firsts.isFirst("TipoDeAsignacion",tokenActual)){
             tipoDeAsignacion();
             expresion();
+        }else{
+            // Epsilon
         }
     }
 
@@ -223,11 +228,17 @@ public class SyntacticParser {
     }
 
     private void expresionUnaria() throws ExcepcionLexica, SyntacticException, IOException {
-        operadorUnario();
-        operando();
+        if(firsts.isFirst("OperadorUnario", tokenActual)){
+            operadorUnario();
+            operando();
+        }else{
+            operando();
+        }
+
     }
 
-    private void operando() {
+    private void operando() throws ExcepcionLexica, SyntacticException, IOException {
+        matchFirsts("Operando");
     }
 
     private void operadorUnario() throws ExcepcionLexica, SyntacticException, IOException {
@@ -238,8 +249,100 @@ public class SyntacticParser {
         matchFirsts("TipoDeAsignacion");
     }
 
-    private void acceso() {
+    private void acceso() throws ExcepcionLexica, SyntacticException, IOException {
+        primario();
+        encadenadoOpt();
     }
+
+    private void primario() throws ExcepcionLexica, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == kw_this){ // Acceso this
+            match(kw_this);
+        }else if(tokenActual.getTokenId() == idMetVar){
+            match(idMetVar);
+            accesoVarOMetodo();
+        }else if(tokenActual.getTokenId() == kw_new){ //Acceso constructor
+            match(kw_new);
+            match(idClase);
+            match(punt_parentIzq);
+            match(punt_parentDer);
+        }else if(tokenActual.getTokenId() == idClase) {
+            accesoMetodoEstatico();
+        }else if(tokenActual.getTokenId() == punt_parentIzq){
+            expresionParentizada();
+        }else{
+            throw new SyntacticException("Token de primario", tokenActual);
+        }
+    }
+
+    private void expresionParentizada() throws ExcepcionLexica, SyntacticException, IOException {
+        match(punt_parentIzq);
+        expresion();
+        match(punt_parentDer);
+    }
+
+    private void accesoMetodoEstatico() throws ExcepcionLexica, SyntacticException, IOException {
+        match(idClase);
+        match(punt_punto);
+        match(idMetVar);
+        argsActuales();
+    }
+
+    private void accesoVarOMetodo() throws ExcepcionLexica, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == punt_parentIzq)
+            argsActuales();
+        else{
+            // Epsilon
+        }
+
+    }
+
+    private void encadenadoOpt() throws ExcepcionLexica, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == punt_punto){
+            match(punt_punto);
+            match(idMetVar);
+            varOMetEncadenado();
+        }else{
+            // Epsilon
+        }
+    }
+
+    private void varOMetEncadenado() throws ExcepcionLexica, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == punt_parentIzq){
+            argsActuales();
+            encadenadoOpt();
+        }else{
+            encadenadoOpt();
+        }
+    }
+
+    private void argsActuales() throws ExcepcionLexica, SyntacticException, IOException {
+        match(punt_parentIzq);
+        listaExpsOpt();
+        match(punt_parentDer);
+    }
+
+    private void listaExpsOpt() throws ExcepcionLexica, SyntacticException, IOException {
+        if(firsts.isFirst("Operando", tokenActual)){
+            listaExps();
+        }else{
+            // Epsilon
+        }
+    }
+
+    private void listaExps() throws ExcepcionLexica, SyntacticException, IOException {
+        expresion();
+        listaExpsFact();
+    }
+
+    private void listaExpsFact() throws ExcepcionLexica, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == punt_coma){
+            match(punt_coma);
+            listaExps();
+        }else{
+            // Epsilon
+        }
+    }
+
 
     private void while_() throws ExcepcionLexica, SyntacticException, IOException {
         match(kw_while);

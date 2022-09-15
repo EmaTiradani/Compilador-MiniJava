@@ -1,0 +1,12 @@
+// Prueba herencia
+
+class Nombre extends Mouse{
+
+
+    int metodo(){
+        // Soy un comment
+    }
+
+}
+
+
