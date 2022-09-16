@@ -1,37 +1,17 @@
-class ClaseQueImplementaOtrasClases implements Jkasjd, JKajkska{
+// Clase que prueba las Expresiones
 
-    //Sentencia puntoycoma
-    int metodoConCosasAdentro(){
-        if(29381 || 999){
+class ClaseQueExtiendeOtraClase extends Exp{
 
-        }
-        if(29381 || 999){
-            hola();
-        }
+    static char parentizadas(){
+        (2 + 2); (a + b);
+            ('m' + 3);
+            ("hola" + " como va?");
+                (null + true);
+    }
 
-        // If y else
-        if(jaja && juju || 33){
-
-        }else{
-
-        }
-        if(23 < 99){
-            metodo();metodo();
-                                i=x;
-
-            metodo2();
-        }else{
-        }
-        if(opa >= 33){
-         jaja=3;
-        }else{
-            variable-=0;
-        }
-        if(algo){
-            if(otroAlgo){}
-        }
-
-
+    void asignaciones(boolean tru){
+        asignameCosas = 2+2;
+        asignameCosas = (2+2); // Problema en expresion --> expresion unaria
 
 
     }

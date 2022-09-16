@@ -1,11 +1,10 @@
-// Clase que prueba las Sentencias if y while
+// Clase que prueba las Sentencias if
 
-class ClaseQueImplementaOtrasClases implements Jkasjd, JKajkska{
+class ClaseQueImplementaOtrasClases implements Sentencia, If{
 
-    //Sentencia puntoycoma
-    int metodoConCosasAdentro(){
+
+    int metodoConIfsAdentro(){
         if(29381 || 999){
-
         }
         if(29381 || 999){
             hola();
@@ -30,12 +29,9 @@ class ClaseQueImplementaOtrasClases implements Jkasjd, JKajkska{
             variable-=0;
         }
         if(algo){
-            if(otroAlgo){}
+            if(otroAlgo){}else{
+                if(cosas){}
+            }
         }
-
-
-
-
     }
-
 }
