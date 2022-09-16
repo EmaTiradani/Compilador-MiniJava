@@ -2,10 +2,20 @@
 
 class ClaseQueExtiendeOtraClase extends Exp{
 
-    static char metodo(){
+    static char parentizadas(){
         (2 + 2); (a + b);
             ('m' + 3);
-            "hola" + " como va?";
+            ("hola" + " como va?");
+                (null + true);
     }
 
+    void asignaciones(boolean tru){
+        {
+            {asignameCosas = 2+2;
+            asignameCosas += (2%2);
+            asignameCosas -= retorno();
+            asignameCosas = retorno1() / retorno2();
+            asignameCosas += algo*(algo/2);}
+        }
+    }
 }

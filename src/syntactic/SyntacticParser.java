@@ -238,7 +238,17 @@ public class SyntacticParser {
     }
 
     private void operando() throws ExcepcionLexica, SyntacticException, IOException {
-        matchFirsts("Operando");
+        //matchFirsts("Operando");
+        if(firsts.isFirst("Literal",tokenActual)){
+            literal();
+        }else if(firsts.isFirst("Acceso", tokenActual)){
+            acceso();
+        }else
+            throw new SyntacticException("Operando", tokenActual);
+    }
+
+    private void literal() throws ExcepcionLexica, SyntacticException, IOException {
+        matchFirsts("Literal");
     }
 
     private void operadorUnario() throws ExcepcionLexica, SyntacticException, IOException {
