@@ -1,0 +1,6 @@
+///[Error:a|5]
+
+interface Interface {
+
+    a = b;
+}

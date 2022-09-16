@@ -1,0 +1,6 @@
+///[Error:idMetodoOVariable|3]
+
+class ClaseComun extends idMetodoOVariable{
+
+
+}

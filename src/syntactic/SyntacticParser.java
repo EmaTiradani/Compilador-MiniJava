@@ -82,7 +82,7 @@ public class SyntacticParser {
             listaEncabezados();
             match(punt_llaveDer);
         }else{
-            throw new SyntacticException("kw_interface", tokenActual); //Poner bien la excepcion
+            throw new SyntacticException("interface", tokenActual);
         }
     }
     private void heredaDe() throws ExcepcionLexica, SyntacticException, IOException {
@@ -90,7 +90,7 @@ public class SyntacticParser {
             match(kw_extends);
             match(idClase);
         } else{
-          //No hago nada por ahora porque va a ε
+          // ε
         }
     }
     private void implementaA() throws ExcepcionLexica, SyntacticException, IOException {
@@ -147,7 +147,7 @@ public class SyntacticParser {
         }else if(firsts.isFirst("Metodo", tokenActual)){
             metodo();
         }else{
-            throw new SyntacticException("hola", tokenActual);
+            throw new SyntacticException("Atributo o Metodo", tokenActual);
         }
     }
 
@@ -195,7 +195,7 @@ public class SyntacticParser {
             acceso();
             asignacionOLlamada();
             match(punt_puntoYComa);
-        }else throw new SyntacticException("; o sentencia", tokenActual);
+        }else throw new SyntacticException("; o Sentencia", tokenActual);
     }
 
     private void asignacionOLlamada() throws ExcepcionLexica, SyntacticException, IOException {
@@ -280,7 +280,7 @@ public class SyntacticParser {
         }else if(tokenActual.getTokenId() == punt_parentIzq){
             expresionParentizada();
         }else{
-            throw new SyntacticException("Token de primario", tokenActual);
+            throw new SyntacticException("Token Primario", tokenActual);
         }
     }
 
@@ -423,7 +423,7 @@ public class SyntacticParser {
                 match(kw_void);
             }
         }else{
-            throw new SyntacticException("tipoMetodo", tokenActual);
+            throw new SyntacticException("TipoMetodo", tokenActual);
         }
     }
 
@@ -480,7 +480,7 @@ public class SyntacticParser {
                 match(idClase);
             }
         }else{
-            throw new SyntacticException("tipo", tokenActual);
+            throw new SyntacticException("Tipo", tokenActual);
         }
     }
 
@@ -496,7 +496,7 @@ public class SyntacticParser {
                 match(kw_public);
             }
         }else{
-            throw new SyntacticException("a",tokenActual);
+            throw new SyntacticException("Visibilidad",tokenActual);
         }
     }
 }

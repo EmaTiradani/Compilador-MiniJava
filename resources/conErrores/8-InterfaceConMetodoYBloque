@@ -1,0 +1,6 @@
+///[Error:{|5]
+
+interface Interface {
+
+    void metodo(){}
+}
