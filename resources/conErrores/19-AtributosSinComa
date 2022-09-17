@@ -1,0 +1,7 @@
+///[Error:atributo2|5]
+
+class ListaDeAtributosSinComa {
+
+    public int atributo1 atributo2;
+
+}

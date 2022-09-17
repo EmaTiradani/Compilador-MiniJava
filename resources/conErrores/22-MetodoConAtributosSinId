@@ -1,0 +1,9 @@
+///[Error:)|5]
+
+class MetodoMal {
+
+    void metodo(int){
+
+    }
+
+}

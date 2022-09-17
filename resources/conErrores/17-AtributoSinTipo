@@ -1,0 +1,7 @@
+///[Error:atributo|5]
+
+class AtributoSinTipo {
+
+    public atributo;
+
+}

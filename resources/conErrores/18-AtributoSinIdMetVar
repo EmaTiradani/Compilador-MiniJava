@@ -1,0 +1,7 @@
+///[Error:;|5]
+
+class AtributoSinIdMetvar {
+
+    public boolean ;
+
+}

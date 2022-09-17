@@ -1,6 +1,7 @@
-///[Error:encabezado1|5]
+///[Error:}|7]
 
-interface Interface {
+class NombreDeAtributoNoIdMetVar {
 
-    encabezado1();
+    void metodoSinBloque()
+
 }

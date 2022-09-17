@@ -1,0 +1,9 @@
+///[Error:!|7]
+
+class DobleNot {
+
+    void encabezado1(){
+
+        pepe = !!a;
+    }
+}
