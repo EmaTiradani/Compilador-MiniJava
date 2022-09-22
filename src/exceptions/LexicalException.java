@@ -1,8 +1,8 @@
-package Exceptions;
+package exceptions;
 
-public class ExcepcionLexica extends Exception{
+public class LexicalException extends Exception{
 
-    public ExcepcionLexica(String lexema, int nroLinea, int nroColumna, String tipoDeError, String linea){
+    public LexicalException(String lexema, int nroLinea, int nroColumna, String tipoDeError, String linea){
         super(errorConstructor(lexema, nroLinea, nroColumna, tipoDeError, linea));
     }
 

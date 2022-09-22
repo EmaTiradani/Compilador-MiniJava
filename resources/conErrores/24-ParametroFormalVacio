@@ -1,0 +1,8 @@
+///[Error:,|5]
+
+class Clase {
+
+    void metodo(boolean par, , int dos){
+
+    }
+}

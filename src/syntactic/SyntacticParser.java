@@ -1,8 +1,8 @@
 package syntactic;
 
-import Exceptions.SyntacticException;
+import exceptions.SyntacticException;
 import lexycal.AnalizadorLexico;
-import Exceptions.ExcepcionLexica;
+import exceptions.LexicalException;
 import lexycal.Token;
 import lexycal.TokenId;
 
@@ -12,43 +12,42 @@ import static lexycal.TokenId.*;
 
 public class SyntacticParser {
     AnalizadorLexico analizadorLexico;
-    boolean sinErrores = true;
     Token tokenActual;
     Firsts firsts;
-    public SyntacticParser(AnalizadorLexico analizadorLexico) throws ExcepcionLexica, IOException {
+    public SyntacticParser(AnalizadorLexico analizadorLexico) throws LexicalException, IOException {
         this.analizadorLexico = analizadorLexico;
         firsts = new Firsts();
         nextToken();
     }
 
-    public void match(TokenId expectedToken) throws ExcepcionLexica, IOException, SyntacticException {
+    public void match(TokenId expectedToken) throws LexicalException, IOException, SyntacticException {
         if(expectedToken.equals(tokenActual.getTokenId()))
             nextToken();
         else
             throw new SyntacticException(expectedToken.toString(), tokenActual);
     }
 
-    public void matchFirsts(String head) throws SyntacticException, ExcepcionLexica, IOException {
+    public void matchFirsts(String head) throws SyntacticException, LexicalException, IOException {
         if(firsts.isFirst(head, tokenActual))
             nextToken();
         else
             throw new SyntacticException(head, tokenActual);
     }
 
-    private void nextToken() throws ExcepcionLexica, IOException {
+    private void nextToken() throws LexicalException, IOException {
         tokenActual = analizadorLexico.getToken();
     }
 
-    public void startAnalysis() throws ExcepcionLexica, SyntacticException, IOException {
+    public void startAnalysis() throws LexicalException, SyntacticException, IOException {
         inicial();
     }
 
-    private void inicial() throws ExcepcionLexica, SyntacticException, IOException {
+    private void inicial() throws LexicalException, SyntacticException, IOException {
         listaClases();
         match(EOF);
     }
 
-    private void listaClases() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaClases() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("ClaseConcreta", tokenActual) || firsts.isFirst("Interface", tokenActual)){
             clase();
             listaClases();
@@ -57,15 +56,16 @@ public class SyntacticParser {
         }
     }
 
-    private void clase() throws ExcepcionLexica, SyntacticException, IOException {
+    private void clase() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("ClaseConcreta", tokenActual)){
             claseConcreta();
         }else{
             interface_();
         }
     }
-    private void claseConcreta() throws ExcepcionLexica, SyntacticException, IOException {
+    private void claseConcreta() throws LexicalException, SyntacticException, IOException {
         matchFirsts("ClaseConcreta");
+        Token iDC = tokenActual; // Semantic
         match(idClase);
         heredaDe();
         implementaA();
@@ -73,7 +73,7 @@ public class SyntacticParser {
         listaMiembros();
         match(punt_llaveDer);
     }
-    private void interface_() throws ExcepcionLexica, SyntacticException, IOException {
+    private void interface_() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Interface", tokenActual)) {
             match(kw_interface);
             match(idClase);
@@ -85,7 +85,7 @@ public class SyntacticParser {
             throw new SyntacticException("interface", tokenActual);
         }
     }
-    private void heredaDe() throws ExcepcionLexica, SyntacticException, IOException {
+    private void heredaDe() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("HeredaDe", tokenActual)){
             match(kw_extends);
             match(idClase);
@@ -93,7 +93,7 @@ public class SyntacticParser {
           // ε
         }
     }
-    private void implementaA() throws ExcepcionLexica, SyntacticException, IOException {
+    private void implementaA() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("ImplementaA", tokenActual)){
             match(kw_implements);
             listaTipoReferencia();
@@ -101,7 +101,7 @@ public class SyntacticParser {
             //No hago nada por ahora porque va a ε
         }
     }
-    private void extiendeA() throws ExcepcionLexica, SyntacticException, IOException {
+    private void extiendeA() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == kw_extends){
             match(kw_extends);
             listaTipoReferencia();
@@ -109,11 +109,11 @@ public class SyntacticParser {
             //No hago nada por ahora porque va a ε
         }
     }
-    private void listaTipoReferencia() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaTipoReferencia() throws LexicalException, SyntacticException, IOException {
         match(idClase);
         listaTipoReferenciaFact();
     }
-    private void listaTipoReferenciaFact() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaTipoReferenciaFact() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getLexema().equals(",")){
             match(punt_coma);
             listaTipoReferencia();
@@ -122,7 +122,7 @@ public class SyntacticParser {
         }
     }
 
-    private void listaMiembros() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaMiembros() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Miembro", tokenActual)){
             miembro();
             listaMiembros();
@@ -130,9 +130,8 @@ public class SyntacticParser {
             //No hago nada por ahora porque va a ε
         }
     }
-    private void listaEncabezados() throws ExcepcionLexica, IOException, SyntacticException {
+    private void listaEncabezados() throws LexicalException, IOException, SyntacticException {
         if(firsts.isFirst("EncabezadoMetodo",tokenActual)){
-            //nextToken();
             encabezadoMetodo();
             match(punt_puntoYComa);
             listaEncabezados();
@@ -140,9 +139,8 @@ public class SyntacticParser {
             //No hago nada por ahora porque va a ε
         }
     }
-    private void miembro() throws ExcepcionLexica, SyntacticException, IOException {
+    private void miembro() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Atributo", tokenActual)){
-            //nextToken();//No se si sera necesario, depende de el body de atributo()
             atributo();
         }else if(firsts.isFirst("Metodo", tokenActual)){
             metodo();
@@ -151,25 +149,25 @@ public class SyntacticParser {
         }
     }
 
-    private void atributo() throws ExcepcionLexica, SyntacticException, IOException {
+    private void atributo() throws LexicalException, SyntacticException, IOException {
         visibilidad();
         tipo();
         listaDecAtrs();
         match(punt_puntoYComa);
     }
 
-    private void metodo() throws ExcepcionLexica, SyntacticException, IOException {
+    private void metodo() throws LexicalException, SyntacticException, IOException {
         encabezadoMetodo();
         bloque();
     }
 
-    private void bloque() throws ExcepcionLexica, SyntacticException, IOException {
+    private void bloque() throws LexicalException, SyntacticException, IOException {
         match(punt_llaveIzq);
         listaSentencias();
         match(punt_llaveDer);
     }
 
-    private void listaSentencias() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaSentencias() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Sentencia", tokenActual)){
             sentencia();
             listaSentencias();
@@ -178,7 +176,7 @@ public class SyntacticParser {
         }
     }
 
-    private void sentencia() throws ExcepcionLexica, SyntacticException, IOException {
+    private void sentencia() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_puntoYComa){
             match(punt_puntoYComa);
         }else if(tokenActual.getTokenId() == kw_var){
@@ -198,7 +196,7 @@ public class SyntacticParser {
         }else throw new SyntacticException("; o Sentencia", tokenActual);
     }
 
-    private void asignacionOLlamada() throws ExcepcionLexica, SyntacticException, IOException {
+    private void asignacionOLlamada() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("TipoDeAsignacion",tokenActual)){
             tipoDeAsignacion();
             expresion();
@@ -207,12 +205,12 @@ public class SyntacticParser {
         }
     }
 
-    private void expresion() throws ExcepcionLexica, SyntacticException, IOException {
+    private void expresion() throws LexicalException, SyntacticException, IOException {
         expresionUnaria();
         expresionRec();
     }
 
-    private void expresionRec() throws ExcepcionLexica, SyntacticException, IOException {
+    private void expresionRec() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("OperadorBinario", tokenActual)){
             operadorBinario();
             expresionUnaria();
@@ -223,11 +221,11 @@ public class SyntacticParser {
 
     }
 
-    private void operadorBinario() throws ExcepcionLexica, SyntacticException, IOException {
+    private void operadorBinario() throws LexicalException, SyntacticException, IOException {
         matchFirsts("OperadorBinario");
     }
 
-    private void expresionUnaria() throws ExcepcionLexica, SyntacticException, IOException {
+    private void expresionUnaria() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("OperadorUnario", tokenActual)){
             operadorUnario();
             operando();
@@ -237,8 +235,7 @@ public class SyntacticParser {
 
     }
 
-    private void operando() throws ExcepcionLexica, SyntacticException, IOException {
-        //matchFirsts("Operando");
+    private void operando() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Literal",tokenActual)){
             literal();
         }else if(firsts.isFirst("Acceso", tokenActual)){
@@ -247,24 +244,24 @@ public class SyntacticParser {
             throw new SyntacticException("Operando", tokenActual);
     }
 
-    private void literal() throws ExcepcionLexica, SyntacticException, IOException {
+    private void literal() throws LexicalException, SyntacticException, IOException {
         matchFirsts("Literal");
     }
 
-    private void operadorUnario() throws ExcepcionLexica, SyntacticException, IOException {
+    private void operadorUnario() throws LexicalException, SyntacticException, IOException {
         matchFirsts("OperadorUnario");
     }
 
-    private void tipoDeAsignacion() throws ExcepcionLexica, SyntacticException, IOException {
+    private void tipoDeAsignacion() throws LexicalException, SyntacticException, IOException {
         matchFirsts("TipoDeAsignacion");
     }
 
-    private void acceso() throws ExcepcionLexica, SyntacticException, IOException {
+    private void acceso() throws LexicalException, SyntacticException, IOException {
         primario();
         encadenadoOpt();
     }
 
-    private void primario() throws ExcepcionLexica, SyntacticException, IOException {
+    private void primario() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == kw_this){ // Acceso this
             match(kw_this);
         }else if(tokenActual.getTokenId() == idMetVar){
@@ -284,20 +281,20 @@ public class SyntacticParser {
         }
     }
 
-    private void expresionParentizada() throws ExcepcionLexica, SyntacticException, IOException {
+    private void expresionParentizada() throws LexicalException, SyntacticException, IOException {
         match(punt_parentIzq);
         expresion();
         match(punt_parentDer);
     }
 
-    private void accesoMetodoEstatico() throws ExcepcionLexica, SyntacticException, IOException {
+    private void accesoMetodoEstatico() throws LexicalException, SyntacticException, IOException {
         match(idClase);
         match(punt_punto);
         match(idMetVar);
         argsActuales();
     }
 
-    private void accesoVarOMetodo() throws ExcepcionLexica, SyntacticException, IOException {
+    private void accesoVarOMetodo() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_parentIzq)
             argsActuales();
         else{
@@ -306,7 +303,7 @@ public class SyntacticParser {
 
     }
 
-    private void encadenadoOpt() throws ExcepcionLexica, SyntacticException, IOException {
+    private void encadenadoOpt() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_punto){
             match(punt_punto);
             match(idMetVar);
@@ -316,7 +313,7 @@ public class SyntacticParser {
         }
     }
 
-    private void varOMetEncadenado() throws ExcepcionLexica, SyntacticException, IOException {
+    private void varOMetEncadenado() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_parentIzq){
             argsActuales();
             encadenadoOpt();
@@ -325,13 +322,13 @@ public class SyntacticParser {
         }
     }
 
-    private void argsActuales() throws ExcepcionLexica, SyntacticException, IOException {
+    private void argsActuales() throws LexicalException, SyntacticException, IOException {
         match(punt_parentIzq);
         listaExpsOpt();
         match(punt_parentDer);
     }
 
-    private void listaExpsOpt() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaExpsOpt() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Operando", tokenActual)){
             listaExps();
         }else{
@@ -339,12 +336,12 @@ public class SyntacticParser {
         }
     }
 
-    private void listaExps() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaExps() throws LexicalException, SyntacticException, IOException {
         expresion();
         listaExpsFact();
     }
 
-    private void listaExpsFact() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaExpsFact() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_coma){
             match(punt_coma);
             listaExps();
@@ -354,7 +351,7 @@ public class SyntacticParser {
     }
 
 
-    private void while_() throws ExcepcionLexica, SyntacticException, IOException {
+    private void while_() throws LexicalException, SyntacticException, IOException {
         match(kw_while);
         match(punt_parentIzq);
         expresion();
@@ -362,7 +359,7 @@ public class SyntacticParser {
         sentencia();
     }
 
-    private void if_() throws ExcepcionLexica, SyntacticException, IOException {
+    private void if_() throws LexicalException, SyntacticException, IOException {
         match(kw_if);
         match(punt_parentIzq);
         expresion();
@@ -371,7 +368,7 @@ public class SyntacticParser {
         else_();
     }
 
-    private void else_() throws ExcepcionLexica, SyntacticException, IOException {
+    private void else_() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == kw_else){
             match(kw_else);
             sentencia();
@@ -380,12 +377,13 @@ public class SyntacticParser {
         }
     }
 
-    private void return_() throws ExcepcionLexica, SyntacticException, IOException {
+    private void return_() throws LexicalException, SyntacticException, IOException {
         match(kw_return);
         expresionOpt();
+        match(punt_puntoYComa);
     }
 
-    private void expresionOpt() throws ExcepcionLexica, SyntacticException, IOException {
+    private void expresionOpt() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("ExpresionUnaria", tokenActual)){
             expresion();
         }else{
@@ -393,21 +391,22 @@ public class SyntacticParser {
         }
     }
 
-    private void varLocal() throws ExcepcionLexica, SyntacticException, IOException {
+    private void varLocal() throws LexicalException, SyntacticException, IOException {
         match(kw_var);
         match(idMetVar);
         match(asignacion);
         expresion();
+        match(punt_puntoYComa); //TODO chequear esto, no cambio nada
     }
 
-    private void encabezadoMetodo() throws ExcepcionLexica, SyntacticException, IOException {
+    private void encabezadoMetodo() throws LexicalException, SyntacticException, IOException {
         estaticoOpt();
         tipoMetodo();
         match(idMetVar);
         argsFormales();
     }
 
-    private void estaticoOpt() throws ExcepcionLexica, SyntacticException, IOException {
+    private void estaticoOpt() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == kw_static){
             match(kw_static);
         }else{
@@ -415,7 +414,7 @@ public class SyntacticParser {
         }
     }
 
-    private void tipoMetodo() throws ExcepcionLexica, SyntacticException, IOException {
+    private void tipoMetodo() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Tipo", tokenActual) || tokenActual.getTokenId() == kw_void) {
             if (firsts.isFirst("Tipo", tokenActual)) {
                 tipo();
@@ -427,24 +426,24 @@ public class SyntacticParser {
         }
     }
 
-    private void argsFormales() throws ExcepcionLexica, SyntacticException, IOException {
+    private void argsFormales() throws LexicalException, SyntacticException, IOException {
         match(punt_parentIzq);
         listaArgsFormalesOpt();
         match(punt_parentDer);
     }
 
-    private void listaArgsFormalesOpt() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaArgsFormalesOpt() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("ListaArgsFormales",tokenActual)){
             listaArgsFormales();
         }
     }
 
-    private void listaArgsFormales() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaArgsFormales() throws LexicalException, SyntacticException, IOException {
         argFormal();
         listaArgsFormalesFact();
     }
 
-    private void listaArgsFormalesFact() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaArgsFormalesFact() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_coma){
             match(punt_coma);
             listaArgsFormales();
@@ -453,17 +452,17 @@ public class SyntacticParser {
         }
     }
 
-    private void argFormal() throws ExcepcionLexica, SyntacticException, IOException {
+    private void argFormal() throws LexicalException, SyntacticException, IOException {
         tipo();
         match(idMetVar);
     }
 
-    private void listaDecAtrs() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaDecAtrs() throws LexicalException, SyntacticException, IOException {
         match(idMetVar);
         listaDecAtrsFact();
     }
 
-    private void listaDecAtrsFact() throws ExcepcionLexica, SyntacticException, IOException {
+    private void listaDecAtrsFact() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_coma){
             match(punt_coma);
             listaDecAtrs();
@@ -472,7 +471,7 @@ public class SyntacticParser {
         }
     }
 
-    private void tipo() throws ExcepcionLexica, SyntacticException, IOException {
+    private void tipo() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("TipoPrimitivo", tokenActual) || tokenActual.getTokenId() == idClase) {
             if (firsts.isFirst("TipoPrimitivo", tokenActual)) {
                 tipoPrimitivo();
@@ -484,11 +483,11 @@ public class SyntacticParser {
         }
     }
 
-    private void tipoPrimitivo() throws ExcepcionLexica, SyntacticException, IOException {
+    private void tipoPrimitivo() throws LexicalException, SyntacticException, IOException {
         matchFirsts("TipoPrimitivo");
     }
 
-    private void visibilidad() throws ExcepcionLexica, SyntacticException, IOException {
+    private void visibilidad() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == kw_private || tokenActual.getTokenId() == kw_public) {
             if (tokenActual.getTokenId() == kw_private) {
                 match(kw_private);

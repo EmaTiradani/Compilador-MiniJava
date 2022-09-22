@@ -1,0 +1,11 @@
+///[Error:}|9]
+
+class Clase extends OtraClase {
+
+    int metodo(){
+        if(true)
+
+
+    }
+
+}

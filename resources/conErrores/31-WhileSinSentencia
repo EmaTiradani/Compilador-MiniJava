@@ -1,0 +1,9 @@
+///[Error:}|7]
+
+ class Clase extends OtraClase {
+
+     int metodo(){
+         while(false)
+     }
+
+ }

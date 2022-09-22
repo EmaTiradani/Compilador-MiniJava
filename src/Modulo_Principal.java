@@ -1,7 +1,7 @@
 import lexycal.AnalizadorLexico;
-import Exceptions.ExcepcionLexica;
+import exceptions.LexicalException;
 import lexycal.Token;
-import FileManager.FileManager;
+import fileManager.FileManager;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ public class Modulo_Principal {
             try {
                 token = analizadorLexico.getToken();
                 System.out.print("(" + token.getTokenId().toString() + "," + token.getLexema() + "," + token.getLinea() + ") \n");
-            } catch (ExcepcionLexica e){
+            } catch (LexicalException e){
                 sinErrores = false;
                 System.out.print(e.getMessage());
                 analizadorLexico.actualizarCaracterActual();

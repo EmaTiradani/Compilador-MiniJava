@@ -1,0 +1,13 @@
+///[Error:}|11]
+
+class Clase extends OtraClase {
+
+    int metodo(){
+        if(true){
+            a = 2/2;
+        }else
+
+
+    }
+
+}

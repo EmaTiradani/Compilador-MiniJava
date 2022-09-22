@@ -1,0 +1,14 @@
+///[Error:)|6]
+
+class Clase extends OtraClase {
+
+    int metodo(){
+        if(){
+            metodo2();
+            a = 4;
+        }
+
+
+    }
+
+}

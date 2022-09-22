@@ -5,17 +5,15 @@ import lexycal.TokenId;
 
 import java.util.*;
 
-import static lexycal.TokenId.*; //Static? mmm
+import static lexycal.TokenId.*;
 
 public class Firsts {
 
-    //Map<String, TokenId> map = new HashMap<String, TokenId>();
-    // Hay que cambiar esto por Map<Object,ArrayList<Object>> multiMap = new HashMap<>();
+
     Map<String, ArrayList<TokenId>> map = new HashMap<String, ArrayList<TokenId>>();
-    // Despues le pido la lista de primeros y listo, pero hay que armar la lista de primeros, F.
 
 
-    public Firsts(){//Si no matchea por algo es por el static
+    public Firsts(){
         map.put("Inicial", new ArrayList<>());
         map.put("ListaClases", new ArrayList<>());
         map.put("Clase", new ArrayList<>());
@@ -82,7 +80,7 @@ public class Firsts {
         map.get("Inicial").add(kw_class);
         map.get("ListaClases").add(kw_class);
         map.get("ListaClases").add(kw_interface);
-        map.get("ListaClases").add(EOF); //Aca va el epsilon?
+        map.get("ListaClases").add(EOF);
         map.get("ClaseConcreta").add(kw_class);
         map.get("Interface").add(kw_interface);
         map.get("HeredaDe").add(kw_extends);
@@ -102,10 +100,7 @@ public class Firsts {
         map.get("ListaArgsFormales").add(kw_char);
         map.get("ListaArgsFormales").add(kw_int);
         map.get("ListaArgsFormales").add(idClase);
-        //map.get("ListaMiembros", )
-        //map.get("ListaEncabezados", )
-        //map.get("Miembro", )
-        //map.get("Atributo", )
+
         map.get("Metodo").add(kw_static);
         map.get("Metodo").add(kw_void);
         map.get("Metodo").add(idClase);
@@ -120,9 +115,6 @@ public class Firsts {
         map.get("EncabezadoMetodo").add(kw_int);
         map.get("EncabezadoMetodo").add(idClase);
 
-
-        //map.get("EncabezadoMetodo", );firsts.isFirst("HeredaDe", tokenActual)
-        //map.get("TipoMetodo", );
         map.get("Visibilidad").add(kw_public);
         map.get("Visibilidad").add(kw_private);
         map.get("Tipo").add(kw_boolean);
@@ -134,14 +126,14 @@ public class Firsts {
         map.get("TipoPrimitivo").add(kw_int);
         map.get("ListaDecAtrs").add(idMetVar);
         map.get("EstaticoOpt").add(kw_static);
-        //map.get("TipoMetodo", )
+
         map.get("ArgsFormales").add(punt_parentIzq);
         map.get("ListaArgsFormalesOpt").add(punt_parentIzq);
-        //map.get("ListaArgsFormalesOpt", kw_void); epsilon ??
+
         map.get("ArgFormal").add(kw_public);
         map.get("ArgFormal").add(kw_private);
         map.get("Bloque").add(punt_llaveIzq);
-        //map.get("ListaSentencias", )
+
         map.get("Sentencia").add(punt_puntoYComa);
         map.get("Sentencia").add(kw_this);
         map.get("Sentencia").add(idMetVar);
@@ -162,15 +154,14 @@ public class Firsts {
         map.get("Llamada").add(kw_new);
         map.get("Llamada").add(punt_parentIzq);
         map.get("Llamada").add(idClase);
-        //Faltan de llamada
+
 
         map.get("VarLocal").add(kw_var);
         map.get("Return").add(kw_return);
-        //map.get("ExpresionOpt",);
+
         map.get("If").add(kw_if);
         map.get("While").add(kw_while);
-        //map.get("Expresion").add();
-        //map.get("ExpresionRec", );
+
         map.get("OperadorBinario").add(op_or);
         map.get("OperadorBinario").add(op_and);
         map.get("OperadorBinario").add(op_igual);
@@ -196,17 +187,14 @@ public class Firsts {
         map.get("ExpresionUnaria").add(kw_new);
         map.get("ExpresionUnaria").add(punt_parentIzq);
         map.get("ExpresionUnaria").add(asignacion);
-        //map.get("ExpresionUnaria", )
-        //*map.get("Operando", asignacion);
-        /*map.get("Operando").add(op_suma);
-        map.get("Operando").add(op_resta);
-        map.get("Operando").add(op_negacion);
-        map.get("Operando").add(kw_this);
-        map.get("Operando").add(idMetVar);
-        map.get("Operando").add(kw_new);
-        map.get("Operando").add(punt_parentIzq);
-        map.get("Operando").add(asignacion);
-        map.get("Operando").add(asignacion);*/
+        map.get("ExpresionUnaria").add(kw_null);// Los de literal
+        map.get("ExpresionUnaria").add(kw_true);
+        map.get("ExpresionUnaria").add(kw_false);
+        map.get("ExpresionUnaria").add(intLiteral);
+        map.get("ExpresionUnaria").add(charLiteral);
+        map.get("ExpresionUnaria").add(stringLiteral);
+        map.get("ExpresionUnaria").add(idClase);
+
         map.get("Operando").add(kw_null);// Los de literal
         map.get("Operando").add(kw_true);
         map.get("Operando").add(kw_false);
@@ -218,8 +206,6 @@ public class Firsts {
         map.get("Operando").add(kw_new);
         map.get("Operando").add(idClase);
         map.get("Operando").add(punt_parentIzq);
-
-        //map.get("Expresion").add()
 
 
 
@@ -250,8 +236,7 @@ public class Firsts {
         map.get("AccesoMetodo").add(idMetVar);
         map.get("AccesoMetodoEstatico").add(idClase);
         map.get("ArgsActuales").add(punt_parentIzq);
-        //map.get("ListaExpsOpt").add()
-        //map.get("ListaExps").add() //Lo de expresion
+
         map.get("EncadenadoOpt").add(punt_punto);
         map.get("VarOMetEncadenado").add(punt_punto);
         map.get("VarOMetEncadenado").add(punt_parentIzq);
@@ -259,22 +244,10 @@ public class Firsts {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
     public boolean isFirst(String production, Token token){
-        if(map.get(production).size() == 0) System.out.println("TE OLVIDASTE LOS PRIMEROS DE "+ production +"  BOLUDO");
+        //if(map.get(production).size() == 0) System.out.println("TE OLVIDASTE LOS PRIMEROS DE "+ production);
         return map.get(production).contains(token.getTokenId());
     }
 }

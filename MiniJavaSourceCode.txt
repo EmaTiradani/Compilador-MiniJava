@@ -1,7 +1,15 @@
-///[Error:}|7]
+///[Error:else|9]
+class Error {
 
-class NombreDeAtributoNoIdMetVar {
+    static int x (boolean b) {
+            var c = false;
+            if (b) {
+                if (c == 2) {
 
-    void metodoSinBloque()
+                } else if (t == 5) while (x < 2) x+=1;
+
+
+            }
+        }
 
 }

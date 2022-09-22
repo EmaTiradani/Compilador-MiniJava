@@ -1,0 +1,9 @@
+///[Error:{|5]
+
+class OtraClase extends B {
+
+    static void metodo{
+
+    }
+
+}

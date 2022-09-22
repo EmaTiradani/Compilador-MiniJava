@@ -1,0 +1,11 @@
+///[Error:void|9]
+
+ class Clase extends OtraClase {
+
+     int metodo(){
+         while(false){
+
+     }
+     void otroMetodo();
+
+ }

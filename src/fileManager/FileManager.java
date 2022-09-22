@@ -1,4 +1,4 @@
-package FileManager;
+package fileManager;
 
 import java.io.*;
 

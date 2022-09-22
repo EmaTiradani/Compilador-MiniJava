@@ -1,0 +1,11 @@
+///[Error:)|6]
+
+class Clase extends OtraClase {
+
+    int metodo(){
+        while(){
+
+        }
+    }
+
+}

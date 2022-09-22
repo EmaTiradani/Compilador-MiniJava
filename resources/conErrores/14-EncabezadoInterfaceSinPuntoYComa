@@ -1,0 +1,6 @@
+///[Error:}|6]
+
+interface Interface {
+
+    char encabezado1()
+}
