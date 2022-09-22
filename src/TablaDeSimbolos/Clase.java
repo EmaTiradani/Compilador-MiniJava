@@ -57,6 +57,10 @@ public class Clase {
         metodos.get(metodo.getId()).add(metodo);
     }
 
+    public void insertarPadre(String nombreClasePadre){
+        this.nombreClasePadre = nombreClasePadre;
+    }
+
 
 
 

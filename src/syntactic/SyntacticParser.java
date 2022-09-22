@@ -1,5 +1,7 @@
 package syntactic;
 
+import TablaDeSimbolos.Clase;
+import TablaDeSimbolos.TablaDeSimbolos;
 import exceptions.SyntacticException;
 import lexycal.AnalizadorLexico;
 import exceptions.LexicalException;
@@ -65,12 +67,19 @@ public class SyntacticParser {
     }
     private void claseConcreta() throws LexicalException, SyntacticException, IOException {
         matchFirsts("ClaseConcreta");
-        Token iDC = tokenActual; // Semantic
+        Token idC = tokenActual; // Me guardo el ID de la clase
         match(idClase);
-        heredaDe();
-        implementaA();
+        Token idPadre = heredaDe();
+
+        Clase clase;
+        if(idPadre == null){
+            clase = new Clase(idC.getLexema(),"Object");
+        }else{
+            clase = new Clase(idC.getLexema(),idPadre.getLexema());
+        }
+        implementaA(); // TODO le puedo pasar la clase como parametro a este metodo y que le vaya agregando cada clase que implementa en cada iteracion ?
         match(punt_llaveIzq);
-        listaMiembros();
+        listaMiembros(); // TODO aca lo mismo que arriba, le paso una lista de miembros como parametro y ahi me la completa, sino deberia retornar una lista pero es un metodo recursivo.
         match(punt_llaveDer);
     }
     private void interface_() throws LexicalException, SyntacticException, IOException {
@@ -85,15 +94,20 @@ public class SyntacticParser {
             throw new SyntacticException("interface", tokenActual);
         }
     }
-    private void heredaDe() throws LexicalException, SyntacticException, IOException {
+    private Token heredaDe() throws LexicalException, SyntacticException, IOException {
+        Token idClasePadre = null;
         if(firsts.isFirst("HeredaDe", tokenActual)){
             match(kw_extends);
+            idClasePadre = tokenActual; // Me guardo el ID de la clase padre
             match(idClase);
+            //TablaDeSimbolos.getClass(idClaseHija).insertarPadre(idClasePadre.getLexema()); //Le seteo la clase padre a la clase hija
         } else{
           // ε
         }
+        return idClasePadre;
     }
     private void implementaA() throws LexicalException, SyntacticException, IOException {
+
         if(firsts.isFirst("ImplementaA", tokenActual)){
             match(kw_implements);
             listaTipoReferencia();

@@ -24,6 +24,10 @@ public final class TablaDeSimbolos {
         }
     }
 
+    public static Clase getClass(String name){
+        return clases.get(name);
+    }
+
 
 
 
