@@ -8,8 +8,9 @@ public final class TablaDeSimbolos {
 
     private static HashMap<String, Clase> clases;
 
-    private static Clase claseActual;
-    private static Metodo metodoActual;
+    public static Clase claseActual;
+    public static Metodo metodoActual;
+    public static Atributo atributoActual;
 
     public TablaDeSimbolos(){
         clases = new HashMap<String, Clase>();

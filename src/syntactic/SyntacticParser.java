@@ -1,7 +1,8 @@
 package syntactic;
 
-import TablaDeSimbolos.Clase;
-import TablaDeSimbolos.TablaDeSimbolos;
+
+import TablaDeSimbolos.*;
+import exceptions.SemanticException;
 import exceptions.SyntacticException;
 import lexycal.AnalizadorLexico;
 import exceptions.LexicalException;
@@ -40,16 +41,16 @@ public class SyntacticParser {
         tokenActual = analizadorLexico.getToken();
     }
 
-    public void startAnalysis() throws LexicalException, SyntacticException, IOException {
+    public void startAnalysis() throws LexicalException, SyntacticException, IOException, SemanticException {
         inicial();
     }
 
-    private void inicial() throws LexicalException, SyntacticException, IOException {
+    private void inicial() throws LexicalException, SyntacticException, IOException, SemanticException {
         listaClases();
         match(EOF);
     }
 
-    private void listaClases() throws LexicalException, SyntacticException, IOException {
+    private void listaClases() throws LexicalException, SyntacticException, IOException, SemanticException {
         if(firsts.isFirst("ClaseConcreta", tokenActual) || firsts.isFirst("Interface", tokenActual)){
             clase();
             listaClases();
@@ -58,28 +59,29 @@ public class SyntacticParser {
         }
     }
 
-    private void clase() throws LexicalException, SyntacticException, IOException {
+    private void clase() throws LexicalException, SyntacticException, IOException, SemanticException {
         if(firsts.isFirst("ClaseConcreta", tokenActual)){
             claseConcreta();
         }else{
             interface_();
         }
     }
-    private void claseConcreta() throws LexicalException, SyntacticException, IOException {
+
+    private void claseConcreta() throws LexicalException, SyntacticException, IOException, SemanticException {
         matchFirsts("ClaseConcreta");
         Token idC = tokenActual; // Me guardo el ID de la clase
         match(idClase);
         Token idPadre = heredaDe();
-
         Clase clase;
         if(idPadre == null){
             clase = new Clase(idC.getLexema(),"Object");
         }else{
             clase = new Clase(idC.getLexema(),idPadre.getLexema());
         }
-        implementaA(); // TODO le puedo pasar la clase como parametro a este metodo y que le vaya agregando cada clase que implementa en cada iteracion ?
+        TablaDeSimbolos.claseActual = clase;
+        implementaA();
         match(punt_llaveIzq);
-        listaMiembros(); // TODO aca lo mismo que arriba, le paso una lista de miembros como parametro y ahi me la completa, sino deberia retornar una lista pero es un metodo recursivo.
+        listaMiembros();
         match(punt_llaveDer);
     }
     private void interface_() throws LexicalException, SyntacticException, IOException {
@@ -100,14 +102,12 @@ public class SyntacticParser {
             match(kw_extends);
             idClasePadre = tokenActual; // Me guardo el ID de la clase padre
             match(idClase);
-            //TablaDeSimbolos.getClass(idClaseHija).insertarPadre(idClasePadre.getLexema()); //Le seteo la clase padre a la clase hija
         } else{
           // ε
         }
         return idClasePadre;
     }
     private void implementaA() throws LexicalException, SyntacticException, IOException {
-
         if(firsts.isFirst("ImplementaA", tokenActual)){
             match(kw_implements);
             listaTipoReferencia();
@@ -124,6 +124,8 @@ public class SyntacticParser {
         }
     }
     private void listaTipoReferencia() throws LexicalException, SyntacticException, IOException {
+        Token nombreExtiende = tokenActual;
+        TablaDeSimbolos.claseActual.implemented.add(nombreExtiende.getLexema());
         match(idClase);
         listaTipoReferenciaFact();
     }
@@ -136,7 +138,7 @@ public class SyntacticParser {
         }
     }
 
-    private void listaMiembros() throws LexicalException, SyntacticException, IOException {
+    private void listaMiembros() throws LexicalException, SyntacticException, IOException, SemanticException {
         if(firsts.isFirst("Miembro", tokenActual)){
             miembro();
             listaMiembros();
@@ -153,7 +155,7 @@ public class SyntacticParser {
             //No hago nada por ahora porque va a ε
         }
     }
-    private void miembro() throws LexicalException, SyntacticException, IOException {
+    private void miembro() throws LexicalException, SyntacticException, IOException, SemanticException {
         if(firsts.isFirst("Atributo", tokenActual)){
             atributo();
         }else if(firsts.isFirst("Metodo", tokenActual)){
@@ -163,16 +165,127 @@ public class SyntacticParser {
         }
     }
 
-    private void atributo() throws LexicalException, SyntacticException, IOException {
-        visibilidad();
-        tipo();
-        listaDecAtrs();
+    private void atributo() throws LexicalException, SyntacticException, IOException, SemanticException {
+        TokenId visibilidad = visibilidad();
+        Tipo tipo = tipo();
+        listaDecAtrs(visibilidad, tipo);
         match(punt_puntoYComa);
+    }
+
+    private Tipo tipo() throws LexicalException, SyntacticException, IOException {
+        Tipo tipo = null;
+        if(firsts.isFirst("TipoPrimitivo", tokenActual) || tokenActual.getTokenId() == idClase) {
+            if (firsts.isFirst("TipoPrimitivo", tokenActual)) {
+                tipo = tipoPrimitivo();
+            } else {
+                tipo = new Tipo(tokenActual.getLexema());
+                match(idClase);
+            }
+        }else{
+            throw new SyntacticException("Tipo", tokenActual);
+        }
+        return tipo;
+    }
+
+    private Tipo tipoPrimitivo() throws LexicalException, SyntacticException, IOException {
+        Tipo tipo = new Tipo(tokenActual.getLexema());
+        matchFirsts("TipoPrimitivo");
+        return tipo;
+    }
+
+    private TokenId visibilidad() throws LexicalException, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == kw_private || tokenActual.getTokenId() == kw_public) {
+            if (tokenActual.getTokenId() == kw_private) {
+                match(kw_private);
+                return kw_private;
+            } else {
+                match(kw_public);
+                return kw_public;
+            }
+        }else{
+            throw new SyntacticException("Visibilidad",tokenActual);
+        }
+    }
+
+    private void listaDecAtrs(TokenId visibilidad, Tipo tipo) throws LexicalException, SyntacticException, IOException, SemanticException {
+        Atributo atributo = new Atributo(tokenActual, tipo, visibilidad);
+        TablaDeSimbolos.claseActual.insertarAtributo(atributo);
+        match(idMetVar);
+        TablaDeSimbolos.atributoActual = atributo;
+        listaDecAtrsFact(visibilidad, tipo);
+    }
+
+    private void listaDecAtrsFact(TokenId visibilidad, Tipo tipo) throws LexicalException, SyntacticException, IOException, SemanticException {
+        if(tokenActual.getTokenId() == punt_coma){
+            match(punt_coma);
+            listaDecAtrs(visibilidad, tipo);
+        }else {
+            // Epsilon
+        }
     }
 
     private void metodo() throws LexicalException, SyntacticException, IOException {
         encabezadoMetodo();
         bloque();
+    }
+
+    private void encabezadoMetodo() throws LexicalException, SyntacticException, IOException {
+        boolean estatico;
+        estatico = estaticoOpt();
+        Tipo tipoMetodo = tipoMetodo();
+        Token idMetodo = tokenActual;
+        match(idMetVar);
+        TablaDeSimbolos.metodoActual = new Metodo(idMetodo, tipoMetodo, estatico, null);
+        argsFormales();
+    }
+
+    private boolean estaticoOpt() throws LexicalException, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == kw_static){
+            match(kw_static);
+            return true;
+        }else{
+            // Epsilon
+        }
+        return false;
+    }
+
+    private Tipo tipoMetodo() throws LexicalException, SyntacticException, IOException {
+        if(firsts.isFirst("Tipo", tokenActual) || tokenActual.getTokenId() == kw_void) {
+            if (firsts.isFirst("Tipo", tokenActual)) {
+                return tipo(); //MM esto esta dudoso, ese .toString()
+            } else {
+                match(kw_void);
+                return new Tipo("void");
+            }
+        }else{
+            throw new SyntacticException("TipoMetodo", tokenActual);
+        }
+    }
+
+    private void argsFormales() throws LexicalException, SyntacticException, IOException {
+        match(punt_parentIzq);
+        listaArgsFormalesOpt();
+        match(punt_parentDer);
+    }
+
+    private void listaArgsFormalesOpt() throws LexicalException, SyntacticException, IOException {
+        if(firsts.isFirst("ListaArgsFormales",tokenActual)){
+            listaArgsFormales();
+        }
+    }
+
+    private void listaArgsFormales() throws LexicalException, SyntacticException, IOException {
+        argFormal();
+        listaArgsFormalesFact();
+    }
+
+    private void listaArgsFormalesFact() throws LexicalException, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == punt_coma){
+            match(punt_coma);
+            listaArgsFormales();
+        }else{
+            // Epsilon
+        }
     }
 
     private void bloque() throws LexicalException, SyntacticException, IOException {
@@ -413,103 +526,15 @@ public class SyntacticParser {
         match(punt_puntoYComa); //TODO chequear esto, no cambio nada
     }
 
-    private void encabezadoMetodo() throws LexicalException, SyntacticException, IOException {
-        estaticoOpt();
-        tipoMetodo();
-        match(idMetVar);
-        argsFormales();
-    }
 
-    private void estaticoOpt() throws LexicalException, SyntacticException, IOException {
-        if(tokenActual.getTokenId() == kw_static){
-            match(kw_static);
-        }else{
-            // Epsilon
-        }
-    }
-
-    private void tipoMetodo() throws LexicalException, SyntacticException, IOException {
-        if(firsts.isFirst("Tipo", tokenActual) || tokenActual.getTokenId() == kw_void) {
-            if (firsts.isFirst("Tipo", tokenActual)) {
-                tipo();
-            } else {
-                match(kw_void);
-            }
-        }else{
-            throw new SyntacticException("TipoMetodo", tokenActual);
-        }
-    }
-
-    private void argsFormales() throws LexicalException, SyntacticException, IOException {
-        match(punt_parentIzq);
-        listaArgsFormalesOpt();
-        match(punt_parentDer);
-    }
-
-    private void listaArgsFormalesOpt() throws LexicalException, SyntacticException, IOException {
-        if(firsts.isFirst("ListaArgsFormales",tokenActual)){
-            listaArgsFormales();
-        }
-    }
-
-    private void listaArgsFormales() throws LexicalException, SyntacticException, IOException {
-        argFormal();
-        listaArgsFormalesFact();
-    }
-
-    private void listaArgsFormalesFact() throws LexicalException, SyntacticException, IOException {
-        if(tokenActual.getTokenId() == punt_coma){
-            match(punt_coma);
-            listaArgsFormales();
-        }else{
-            // Epsilon
-        }
-    }
 
     private void argFormal() throws LexicalException, SyntacticException, IOException {
-        tipo();
+        Tipo tipoArgumento = tipo();
+        Argumento argumento = new Argumento(tokenActual, tipoArgumento);
         match(idMetVar);
+        TablaDeSimbolos.metodoActual.addArgumento(argumento);
     }
 
-    private void listaDecAtrs() throws LexicalException, SyntacticException, IOException {
-        match(idMetVar);
-        listaDecAtrsFact();
-    }
 
-    private void listaDecAtrsFact() throws LexicalException, SyntacticException, IOException {
-        if(tokenActual.getTokenId() == punt_coma){
-            match(punt_coma);
-            listaDecAtrs();
-        }else {
-            // Epsilon
-        }
-    }
 
-    private void tipo() throws LexicalException, SyntacticException, IOException {
-        if(firsts.isFirst("TipoPrimitivo", tokenActual) || tokenActual.getTokenId() == idClase) {
-            if (firsts.isFirst("TipoPrimitivo", tokenActual)) {
-                tipoPrimitivo();
-            } else {
-                match(idClase);
-            }
-        }else{
-            throw new SyntacticException("Tipo", tokenActual);
-        }
-    }
-
-    private void tipoPrimitivo() throws LexicalException, SyntacticException, IOException {
-        matchFirsts("TipoPrimitivo");
-    }
-
-    private void visibilidad() throws LexicalException, SyntacticException, IOException {
-        if(tokenActual.getTokenId() == kw_private || tokenActual.getTokenId() == kw_public) {
-            if (tokenActual.getTokenId() == kw_private) {
-                match(kw_private);
-            } else {
-                match(kw_public);
-            }
-        }else{
-            throw new SyntacticException("Visibilidad",tokenActual);
-        }
-    }
 }

@@ -1,36 +1,44 @@
 package TablaDeSimbolos;
 
 import lexycal.Token;
-import lexycal.TokenId;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Metodo {
 
     private Token idMet;
-    private TokenId tipoRetorno;
-    private ArrayList<Token> atributos;
+    private Tipo tipoRetorno;
+    private ArrayList<Argumento> argumentos;
+    private boolean estatico;
 
 
-    public Metodo(Token idMet, TokenId tipoRetorno, ArrayList<Token> atributos){
+    public Metodo(Token idMet, Tipo tipoRetorno, boolean estatico, ArrayList<Argumento> argumentos){
         this.idMet = idMet;
         this.tipoRetorno = tipoRetorno;
-        if(atributos.size() == 0)
-            this.atributos = new ArrayList<>();
+        this.estatico = estatico;
+        if(argumentos == null)
+            this.argumentos = new ArrayList<>();
         else
-            this.atributos = atributos;
+            this.argumentos = argumentos;
     }
 
     public Token getId(){
         return idMet;
     }
 
-    public TokenId getTipoRetorno(){
+    public Tipo getTipoRetorno(){
         return tipoRetorno;
     }
 
-    public ArrayList<Token> getAtributos(){
-        return atributos;
+    public ArrayList<Argumento> getAtributos(){
+        return argumentos;
+    }
+
+    public void addArgumento(Argumento argumento){
+        argumentos.add(argumento);
+    }
+
+    public boolean getEstatico(){
+        return estatico;
     }
 }

@@ -12,7 +12,7 @@ public class Clase {
     //private Token nombreClasePadre;
     private String nombreClase;
     private String nombreClasePadre;
-    private HashMap<String, String> implemented;
+    public ArrayList<String> implemented;
 
     private HashMap<String, Atributo> atributos;
     private HashMap<String, ArrayList<Metodo>> metodos;
@@ -23,6 +23,7 @@ public class Clase {
     public Clase(String nombreClase, String nombreClasePadre){
         this.nombreClase = nombreClase;
         atributos = new HashMap<>();
+        implemented = new ArrayList<>();
         metodos = new HashMap<>();
 
         consolidado = false;
