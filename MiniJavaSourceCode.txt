@@ -13,3 +13,18 @@ class Error {
         }
 
 }
+
+class Pepe extends Jose {
+
+    static int x (boolean b) {
+            var c = false;
+            if (b) {
+                if (c == 2) {
+
+                } else if (t == 5) while (x < 2) x+=1;
+
+
+            }
+        }
+
+}

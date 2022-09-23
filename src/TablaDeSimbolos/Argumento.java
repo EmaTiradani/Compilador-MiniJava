@@ -19,4 +19,8 @@ public class Argumento {
     public Tipo getTipoParametro(){
         return tipoParametro;
     }
+
+    public void print(){
+        System.out.println("Argumento: " + idVar + "(" + tipoParametro.getType() + ")");
+    }
 }

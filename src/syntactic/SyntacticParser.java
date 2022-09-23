@@ -47,6 +47,7 @@ public class SyntacticParser {
 
     private void inicial() throws LexicalException, SyntacticException, IOException, SemanticException {
         listaClases();
+        TablaDeSimbolos.print();
         match(EOF);
     }
 
@@ -80,6 +81,7 @@ public class SyntacticParser {
         }
         TablaDeSimbolos.claseActual = clase;
         implementaA();
+        TablaDeSimbolos.insertClass(idC.getLexema(), clase);
         match(punt_llaveIzq);
         listaMiembros();
         match(punt_llaveDer);

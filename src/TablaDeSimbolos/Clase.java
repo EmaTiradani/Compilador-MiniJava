@@ -22,6 +22,7 @@ public class Clase {
 
     public Clase(String nombreClase, String nombreClasePadre){
         this.nombreClase = nombreClase;
+        this.nombreClasePadre = nombreClasePadre;
         atributos = new HashMap<>();
         implemented = new ArrayList<>();
         metodos = new HashMap<>();
@@ -62,7 +63,20 @@ public class Clase {
         this.nombreClasePadre = nombreClasePadre;
     }
 
+    public HashMap<String, Atributo> getAtributos(){
+        return atributos;
+    }
 
+    public HashMap<String,ArrayList<Metodo>> getMetodos(){
+        return metodos;
+    }
+
+    public void print(){
+        metodos.forEach((s,m) -> {
+            System.out.println("Nombre de metodo: " + s + "\n | ");
+            m.print();
+
+    }
 
 
 }
