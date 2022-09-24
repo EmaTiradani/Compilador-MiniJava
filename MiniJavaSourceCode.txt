@@ -1,7 +1,8 @@
 ///[Error:else|9]
 class Error {
 
-    static int x (boolean b) {
+    public int a,x,c,f;
+    int x (boolean b) {
             var c = false;
             if (b) {
                 if (c == 2) {

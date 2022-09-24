@@ -26,4 +26,8 @@ public class Atributo {
     public TokenId getVisibilidad(){
         return visibilidad;
     }
+
+    public void print(){
+        System.out.println("Atributo: " + idVar.getLexema() + " |tipo: " + tipo.getType() + " |visibilidad : " + visibilidad);
+    }
 }

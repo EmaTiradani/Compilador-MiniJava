@@ -3,6 +3,7 @@ package TablaDeSimbolos;
 import exceptions.SemanticException;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public final class TablaDeSimbolos {
 
@@ -29,11 +30,16 @@ public final class TablaDeSimbolos {
         return clases.get(name);
     }
 
-    public static String print(){ //Metodo para ver si se crean bien las cosas de la TS
-        String tablaAString;
+    public static void print(){ //Metodo para ver si se crean bien las cosas de la TS
+        /*String tablaAString;
         clases.forEach((s,c) -> {System.out.println("Nombre de clase: " + s + "\n | "); c.print();});
         //System.out.printf(clases.toString());
-        return clases.toString();
+        return clases.toString();*/
+        for(Map.Entry<String, Clase> clase : clases.entrySet()){
+            System.out.println("-Nombre de clase: " + clase.getKey());
+            clase.getValue().print();
+            System.out.println("|");
+        }
     }
 
 

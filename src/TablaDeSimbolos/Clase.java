@@ -3,8 +3,10 @@ package TablaDeSimbolos;
 import exceptions.SemanticException;
 import lexycal.Token;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Clase {
 
@@ -56,7 +58,15 @@ public class Clase {
         /*if(!metodos.containsKey(metodo.getId())){
             metodos.put(metodo.getId(), metodo);
         }*/
-        metodos.get(metodo.getId()).add(metodo);
+        if(metodos.containsKey(metodo.getId())){
+            if(encabezadosIguales(metodo, metodo.getId().))
+            metodos.get(metodo.getId()).add(metodo);
+        }else{
+            ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
+            listaMetodos.add(metodo);
+            metodos.put(metodo.getId().getLexema(), listaMetodos);
+        }
+
     }
 
     public void insertarPadre(String nombreClasePadre){
@@ -72,10 +82,24 @@ public class Clase {
     }
 
     public void print(){
-        metodos.forEach((s,m) -> {
+        /*metodos.forEach((s,m) -> {
             System.out.println("Nombre de metodo: " + s + "\n | ");
-            m.print();
+            m.print();});
+*/
+        for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
+            //System.out.println("Nombre de atributo: " + atributo.getKey() + "\n | ");
+            atributo.getValue().print();
+        }
 
+        for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            //for(Map.Entry<Metodo> metodo : listaMetodos.getValue())
+            //listaMetodos.getValue().iterator()
+            for(Metodo metodo : listaMetodos.getValue()){
+                System.out.println("\nNombre de metodo: " + metodo.getId().getLexema());
+                //metodo.getValue().print();
+            }
+
+        }
     }
 
 

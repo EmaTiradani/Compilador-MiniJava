@@ -42,8 +42,9 @@ public class Metodo {
         return estatico;
     }
 
-    public void print(){
+    /*public void print(){
         System.out.println("Soy un metodo");
         argumentos.forEach(argumento -> argumento.print());
-    }
+    }*/
+
 }
