@@ -1,7 +1,0 @@
-///[Error:NombreClase|5]
-
-class NombreDeAtributoNoIdMetVar {
-
-    public int atributo1, NombreClase;
-
-}

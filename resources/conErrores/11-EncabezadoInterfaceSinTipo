@@ -1,6 +1,0 @@
-///[Error:encabezado1|5]
-
-interface Interface {
-
-    encabezado1();
-}

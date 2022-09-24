@@ -1,7 +1,0 @@
-///[Error:18723072|5]
-
-class NombreDeAtributoNoIdMetVar {
-
-    public int atributo1, 18723072;
-
-}

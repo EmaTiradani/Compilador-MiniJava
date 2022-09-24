@@ -1,9 +1,0 @@
-///[Error:|9]
-
-class Hijo extends ClasePadre {
-
-
-    void metodo(){
-        ;
-    }
-

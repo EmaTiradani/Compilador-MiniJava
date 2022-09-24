@@ -1,6 +1,0 @@
-///[Error:metodo|5]
-
-interface Interface {
-
-    metodo();
-}

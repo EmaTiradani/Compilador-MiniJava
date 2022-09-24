@@ -86,7 +86,7 @@ public class SyntacticParser {
         listaMiembros();
         match(punt_llaveDer);
     }
-    private void interface_() throws LexicalException, SyntacticException, IOException {
+    private void interface_() throws LexicalException, SyntacticException, IOException, SemanticException {
         if(firsts.isFirst("Interface", tokenActual)) {
             match(kw_interface);
             match(idClase);
@@ -148,7 +148,7 @@ public class SyntacticParser {
             //No hago nada por ahora porque va a ε
         }
     }
-    private void listaEncabezados() throws LexicalException, IOException, SyntacticException {
+    private void listaEncabezados() throws LexicalException, IOException, SyntacticException, SemanticException {
         if(firsts.isFirst("EncabezadoMetodo",tokenActual)){
             encabezadoMetodo();
             match(punt_puntoYComa);
@@ -226,12 +226,12 @@ public class SyntacticParser {
         }
     }
 
-    private void metodo() throws LexicalException, SyntacticException, IOException {
+    private void metodo() throws LexicalException, SyntacticException, IOException, SemanticException {
         encabezadoMetodo();
         bloque();
     }
 
-    private void encabezadoMetodo() throws LexicalException, SyntacticException, IOException {
+    private void encabezadoMetodo() throws LexicalException, SyntacticException, IOException, SemanticException {
         boolean estatico;
         estatico = estaticoOpt();
         Tipo tipoMetodo = tipoMetodo();

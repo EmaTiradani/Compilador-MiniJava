@@ -1,17 +1,13 @@
 package TablaDeSimbolos;
 
 import exceptions.SemanticException;
-import lexycal.Token;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Clase {
 
-    //private Token nombreClase;
-    //private Token nombreClasePadre;
+
     private String nombreClase;
     private String nombreClasePadre;
     public ArrayList<String> implemented;
@@ -51,22 +47,25 @@ public class Clase {
         }
     }
 
-    public void insertarMetodo(Metodo metodo){
-        // TODO Lo puedo hacer sin tener el logro de los constructores?
-        // Tengo que chequear si esta bien la sobrecarga? Es decir, tengo que chequear que no haya 2 metodos con el mismo encabezado en la misma clase?
+    public void insertarMetodo(Metodo metodo) throws SemanticException {
 
-        /*if(!metodos.containsKey(metodo.getId())){
-            metodos.put(metodo.getId(), metodo);
-        }*/
-        if(metodos.containsKey(metodo.getId())){
-            if(encabezadosIguales(metodo, metodo.getId().))
-            metodos.get(metodo.getId()).add(metodo);
+        if(metodos.containsKey(metodo.getId().getLexema())){
+            /*for(Metodo met : metodos.get(metodo.getId().getLexema())){
+                if(met.soloCambiaTipoRetorno(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
+                    throw new SemanticException("Metodo sobrecargado", "Sobrecarga dep. del contexto");
+                }else{
+                    ArrayList<Metodo> mets = metodos.get(metodo.getId().getLexema());
+                    mets.add(metodo); // ?? que pasa?
+                }
+            }*/
+            throw new SemanticException("Metodo sobrecargado", "Distinto metodo");
         }else{
             ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
             listaMetodos.add(metodo);
             metodos.put(metodo.getId().getLexema(), listaMetodos);
         }
 
+        //System.out.println("Metodo insertado");
     }
 
     public void insertarPadre(String nombreClasePadre){
@@ -82,23 +81,15 @@ public class Clase {
     }
 
     public void print(){
-        /*metodos.forEach((s,m) -> {
-            System.out.println("Nombre de metodo: " + s + "\n | ");
-            m.print();});
-*/
+
         for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
-            //System.out.println("Nombre de atributo: " + atributo.getKey() + "\n | ");
             atributo.getValue().print();
         }
 
         for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
-            //for(Map.Entry<Metodo> metodo : listaMetodos.getValue())
-            //listaMetodos.getValue().iterator()
             for(Metodo metodo : listaMetodos.getValue()){
                 System.out.println("\nNombre de metodo: " + metodo.getId().getLexema());
-                //metodo.getValue().print();
             }
-
         }
     }
 

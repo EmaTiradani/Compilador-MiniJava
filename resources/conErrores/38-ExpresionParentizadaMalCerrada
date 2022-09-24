@@ -1,9 +1,0 @@
-///[Error:;|6]
-
-class Clase {
-
-    static void metodo(){
-        var variable = ((3 % 5);
-    }
-
-}

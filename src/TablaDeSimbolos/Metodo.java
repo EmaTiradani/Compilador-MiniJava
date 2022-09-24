@@ -30,7 +30,7 @@ public class Metodo {
         return tipoRetorno;
     }
 
-    public ArrayList<Argumento> getAtributos(){
+    public ArrayList<Argumento> getArgumentos(){
         return argumentos;
     }
 
@@ -42,9 +42,26 @@ public class Metodo {
         return estatico;
     }
 
-    /*public void print(){
-        System.out.println("Soy un metodo");
-        argumentos.forEach(argumento -> argumento.print());
-    }*/
+    public boolean soloCambiaTipoRetorno(Metodo metodo){ //Comparo todos los atribs. menos el ID, que se supone que es el mismo
+        return (!metodo.getTipoRetorno().getType().equals(tipoRetorno.getType())
+                && compararListaArgumentos(metodo.getArgumentos())
+                && metodo.getEstatico()==this.estatico);
+    }
+
+    private boolean compararListaArgumentos(ArrayList<Argumento> argumentos){
+        boolean sonIguales = true;
+        if(argumentos.size() != this.argumentos.size())
+            sonIguales = false;
+        for(int i=0; i<argumentos.size(); i++){
+            if(!compararArgumentos(argumentos.get(i), this.argumentos.get(i)))
+                sonIguales = false;
+        }
+        return sonIguales;
+    }
+
+    private boolean compararArgumentos(Argumento argumento1, Argumento argumento2){ //TODO No tendria que comprar el id, no?
+        return(/*argumento1.getIdVar().getLexema().equals(argumento2.getIdVar().getLexema())
+                && */argumento1.getTipoParametro().getType().equals(argumento2.getTipoParametro().getType()));
+    }
 
 }

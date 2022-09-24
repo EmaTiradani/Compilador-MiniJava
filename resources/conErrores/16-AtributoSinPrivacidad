@@ -1,7 +1,0 @@
-///[Error:;|5]
-
-class AtributoSinPrivacidad {
-
-    Tipo atributo;
-
-}

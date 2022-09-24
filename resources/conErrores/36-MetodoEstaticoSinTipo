@@ -1,9 +1,0 @@
-///[Error:metodo|5]
-
-class OtraClase extends B12 {
-
-    static metodo(){
-
-    }
-
-}
