@@ -2,8 +2,6 @@ package TablaDeSimbolos;
 
 import exceptions.SemanticException;
 import lexycal.Token;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,12 +72,12 @@ public class Clase {
 
     public void insertarPadre(String nombreClasePadre) throws SemanticException {
         this.nombreClasePadre = nombreClasePadre;
-        HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase(nombreClasePadre).getMetodos();
+        /*HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase(nombreClasePadre).getMetodos();
         for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodosClasePadre.entrySet()){
             for(Metodo metodo : listaMetodos.getValue()){
                 insertarMetodo(metodo);
             }
-        }
+        }*/
     }
 
     public HashMap<String, Atributo> getAtributos(){

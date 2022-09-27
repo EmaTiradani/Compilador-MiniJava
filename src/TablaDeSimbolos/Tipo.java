@@ -9,12 +9,19 @@ public class Tipo {
 
     public Tipo(String id){
         this.id = id;
+        isPrimitive = false;
     }
 
     public String getType(){
         return id;
     }
 
+    public boolean isPrimitive(){
+        return isPrimitive;
+    }
 
+    public void setPrimitive(){
+        isPrimitive = true;
+    }
 
 }
