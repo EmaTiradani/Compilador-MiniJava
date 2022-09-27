@@ -1,5 +1,5 @@
 ///[Error:else|9]
-class Pepe extends Jose {
+class Pepe{
 
     static int x (boolean b) {
             var c = false;
@@ -19,5 +19,10 @@ class Pepe extends Jose {
     void holas (boolean b) {
 
     }
+}
+class Askjdask extends Lasrsdas{
 
+    boolean metodito(){
+
+    }
 }

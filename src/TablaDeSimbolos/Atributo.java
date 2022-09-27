@@ -19,6 +19,8 @@ public class Atributo {
         return idVar.getLexema();
     }
 
+    public Token getToken(){ return idVar;}
+
     public Tipo getTipo(){
         return tipo;
     }

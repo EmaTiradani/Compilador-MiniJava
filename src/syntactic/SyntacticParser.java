@@ -10,6 +10,9 @@ import lexycal.Token;
 import lexycal.TokenId;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static lexycal.TokenId.*;
 
@@ -75,17 +78,30 @@ public class SyntacticParser {
         Token idPadre = heredaDe();
         Clase clase;
         if(idPadre == null){
-            clase = new Clase(idC.getLexema(),"Object");
+            clase = new Clase(idC);
+            clase.insertarPadre("Object");
         }else{
-            clase = new Clase(idC.getLexema(),idPadre.getLexema());
+            clase = new Clase(idC);
+            clase.insertarPadre(idPadre.getLexema());
         }
         TablaDeSimbolos.claseActual = clase;
+        HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase(clase.getNombreClasePadre()).getMetodos();
+        //insertarMetodos(TablaDeSimbolos.claseActual, metodosClasePadre);
         implementaA();
         TablaDeSimbolos.insertClass(idC.getLexema(), clase);
         match(punt_llaveIzq);
         listaMiembros();
         match(punt_llaveDer);
     }
+
+    private void insertarMetodos(Clase clase, HashMap<String,ArrayList<Metodo>> metodos) throws SemanticException {
+        for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodos.entrySet()) {
+            for(Metodo metodo : listaMetodos.getValue()){
+                clase.insertarMetodo(metodo);
+            }
+        }
+    }
+
     private void interface_() throws LexicalException, SyntacticException, IOException, SemanticException {
         if(firsts.isFirst("Interface", tokenActual)) {
             match(kw_interface);

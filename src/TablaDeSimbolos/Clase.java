@@ -1,6 +1,9 @@
 package TablaDeSimbolos;
 
 import exceptions.SemanticException;
+import lexycal.Token;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +11,7 @@ import java.util.Map;
 public class Clase {
 
 
-    private String nombreClase;
+    private Token nombreClase;
     private String nombreClasePadre;
     public ArrayList<String> implemented;
 
@@ -18,9 +21,9 @@ public class Clase {
     boolean consolidado;
     boolean herenciaCircular;
 
-    public Clase(String nombreClase, String nombreClasePadre){
+    public Clase(Token nombreClase){
         this.nombreClase = nombreClase;
-        this.nombreClasePadre = nombreClasePadre;
+        this.nombreClasePadre = "Object";
         atributos = new HashMap<>();
         implemented = new ArrayList<>();
         metodos = new HashMap<>();
@@ -28,22 +31,24 @@ public class Clase {
         consolidado = false;
         herenciaCircular = false;
 
-        if(nombreClasePadre.equals("Object")){
+        /*if(nombreClasePadre.equals("Object")){
             consolidado = true;
             herenciaCircular = true;
             //herencia circular entra en consolidado? O chequeo por separado?
-        }
+        }*/
     }
 
     public String getNombreClase(){
-        return nombreClase;
+        return nombreClase.getLexema();
     }
+
+    public Token getToken(){ return nombreClase;}
 
     public void insertarAtributo(Atributo atributo) throws SemanticException {
         if(!atributos.containsKey(atributo.getId())){
             atributos.put(atributo.getId(), atributo);
         }else{
-            throw new SemanticException("Atributo con el mismo ID", "Error");
+            throw new SemanticException("Atributo con el mismo ID", atributo.getToken());
         }
     }
 
@@ -58,18 +63,23 @@ public class Clase {
                     mets.add(metodo); // ?? que pasa?
                 }
             }*/
-            throw new SemanticException("Metodo sobrecargado", "Distinto metodo");
+            throw new SemanticException("Metodo mal redefinido", metodo.getId());
         }else{
             ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
             listaMetodos.add(metodo);
             metodos.put(metodo.getId().getLexema(), listaMetodos);
         }
 
-        //System.out.println("Metodo insertado");
     }
 
-    public void insertarPadre(String nombreClasePadre){
+    public void insertarPadre(String nombreClasePadre) throws SemanticException {
         this.nombreClasePadre = nombreClasePadre;
+        HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase(nombreClasePadre).getMetodos();
+        for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodosClasePadre.entrySet()){
+            for(Metodo metodo : listaMetodos.getValue()){
+                insertarMetodo(metodo);
+            }
+        }
     }
 
     public HashMap<String, Atributo> getAtributos(){
@@ -78,6 +88,10 @@ public class Clase {
 
     public HashMap<String,ArrayList<Metodo>> getMetodos(){
         return metodos;
+    }
+
+    public String getNombreClasePadre(){
+        return nombreClasePadre;
     }
 
     public void print(){
