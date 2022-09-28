@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static lexycal.TokenId.idClase;
+
 public class Clase {
 
 
@@ -52,6 +54,10 @@ public class Clase {
         return constructores;
     }
 
+    public boolean herenciaCircular(){
+        return notHerenciaCircular;
+    }
+
     public void noTieneHerenciaCircular(){
         notHerenciaCircular = true;
     }
@@ -75,7 +81,7 @@ public class Clase {
                     mets.add(metodo); // ?? que pasa?
                 }
             }*/
-            throw new SemanticException("Metodo mal redefinido", metodo.getId());
+            throw new SemanticException("esta mal redefinido", metodo.getId());
         }else{
             ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
             listaMetodos.add(metodo);
@@ -115,9 +121,13 @@ public class Clase {
         }
     }
 
+    public void consolidar(){
+
+    }
+
     private void checkHerenciaExplicitaDeclarada() throws SemanticException {
         if(!TablaDeSimbolos.existeClase(nombreClasePadre)){
-            throw new SemanticException("no esta declarada", TablaDeSimbolos.getClase(nombreClasePadre).getToken());
+            throw new SemanticException("no esta declarada", new Token(idClase, nombreClasePadre, nombreClase.getLinea()));
         }
     }
 
@@ -129,11 +139,12 @@ public class Clase {
 
     private void checkHerenciaCircular(ArrayList<String> listaClases) throws SemanticException {
         listaClases.add(nombreClase.getLexema());
-        do{
-            if(listaClases.contains(nombreClasePadre))
+        if (!TablaDeSimbolos.getClase(nombreClasePadre).herenciaCircular()) {
+            if (listaClases.contains(nombreClasePadre)) {
                 throw new SemanticException(" Hay herencia circular", nombreClase);
+            }
             TablaDeSimbolos.getClase(nombreClasePadre).checkHerenciaCircular(listaClases);
-        }while(nombreClasePadre.equals("Object")); // Puede ser nombre clase si es que explota
+        }
     }
 
     private void checkMetodosBienDeclarados() throws SemanticException {

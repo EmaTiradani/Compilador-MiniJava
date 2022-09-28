@@ -43,11 +43,11 @@ public final class TablaDeSimbolos {
         for(Map.Entry<String, Clase> clase : clases.entrySet()){
             System.out.println("-Nombre de clase: " + clase.getKey());
             clase.getValue().print();
-            System.out.println("|");
+            System.out.println("|--------------");
         }
     }
 
-    private void checkDec() throws SemanticException {
+    public static void checkDec() throws SemanticException {
 
         for (Map.Entry<String, Clase> clase : clases.entrySet()){
             /*if(clase.getValue().getNombreClase() != "Object"){
@@ -59,6 +59,16 @@ public final class TablaDeSimbolos {
                 constructoresBienDeclarados(clase.getValue().getConstructores());//Que todos sus mets, vars, de instancia y su constructor esten correctamente declarados
             }*/
             clase.getValue().estaBienDeclarada();
+        }
+    }
+
+    public static void consolidar() throws SemanticException {
+        for (Map.Entry<String, Clase> clase : clases.entrySet()){
+            if(clase.getValue().getNombreClase() != "Object"){
+                //insertarMetodosYAtributosDeAncestros(clase.getValue()); Esto no va
+                //Aca le tengo que decir --> clase.consolidar();
+                clase.getValue().consolidar();
+            }
         }
     }
 
@@ -88,13 +98,7 @@ public final class TablaDeSimbolos {
         }while(clase.getNombreClasePadre().equals("Object"));
     }*/
 
-    private void consolidar() throws SemanticException {
-        for (Map.Entry<String, Clase> clase : clases.entrySet()){
-            if(clase.getValue().getNombreClase() != "Object"){
-                insertarMetodosYAtributosDeAncestros(clase.getValue());
-            }
-        }
-    }
+
 
     private void insertarMetodosYAtributosDeAncestros(Clase clase) throws SemanticException {
         if(clase.getNombreClasePadre().equals("Object")){
@@ -136,49 +140,49 @@ public final class TablaDeSimbolos {
         Clase object = new Clase(new Token(idClase ,"Object", 0));
         ArrayList<Argumento> argumentosObject = new ArrayList<Argumento>();
         argumentosObject.add(new Argumento(new Token(idMetVar, "i", 0), new Tipo("int")));
-        Metodo debugPrint = new Metodo(new Token(idMetVar, "debugPrint", 0), new Tipo("void"), true, argumentosObject);
+        Metodo debugPrint = new Metodo(new Token(idMetVar, "debugPrint", 0), new TipoMetodo("void"), true, argumentosObject);
+        object.insertarMetodo(debugPrint);
         object.noTieneHerenciaCircular();
         clases.put("Object", object);
     }
 
     private void crearMetodosSystem(Clase system) throws SemanticException {
-        Metodo read = new Metodo(new Token(idMetVar,"read", 0),new Tipo("int"), true, null);// Read
+        Metodo read = new Metodo(new Token(idMetVar,"read", 0),new TipoMetodo("int"), true, null);// Read
         system.insertarMetodo(read);
         ArrayList<Argumento> argumentosPrintB = new ArrayList<Argumento>();// PrintB
         argumentosPrintB.add(new Argumento(new Token(idMetVar, "b", 0), new Tipo("boolean")));
-        Metodo print = new Metodo(new Token(idMetVar,"printB", 0),new Tipo("void"), true, argumentosPrintB);
+        Metodo print = new Metodo(new Token(idMetVar,"printB", 0),new TipoMetodo("void"), true, argumentosPrintB);
         system.insertarMetodo(print);
         ArrayList<Argumento> argumentosPrintC = new ArrayList<Argumento>();// PrintC
         argumentosPrintC.add(new Argumento(new Token(idMetVar, "c", 0), new Tipo("char")));
-        Metodo printC = new Metodo(new Token(idMetVar,"printC", 0),new Tipo("void"), true, argumentosPrintC);
+        Metodo printC = new Metodo(new Token(idMetVar,"printC", 0),new TipoMetodo("void"), true, argumentosPrintC);
         system.insertarMetodo(printC);
         ArrayList<Argumento> argumentosPrintI = new ArrayList<Argumento>();// PrintI
         argumentosPrintI.add(new Argumento(new Token(idMetVar, "i", 0), new Tipo("int")));
-        Metodo printI = new Metodo(new Token(idMetVar,"printI", 0),new Tipo("void"), true, argumentosPrintI);
+        Metodo printI = new Metodo(new Token(idMetVar,"printI", 0),new TipoMetodo("void"), true, argumentosPrintI);
         system.insertarMetodo(printI);
         ArrayList<Argumento> argumentosPrintS = new ArrayList<Argumento>();// PrintS
         argumentosPrintS.add(new Argumento(new Token(idMetVar, "s", 0), new Tipo("String")));
-        Metodo printS = new Metodo(new Token(idMetVar,"printS", 0),new Tipo("void"), true, argumentosPrintS);
+        Metodo printS = new Metodo(new Token(idMetVar,"printS", 0),new TipoMetodo("void"), true, argumentosPrintS);
         system.insertarMetodo(printS);
-        Metodo println = new Metodo(new Token(idMetVar,"println", 0),new Tipo("void"), true, null);// Println
+        Metodo println = new Metodo(new Token(idMetVar,"println", 0),new TipoMetodo("void"), true, null);// Println
         system.insertarMetodo(println);
         ArrayList<Argumento> argumentosPrintBln = new ArrayList<Argumento>();// PrintBln
         argumentosPrintBln.add(new Argumento(new Token(idMetVar, "b", 0), new Tipo("boolean")));
-        Metodo printBln = new Metodo(new Token(idMetVar,"printBln", 0),new Tipo("void"), true, argumentosPrintBln);
+        Metodo printBln = new Metodo(new Token(idMetVar,"printBln", 0),new TipoMetodo("void"), true, argumentosPrintBln);
         system.insertarMetodo(printBln);
         ArrayList<Argumento> argumentosPrintCln = new ArrayList<Argumento>();// PrintCln
         argumentosPrintCln.add(new Argumento(new Token(idMetVar, "c", 0), new Tipo("char")));
-        Metodo printCln = new Metodo(new Token(idMetVar,"printCln", 0),new Tipo("void"), true, argumentosPrintCln);
+        Metodo printCln = new Metodo(new Token(idMetVar,"printCln", 0),new TipoMetodo("void"), true, argumentosPrintCln);
         system.insertarMetodo(printCln);
         ArrayList<Argumento> argumentosPrintIln = new ArrayList<Argumento>();// PrintIln
         argumentosPrintIln.add(new Argumento(new Token(idMetVar, "i", 0), new Tipo("int")));
-        Metodo printIln = new Metodo(new Token(idMetVar,"printIln", 0),new Tipo("void"), true, argumentosPrintIln);
+        Metodo printIln = new Metodo(new Token(idMetVar,"printIln", 0),new TipoMetodo("void"), true, argumentosPrintIln);
         system.insertarMetodo(printIln);
         ArrayList<Argumento> argumentosPrintSln = new ArrayList<Argumento>();// PrintSln
         argumentosPrintS.add(new Argumento(new Token(idMetVar, "s", 0), new Tipo("String")));
-        Metodo printSln = new Metodo(new Token(idMetVar,"printSln", 0),new Tipo("void"), true, argumentosPrintSln);
+        Metodo printSln = new Metodo(new Token(idMetVar,"printSln", 0),new TipoMetodo("void"), true, argumentosPrintSln);
         system.insertarMetodo(printSln);
-
     }
 
 

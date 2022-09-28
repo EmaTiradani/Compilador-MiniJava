@@ -26,6 +26,8 @@ public class MainSyntactic {
             syntacticParser = new SyntacticParser(analizadorLexico);
             TablaDeSimbolos tablaDeSimbolos = new TablaDeSimbolos();
             syntacticParser.startAnalysis();
+            TablaDeSimbolos.checkDec();
+            TablaDeSimbolos.consolidar();
 
             System.out.println("Compilacion exitosa\n\n[SinErrores]");
         }

@@ -14,6 +14,7 @@ public class Constructor {
 
     public Constructor(Token nombreClase) {
         this.token = nombreClase;
+        argumentos = new ArrayList<Argumento>();
     }
 
     public void addArguments(ArrayList<Argumento> args){

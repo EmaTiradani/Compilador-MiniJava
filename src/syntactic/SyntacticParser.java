@@ -77,15 +77,12 @@ public class SyntacticParser {
         match(idClase);
         Token idPadre = heredaDe();
         Clase clase;
-        if(idPadre == null){
-            clase = new Clase(idC);
-            clase.insertarPadre("Object");
-        }else{
-            clase = new Clase(idC);
+        clase = new Clase(idC);
+        if(idPadre != null)
             clase.insertarPadre(idPadre.getLexema());
-        }
+
         TablaDeSimbolos.claseActual = clase;
-        HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase(clase.getNombreClasePadre()).getMetodos();
+        //HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase(clase.getNombreClasePadre()).getMetodos();
         //insertarMetodos(TablaDeSimbolos.claseActual, metodosClasePadre);
         implementaA();
         TablaDeSimbolos.insertClass(idC.getLexema(), clase);
@@ -250,7 +247,7 @@ public class SyntacticParser {
     private void encabezadoMetodo() throws LexicalException, SyntacticException, IOException, SemanticException {
         boolean estatico;
         estatico = estaticoOpt();
-        Tipo tipoMetodo = tipoMetodo();
+        TipoMetodo tipoMetodo = tipoMetodo();
         Token idMetodo = tokenActual;
         match(idMetVar);
         TablaDeSimbolos.metodoActual = new Metodo(idMetodo, tipoMetodo, estatico, null);
@@ -268,13 +265,13 @@ public class SyntacticParser {
         return false;
     }
 
-    private Tipo tipoMetodo() throws LexicalException, SyntacticException, IOException {
+    private TipoMetodo tipoMetodo() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Tipo", tokenActual) || tokenActual.getTokenId() == kw_void) {
             if (firsts.isFirst("Tipo", tokenActual)) {
-                return tipo(); //MM esto esta dudoso, ese .toString()
+                return new TipoMetodo(tipo().getType());
             } else {
                 match(kw_void);
-                return new Tipo("void");
+                return new TipoMetodo("void");
             }
         }else{
             throw new SyntacticException("TipoMetodo", tokenActual);

@@ -8,12 +8,12 @@ import java.util.ArrayList;
 public class Metodo {
 
     private Token idMet;
-    private Tipo tipoRetorno;
+    private TipoMetodo tipoRetorno;
     private ArrayList<Argumento> argumentos;
     private boolean estatico;
 
 
-    public Metodo(Token idMet, Tipo tipoRetorno, boolean estatico, ArrayList<Argumento> argumentos){
+    public Metodo(Token idMet, TipoMetodo tipoRetorno, boolean estatico, ArrayList<Argumento> argumentos){
         this.idMet = idMet;
         this.tipoRetorno = tipoRetorno;
         this.estatico = estatico;

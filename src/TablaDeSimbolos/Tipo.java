@@ -8,12 +8,21 @@ import static lexycal.TokenId.*;
 
 public class Tipo {
 
-    private boolean isPrimitive;
-    private String id;
+    protected boolean isPrimitive;
+    protected String id;
 
     public Tipo(String id){
         this.id = id;
-        isPrimitive = false;
+        switch(id){
+            case "boolean": isPrimitive = true;
+            break;
+            case "char": isPrimitive = true;
+            break;
+            case "int": isPrimitive = true;
+            break;
+            default : isPrimitive = false;
+            break;
+        }
     }
 
     public String getType(){

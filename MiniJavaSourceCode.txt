@@ -20,9 +20,17 @@ class Pepe{
 
     }
 }
-class Askjdask extends Lasrsdas{
+class Askjdask extends Pepe{
 
-    boolean metodito(){
+    public boolean x,y,z;
+
+    void metodito(int d){
+
 
     }
+
+
+
+
+
 }
