@@ -21,6 +21,8 @@ public class Clase {
     boolean consolidado;
     boolean notHerenciaCircular;
 
+    private Metodo metodoMain = null;
+
     ArrayList<Constructor> constructores;
 
     public Clase(Token nombreClase){
@@ -73,21 +75,27 @@ public class Clase {
     public void insertarMetodo(Metodo metodo) throws SemanticException {
 
         if(metodos.containsKey(metodo.getId().getLexema())){
-            /*for(Metodo met : metodos.get(metodo.getId().getLexema())){
+            boolean puedeSerInsertado = false;
+            for(Metodo met : metodos.get(metodo.getId().getLexema())){
                 if(met.soloCambiaTipoRetorno(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
-                    throw new SemanticException("Metodo sobrecargado", "Sobrecarga dep. del contexto");
+                    throw new SemanticException("esta mal redefinido", metodo.getId());
                 }else{
-                    ArrayList<Metodo> mets = metodos.get(metodo.getId().getLexema());
-                    mets.add(metodo); // ?? que pasa?
+                    /*ArrayList<Metodo> mets = metodos.get(metodo.getId().getLexema());
+                    mets.add(metodo);*/
+                    puedeSerInsertado = true;
                 }
-            }*/
-            throw new SemanticException("esta mal redefinido", metodo.getId());
+            }
+            if(puedeSerInsertado){
+                metodos.get(metodo.getId().getLexema()).add(metodo);
+            }
+            //throw new SemanticException("esta mal redefinido", metodo.getId());
         }else{
             ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
             listaMetodos.add(metodo);
             metodos.put(metodo.getId().getLexema(), listaMetodos);
         }
-
+        if(metodo.esMain())
+            metodoMain = metodo;
     }
 
     public void insertarPadre(String nombreClasePadre) throws SemanticException {
@@ -112,17 +120,45 @@ public class Clase {
         return nombreClasePadre;
     }
 
-    public void estaBienDeclarada() throws SemanticException {
+    public boolean estaBienDeclarada() throws SemanticException {
+        boolean tengoMain = false;
         if(!nombreClase.getLexema().equals("Object")){
             checkHerenciaExplicitaDeclarada();
             checkConstructoresBienDeclarados();
             checkHerenciaCircular(new ArrayList<String>());
             checkMetodosBienDeclarados();
+            tengoMain = checkMain();
+        }
+        return tengoMain;
+    }
+
+    public void consolidar() throws SemanticException {
+        if(TablaDeSimbolos.getClase(nombreClasePadre).consolidado){
+            insertarMetodoYAtributosDePadre();
+            consolidado = true;
+        }else{
+            TablaDeSimbolos.getClase(nombreClasePadre).consolidar();
+            consolidar();
         }
     }
 
-    public void consolidar(){
+    private void insertarMetodoYAtributosDePadre() throws SemanticException {
+        // Inserto los atributos del padre
+        HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase(nombreClasePadre).getMetodos();
+        for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodosClasePadre.entrySet()){
+            for(Metodo metodo : listaMetodos.getValue()){
+                insertarMetodo(metodo);
+            }
+        }
+        // Inserto los atributos del padre
+        HashMap<String,Atributo> atributosClasePadre = TablaDeSimbolos.getClase(nombreClasePadre).getAtributos();
+        for(Map.Entry<String, Atributo> atributo : atributosClasePadre.entrySet()){
+            insertarAtributo(atributo.getValue());
+        }
+    }
 
+    private boolean checkMain(){
+        return (!(metodoMain == null));
     }
 
     private void checkHerenciaExplicitaDeclarada() throws SemanticException {

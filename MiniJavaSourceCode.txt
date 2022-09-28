@@ -1,7 +1,7 @@
 ///[Error:else|9]
-class Pepe{
+class Pepe extends Fafa{
 
-    static int x (boolean b) {
+    static void main () {
             var c = false;
             if (b) {
                 if (c == 2) {
@@ -16,11 +16,11 @@ class Pepe{
 
     }
 
-    void holas (boolean b) {
+    int hola (boolean b) {
 
     }
 }
-class Askjdask extends Pepe{
+class Askjdask{
 
     public boolean x,y,z;
 
@@ -28,9 +28,11 @@ class Askjdask extends Pepe{
 
 
     }
-
-
-
-
-
 }
+
+interface Fafa{
+
+int m1();
+}
+
+

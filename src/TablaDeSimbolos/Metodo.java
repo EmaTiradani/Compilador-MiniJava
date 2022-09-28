@@ -72,4 +72,10 @@ public class Metodo {
                 && */argumento1.getTipoParametro().getType().equals(argumento2.getTipoParametro().getType()));
     }
 
+    public boolean esMain() {
+        if(estatico && idMet.getLexema().equals("main") && argumentos.size() == 0 && tipoRetorno.getType().equals("void"))
+            return true;
+        else
+            return false;
+    }
 }

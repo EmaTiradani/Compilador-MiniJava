@@ -11,6 +11,7 @@ import static lexycal.TokenId.*;
 public final class TablaDeSimbolos {
 
     private static HashMap<String, Clase> clases;
+    private static HashMap<String, Interfaz> interfaces;
 
     public static Clase claseActual;
     public static Metodo metodoActual;
@@ -18,6 +19,7 @@ public final class TablaDeSimbolos {
 
     public TablaDeSimbolos() throws SemanticException {
         clases = new HashMap<String, Clase>();
+        interfaces = new HashMap<String, Interfaz>();
         crearClaseObject();
         crearClaseSystem();
         crearClaseString();
@@ -28,6 +30,14 @@ public final class TablaDeSimbolos {
             throw new SemanticException("ya estaba declarada", clase.getToken());
         }else{
             clases.put(name, clase);
+        }
+    }
+
+    public static void insertInterface(String name, Interfaz interfaz) throws SemanticException {
+        if(interfaces.containsKey(name)){
+            throw new SemanticException("ya estaba declarada", interfaz.getToken());
+        }else{
+            interfaces.put(name, interfaz);
         }
     }
 
@@ -48,7 +58,7 @@ public final class TablaDeSimbolos {
     }
 
     public static void checkDec() throws SemanticException {
-
+        boolean hayMain = false;
         for (Map.Entry<String, Clase> clase : clases.entrySet()){
             /*if(clase.getValue().getNombreClase() != "Object"){
                 checkHerenciaExplicitaDeclarada(clase.getValue());// Chequear si tiene herencia explicita herede de una clase declarada
@@ -58,7 +68,13 @@ public final class TablaDeSimbolos {
 
                 constructoresBienDeclarados(clase.getValue().getConstructores());//Que todos sus mets, vars, de instancia y su constructor esten correctamente declarados
             }*/
-            clase.getValue().estaBienDeclarada();
+            boolean tieneMain = clase.getValue().estaBienDeclarada();
+            if(tieneMain){
+                hayMain = true;
+            }
+        }
+        if(!hayMain){
+            throw new SemanticException("No hay ninguna clase con un metodo main");
         }
     }
 
@@ -70,6 +86,7 @@ public final class TablaDeSimbolos {
                 clase.getValue().consolidar();
             }
         }
+        System.out.println("Consolida2");
     }
 
     /*private void checkHerenciaExplicitaDeclarada(Clase clase) throws SemanticException {
@@ -143,6 +160,7 @@ public final class TablaDeSimbolos {
         Metodo debugPrint = new Metodo(new Token(idMetVar, "debugPrint", 0), new TipoMetodo("void"), true, argumentosObject);
         object.insertarMetodo(debugPrint);
         object.noTieneHerenciaCircular();
+        object.consolidado = true;
         clases.put("Object", object);
     }
 
