@@ -2,8 +2,6 @@ package TablaDeSimbolos;
 
 import exceptions.SemanticException;
 import lexycal.Token;
-import lexycal.TokenId;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +20,6 @@ public final class TablaDeSimbolos {
         clases = new HashMap<String, Clase>();
 
     }
-
 
     public static void insertClass(String name, Clase clase) throws SemanticException {
         if(clases.containsKey(name)){
@@ -44,19 +41,50 @@ public final class TablaDeSimbolos {
         }
     }
 
-    private void crearClaseObject() throws SemanticException {
-        Clase object = new Clase(new Token(idClase ,"Object", 0));
-        ArrayList<Argumento> argumentosObject = new ArrayList<Argumento>();
-        argumentosObject.add(new Argumento(new Token(idMetVar, "i", 0), new Tipo("int")));
-        Metodo debugPrint = new Metodo(new Token(idMetVar, "debugPrint", 0), new Tipo("void"), true, argumentosObject);
-        clases.put("Object", object);
+    private void checkMain(){//Despues de consolidar
+
     }
 
-    private void checkDec(){
-        //Chequear si tiene herencia expliocita de una clase declarada
-        //Chequear que no tenga herencia circular
-        //Que no tenga 2 metodos o variables de instancia con el mismo nombre
-        //Que todos sus mets, vars, de injstancia y su constructor esten correctamente declarados
+    private void checkDec() throws SemanticException {
+
+        for (Map.Entry<String, Clase> clase : clases.entrySet()){
+            if(clase.getValue().getNombreClase() != "Object"){
+                checkHerenciaExplicitaDeclarada(clase.getValue());// Chequear si tiene herencia explicita herede de una clase declarada
+                ArrayList<String> listaParaChequearHerencia = new ArrayList<>();
+                checkHerenciaCircular(clase.getValue(), listaParaChequearHerencia);// Chequear que no tenga herencia circular
+                // Que no tenga 2 metodos o variables de instancia con el mismo nombre TODO chequear de nuevo?
+
+                constructoresBienDeclarados(clase);//Que todos sus mets, vars, de instancia y su constructor esten correctamente declarados
+            }
+        }
+
+
+
+    }
+
+    private void checkHerenciaExplicitaDeclarada(Clase clase) throws SemanticException {
+        String nombreClasePadre = clases.get(clase.getNombreClase()).getNombreClasePadre();
+        if(!clases.containsKey(nombreClasePadre)){
+            throw new SemanticException("no esta declarada", clases.get(nombreClasePadre).getToken());
+        }
+    }
+
+    private void constructoresBienDeclarados(Clase clase){
+        String nombreConstructor = clase.getNombreClase();
+        chequearAtributos(clase.getMetodos().get(nombreConstructor));
+    }
+
+    private chequearAtributos(Metodo metodo){
+
+    }
+
+    private void checkHerenciaCircular(Clase clase, ArrayList<String> listaClases) throws SemanticException {
+        listaClases.add(clase.getNombreClase());
+        do{
+            if(listaClases.contains(clase.getNombreClasePadre()))
+                throw new SemanticException("Hay herencia circular");
+            checkHerenciaCircular(clases.get(clase.getNombreClasePadre()), listaClases);
+        }while(clase.getNombreClasePadre().equals("Object"));
     }
 
     private void consolidar() throws SemanticException {
@@ -95,7 +123,6 @@ public final class TablaDeSimbolos {
         }
     }
 
-
     private void crearClaseString(){
         Clase string = new Clase(new Token(idClase, "String", 0));
         clases.put("String", string);
@@ -105,6 +132,14 @@ public final class TablaDeSimbolos {
         Clase system = new Clase(new Token(idClase, "System", 0));
         crearMetodosSystem(system);
         clases.put("System", system);
+    }
+
+    private void crearClaseObject() throws SemanticException {
+        Clase object = new Clase(new Token(idClase ,"Object", 0));
+        ArrayList<Argumento> argumentosObject = new ArrayList<Argumento>();
+        argumentosObject.add(new Argumento(new Token(idMetVar, "i", 0), new Tipo("int")));
+        Metodo debugPrint = new Metodo(new Token(idMetVar, "debugPrint", 0), new Tipo("void"), true, argumentosObject);
+        clases.put("Object", object);
     }
 
     private void crearMetodosSystem(Clase system) throws SemanticException {

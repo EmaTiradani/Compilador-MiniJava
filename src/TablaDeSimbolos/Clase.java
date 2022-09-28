@@ -19,15 +19,21 @@ public class Clase {
     boolean consolidado;
     boolean herenciaCircular;
 
+    ArrayList<Constructor> constructores;
+
     public Clase(Token nombreClase){
         this.nombreClase = nombreClase;
         this.nombreClasePadre = "Object";
         atributos = new HashMap<>();
         implemented = new ArrayList<>();
         metodos = new HashMap<>();
+        constructores = new ArrayList<>();
 
         consolidado = false;
         herenciaCircular = false;
+
+        Constructor constructor = new Constructor(nombreClase);
+        constructores.add(constructor);
 
         /*if(nombreClasePadre.equals("Object")){
             consolidado = true;
