@@ -1,5 +1,6 @@
 package TablaDeSimbolos;
 
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public class Argumento {
@@ -18,6 +19,10 @@ public class Argumento {
 
     public Tipo getTipoParametro(){
         return tipoParametro;
+    }
+
+    public void checkDec() throws SemanticException {
+        tipoParametro.checkExistencia(idVar.getLinea());
     }
 
     public void print(){

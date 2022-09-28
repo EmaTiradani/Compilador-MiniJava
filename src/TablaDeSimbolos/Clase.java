@@ -17,7 +17,7 @@ public class Clase {
     private HashMap<String, ArrayList<Metodo>> metodos;
 
     boolean consolidado;
-    boolean herenciaCircular;
+    boolean notHerenciaCircular;
 
     ArrayList<Constructor> constructores;
 
@@ -30,7 +30,7 @@ public class Clase {
         constructores = new ArrayList<>();
 
         consolidado = false;
-        herenciaCircular = false;
+        notHerenciaCircular = false;
 
         Constructor constructor = new Constructor(nombreClase);
         constructores.add(constructor);
@@ -47,6 +47,14 @@ public class Clase {
     }
 
     public Token getToken(){ return nombreClase;}
+
+    public ArrayList<Constructor> getConstructores(){
+        return constructores;
+    }
+
+    public void noTieneHerenciaCircular(){
+        notHerenciaCircular = true;
+    }
 
     public void insertarAtributo(Atributo atributo) throws SemanticException {
         if(!atributos.containsKey(atributo.getId())){
@@ -97,6 +105,45 @@ public class Clase {
     public String getNombreClasePadre(){
         return nombreClasePadre;
     }
+
+    public void estaBienDeclarada() throws SemanticException {
+        if(!nombreClase.getLexema().equals("Object")){
+            checkHerenciaExplicitaDeclarada();
+            checkConstructoresBienDeclarados();
+            checkHerenciaCircular(new ArrayList<String>());
+            checkMetodosBienDeclarados();
+        }
+    }
+
+    private void checkHerenciaExplicitaDeclarada() throws SemanticException {
+        if(!TablaDeSimbolos.existeClase(nombreClasePadre)){
+            throw new SemanticException("no esta declarada", TablaDeSimbolos.getClase(nombreClasePadre).getToken());
+        }
+    }
+
+    private void checkConstructoresBienDeclarados() throws SemanticException {
+        for(Constructor constructor : constructores){
+            constructor.checkDec();
+        }
+    }
+
+    private void checkHerenciaCircular(ArrayList<String> listaClases) throws SemanticException {
+        listaClases.add(nombreClase.getLexema());
+        do{
+            if(listaClases.contains(nombreClasePadre))
+                throw new SemanticException(" Hay herencia circular", nombreClase);
+            TablaDeSimbolos.getClase(nombreClasePadre).checkHerenciaCircular(listaClases);
+        }while(nombreClasePadre.equals("Object")); // Puede ser nombre clase si es que explota
+    }
+
+    private void checkMetodosBienDeclarados() throws SemanticException {
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            for(Metodo metodo : listaMetodos.getValue()){
+                metodo.checkDec();
+            }
+        }
+    }
+
 
     public void print(){
 

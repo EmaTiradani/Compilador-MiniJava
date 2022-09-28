@@ -1,5 +1,6 @@
 package TablaDeSimbolos;
 
+import exceptions.SemanticException;
 import lexycal.Token;
 
 import java.util.ArrayList;
@@ -40,6 +41,13 @@ public class Metodo {
 
     public boolean getEstatico(){
         return estatico;
+    }
+
+    public void checkDec() throws SemanticException {
+        tipoRetorno.checkExistencia(idMet.getLinea());
+        for(Argumento argumento : argumentos){
+            argumento.checkDec();
+        }
     }
 
     public boolean soloCambiaTipoRetorno(Metodo metodo){ //Comparo todos los atribs. menos el ID, que se supone que es el mismo

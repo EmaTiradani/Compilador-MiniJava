@@ -18,7 +18,9 @@ public final class TablaDeSimbolos {
 
     public TablaDeSimbolos() throws SemanticException {
         clases = new HashMap<String, Clase>();
-
+        crearClaseObject();
+        crearClaseSystem();
+        crearClaseString();
     }
 
     public static void insertClass(String name, Clase clase) throws SemanticException {
@@ -33,6 +35,10 @@ public final class TablaDeSimbolos {
         return clases.get(name);
     }
 
+    public static boolean existeClase(String nombreClase){
+        return clases.containsKey(nombreClase);
+    }
+
     public static void print(){ //Metodo para ver si se crean bien las cosas de la TS
         for(Map.Entry<String, Clase> clase : clases.entrySet()){
             System.out.println("-Nombre de clase: " + clase.getKey());
@@ -41,41 +47,36 @@ public final class TablaDeSimbolos {
         }
     }
 
-    private void checkMain(){//Despues de consolidar
-
-    }
-
     private void checkDec() throws SemanticException {
 
         for (Map.Entry<String, Clase> clase : clases.entrySet()){
-            if(clase.getValue().getNombreClase() != "Object"){
+            /*if(clase.getValue().getNombreClase() != "Object"){
                 checkHerenciaExplicitaDeclarada(clase.getValue());// Chequear si tiene herencia explicita herede de una clase declarada
                 ArrayList<String> listaParaChequearHerencia = new ArrayList<>();
                 checkHerenciaCircular(clase.getValue(), listaParaChequearHerencia);// Chequear que no tenga herencia circular
                 // Que no tenga 2 metodos o variables de instancia con el mismo nombre TODO chequear de nuevo?
 
-                constructoresBienDeclarados(clase);//Que todos sus mets, vars, de instancia y su constructor esten correctamente declarados
-            }
+                constructoresBienDeclarados(clase.getValue().getConstructores());//Que todos sus mets, vars, de instancia y su constructor esten correctamente declarados
+            }*/
+            clase.getValue().estaBienDeclarada();
         }
-
-
-
     }
 
-    private void checkHerenciaExplicitaDeclarada(Clase clase) throws SemanticException {
+    /*private void checkHerenciaExplicitaDeclarada(Clase clase) throws SemanticException {
         String nombreClasePadre = clases.get(clase.getNombreClase()).getNombreClasePadre();
         if(!clases.containsKey(nombreClasePadre)){
             throw new SemanticException("no esta declarada", clases.get(nombreClasePadre).getToken());
         }
     }
 
-    private void constructoresBienDeclarados(Clase clase){
-        String nombreConstructor = clase.getNombreClase();
-        chequearAtributos(clase.getMetodos().get(nombreConstructor));
-    }
-
-    private chequearAtributos(Metodo metodo){
-
+    private void constructoresBienDeclarados(ArrayList<Constructor> constructores) throws SemanticException {
+        for(Constructor constructor : constructores){
+            for(Argumento argumento : constructor.getArguments()){
+                if(argumento.getIdVar().getTokenId() == idClase)
+                    if(!clases.containsKey(argumento.getTipoParametro().getType()))
+                        throw new SemanticException("El constructor tiene un parametro del Tipo de una clase sin declarar");
+            }
+        }
     }
 
     private void checkHerenciaCircular(Clase clase, ArrayList<String> listaClases) throws SemanticException {
@@ -85,12 +86,9 @@ public final class TablaDeSimbolos {
                 throw new SemanticException("Hay herencia circular");
             checkHerenciaCircular(clases.get(clase.getNombreClasePadre()), listaClases);
         }while(clase.getNombreClasePadre().equals("Object"));
-    }
+    }*/
 
     private void consolidar() throws SemanticException {
-        crearClaseObject();
-        crearClaseSystem();
-        crearClaseString();
         for (Map.Entry<String, Clase> clase : clases.entrySet()){
             if(clase.getValue().getNombreClase() != "Object"){
                 insertarMetodosYAtributosDeAncestros(clase.getValue());
@@ -139,6 +137,7 @@ public final class TablaDeSimbolos {
         ArrayList<Argumento> argumentosObject = new ArrayList<Argumento>();
         argumentosObject.add(new Argumento(new Token(idMetVar, "i", 0), new Tipo("int")));
         Metodo debugPrint = new Metodo(new Token(idMetVar, "debugPrint", 0), new Tipo("void"), true, argumentosObject);
+        object.noTieneHerenciaCircular();
         clases.put("Object", object);
     }
 

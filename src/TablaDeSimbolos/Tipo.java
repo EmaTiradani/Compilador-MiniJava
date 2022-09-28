@@ -1,6 +1,10 @@
 package TablaDeSimbolos;
 
-import lexycal.TokenId;
+import exceptions.SemanticException;
+import lexycal.Token;
+
+
+import static lexycal.TokenId.*;
 
 public class Tipo {
 
@@ -14,6 +18,13 @@ public class Tipo {
 
     public String getType(){
         return id;
+    }
+
+    public void checkExistencia(int numeroLinea) throws SemanticException {
+        if(!isPrimitive){
+            if(!TablaDeSimbolos.existeClase(id))
+                throw new SemanticException("no esta declarada", new Token(idClase, id, numeroLinea));
+        }
     }
 
     public boolean isPrimitive(){

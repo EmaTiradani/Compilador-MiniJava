@@ -26,6 +26,8 @@ public class SemanticException extends Exception{
             } else if (message.equals("no esta declarada")){
                 error += (token.getLinea() + ": La clase " + token.getLexema() + " " + message);
             }
+        }else{
+            error += (token.getLinea() + message);
         }
         //String error = ("Error semantico en linea " + linea + ""
         /*String error = ("Error sintactico en linea " + actualToken.getLinea() + ": Se esperaba " + expectedToken + " y se encontro \"" + actualToken.getLexema()) + "\"";
