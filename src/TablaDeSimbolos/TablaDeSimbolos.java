@@ -10,7 +10,7 @@ import static lexycal.TokenId.*;
 
 public final class TablaDeSimbolos {
 
-    private static HashMap<String, Clase> clases;
+    private static HashMap<String, ClaseConcreta> clases;
     private static HashMap<String, Interfaz> interfaces;
 
     public static Clase claseActual;
@@ -18,14 +18,14 @@ public final class TablaDeSimbolos {
     public static Atributo atributoActual;
 
     public TablaDeSimbolos() throws SemanticException {
-        clases = new HashMap<String, Clase>();
+        clases = new HashMap<String, ClaseConcreta>();
         interfaces = new HashMap<String, Interfaz>();
         crearClaseObject();
         crearClaseSystem();
         crearClaseString();
     }
 
-    public static void insertClass(String name, Clase clase) throws SemanticException {
+    public static void insertClass(String name, ClaseConcreta clase) throws SemanticException {
         if(clases.containsKey(name)){
             throw new SemanticException("ya estaba declarada", clase.getToken());
         }else{
@@ -41,8 +41,12 @@ public final class TablaDeSimbolos {
         }
     }
 
-    public static Clase getClase(String name){
+    public static ClaseConcreta getClase(String name){
         return clases.get(name);
+    }
+
+    public static Interfaz getInterfaz(String name){
+        return interfaces.get(name);
     }
 
     public static boolean existeClase(String nombreClase){
@@ -50,7 +54,7 @@ public final class TablaDeSimbolos {
     }
 
     public static void print(){ //Metodo para ver si se crean bien las cosas de la TS
-        for(Map.Entry<String, Clase> clase : clases.entrySet()){
+        for(Map.Entry<String, ClaseConcreta> clase : clases.entrySet()){
             System.out.println("-Nombre de clase: " + clase.getKey());
             clase.getValue().print();
             System.out.println("|--------------");
@@ -59,7 +63,7 @@ public final class TablaDeSimbolos {
 
     public static void checkDec() throws SemanticException {
         boolean hayMain = false;
-        for (Map.Entry<String, Clase> clase : clases.entrySet()){
+        for (Map.Entry<String, ClaseConcreta> clase : clases.entrySet()){
             /*if(clase.getValue().getNombreClase() != "Object"){
                 checkHerenciaExplicitaDeclarada(clase.getValue());// Chequear si tiene herencia explicita herede de una clase declarada
                 ArrayList<String> listaParaChequearHerencia = new ArrayList<>();
@@ -76,10 +80,14 @@ public final class TablaDeSimbolos {
         if(!hayMain){
             throw new SemanticException("No hay ninguna clase con un metodo main");
         }
+        for (Map.Entry<String, Interfaz> interfaz : interfaces.entrySet()){
+            interfaz.getValue().estaBienDeclarada();
+        }
     }
 
+
     public static void consolidar() throws SemanticException {
-        for (Map.Entry<String, Clase> clase : clases.entrySet()){
+        for (Map.Entry<String, ClaseConcreta> clase : clases.entrySet()){
             if(clase.getValue().getNombreClase() != "Object"){
                 //insertarMetodosYAtributosDeAncestros(clase.getValue()); Esto no va
                 //Aca le tengo que decir --> clase.consolidar();
@@ -117,7 +125,7 @@ public final class TablaDeSimbolos {
 
 
 
-    private void insertarMetodosYAtributosDeAncestros(Clase clase) throws SemanticException {
+    private void insertarMetodosYAtributosDeAncestros(ClaseConcreta clase) throws SemanticException {
         if(clase.getNombreClasePadre().equals("Object")){
             HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase("Object").getMetodos();
             for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodosClasePadre.entrySet()){
@@ -143,18 +151,18 @@ public final class TablaDeSimbolos {
     }
 
     private void crearClaseString(){
-        Clase string = new Clase(new Token(idClase, "String", 0));
+        ClaseConcreta string = new ClaseConcreta(new Token(idClase, "String", 0));
         clases.put("String", string);
     }
 
     private void crearClaseSystem() throws SemanticException {
-        Clase system = new Clase(new Token(idClase, "System", 0));
+        ClaseConcreta system = new ClaseConcreta(new Token(idClase, "System", 0));
         crearMetodosSystem(system);
         clases.put("System", system);
     }
 
     private void crearClaseObject() throws SemanticException {
-        Clase object = new Clase(new Token(idClase ,"Object", 0));
+        ClaseConcreta object = new ClaseConcreta(new Token(idClase ,"Object", 0));
         ArrayList<Argumento> argumentosObject = new ArrayList<Argumento>();
         argumentosObject.add(new Argumento(new Token(idMetVar, "i", 0), new Tipo("int")));
         Metodo debugPrint = new Metodo(new Token(idMetVar, "debugPrint", 0), new TipoMetodo("void"), true, argumentosObject);
@@ -164,7 +172,7 @@ public final class TablaDeSimbolos {
         clases.put("Object", object);
     }
 
-    private void crearMetodosSystem(Clase system) throws SemanticException {
+    private void crearMetodosSystem(ClaseConcreta system) throws SemanticException {
         Metodo read = new Metodo(new Token(idMetVar,"read", 0),new TipoMetodo("int"), true, null);// Read
         system.insertarMetodo(read);
         ArrayList<Argumento> argumentosPrintB = new ArrayList<Argumento>();// PrintB

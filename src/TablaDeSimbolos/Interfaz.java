@@ -1,28 +1,128 @@
 package TablaDeSimbolos;
 
+import exceptions.SemanticException;
 import lexycal.Token;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Interfaz {
+import static lexycal.TokenId.idClase;
+
+public class Interfaz extends Clase{
 
     private Token nombreInterface;
     private ArrayList<String> clasesQueExtiende;
-    private ArrayList<Metodo> listaEncabezados;
+    private HashMap<String, ArrayList<Metodo>>  metodos;
 
+    boolean consolidado, notHerenciaCircular;
 
 
     public Interfaz(Token nombreInterface){
         this.nombreInterface = nombreInterface;
         clasesQueExtiende = new ArrayList<>();
-        listaEncabezados = new ArrayList<Metodo>();
+        metodos = new HashMap<>();
+
+        consolidado = false;
+        notHerenciaCircular = false;
     }
 
     public Token getToken(){
         return nombreInterface;
     }
 
-    public String getNombre(){
+    @Override
+    public String getNombreClase() {
         return nombreInterface.getLexema();
     }
+
+    public void insertarAtributo(Atributo atributo) throws SemanticException {
+        // Aca no deberia entrar nunca
+    }
+
+    @Override
+    public void insertarMetodo(Metodo metodo) throws SemanticException {
+        if(!metodo.getEstatico()) {
+            if (metodos.containsKey(metodo.getId().getLexema())) {
+                boolean puedeSerInsertado = false;
+                for (Metodo met : metodos.get(metodo.getId().getLexema())) {
+                    if (met.soloCambiaTipoRetorno(metodo)) {// Java no soporta sobrecarga dep. del contexto si pasa eso, error
+                        throw new SemanticException("esta mal redefinido", metodo.getId());
+                    } else {
+                    /*ArrayList<Metodo> mets = metodos.get(metodo.getId().getLexema());
+                    mets.add(metodo);*/
+                        puedeSerInsertado = true;
+                    }
+                }
+                if (puedeSerInsertado) {
+                    metodos.get(metodo.getId().getLexema()).add(metodo);
+                }
+                //throw new SemanticException("esta mal redefinido", metodo.getId());
+            } else {
+                ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
+                listaMetodos.add(metodo);
+                metodos.put(metodo.getId().getLexema(), listaMetodos);
+            }
+        }else{
+            throw new SemanticException("Metodo estatico en una interfaz");
+        }
+    }
+
+    public boolean estaBienDeclarada() throws SemanticException{
+        if(!nombreInterface.getLexema().equals("Object")){
+            //checkHerenciaExplicitaDeclarada();
+            //checkConstructoresBienDeclarados();
+            checkHerenciaCircular(new ArrayList<String>());
+            checkMetodosBienDeclarados();
+        }
+        return false;
+    }
+
+    public void checkExtends() throws SemanticException {
+        for(String interfaceAncestra : clasesQueExtiende){
+            if(!TablaDeSimbolos.existeClase(interfaceAncestra)){
+                throw new SemanticException("no esta declarada", new Token(idClase, interfaceAncestra, nombreInterface.getLinea()));
+            }
+        }
+
+    }
+    /*private void checkHerenciaExplicitaDeclarada() throws SemanticException {
+        if(!TablaDeSimbolos.existeClase(nombreClasePadre)){
+            throw new SemanticException("no esta declarada", new Token(idClase, nombreClasePadre, nombreClase.getLinea()));
+        }
+    }*/
+
+    /*private void checkConstructoresBienDeclarados() throws SemanticException {
+        for(Constructor constructor : constructores){
+            constructor.checkDec();
+        }
+    }*/
+
+    public void checkHerenciaCircular(ArrayList<String> listaClases) throws SemanticException {
+        listaClases.add(nombreInterface.getLexema());
+
+        for(String interfaceAncestra : clasesQueExtiende) {
+            TablaDeSimbolos.getInterfaz(interfaceAncestra).checkExtends();// mmmm TODO
+
+            if (!TablaDeSimbolos.getClase(interfaceAncestra).herenciaCircular()) {
+                if (listaClases.contains(interfaceAncestra)) {
+                    throw new SemanticException(" Hay herencia circular", nombreInterface);
+                }
+                TablaDeSimbolos.getInterfaz(interfaceAncestra).checkHerenciaCircular(listaClases);
+            }
+        }
+    }
+
+    private void checkMetodosBienDeclarados() throws SemanticException {
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            for(Metodo metodo : listaMetodos.getValue()){
+                metodo.checkDec();
+            }
+        }
+    }
+
+    public void insertarAncestro(Interfaz interfaz){
+        clasesQueExtiende.add(interfaz.getNombreClase());
+    }
+
 
 }

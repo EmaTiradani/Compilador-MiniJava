@@ -76,8 +76,8 @@ public class SyntacticParser {
         Token idC = tokenActual; // Me guardo el ID de la clase
         match(idClase);
         Token idPadre = heredaDe();
-        Clase clase;
-        clase = new Clase(idC);
+        ClaseConcreta clase;
+        clase = new ClaseConcreta(idC);
         if(idPadre != null)
             clase.insertarPadre(idPadre.getLexema());
 
@@ -91,7 +91,7 @@ public class SyntacticParser {
         match(punt_llaveDer);
     }
 
-    private void insertarMetodos(Clase clase, HashMap<String,ArrayList<Metodo>> metodos) throws SemanticException {
+    private void insertarMetodos(ClaseConcreta clase, HashMap<String,ArrayList<Metodo>> metodos) throws SemanticException {
         for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodos.entrySet()) {
             for(Metodo metodo : listaMetodos.getValue()){
                 clase.insertarMetodo(metodo);
@@ -102,6 +102,7 @@ public class SyntacticParser {
     private void interface_() throws LexicalException, SyntacticException, IOException, SemanticException {
         if(firsts.isFirst("Interface", tokenActual)) {
             match(kw_interface);
+            Token nombreInterfaz = tokenActual;
             match(idClase);
             extiendeA();
             match(punt_llaveIzq);

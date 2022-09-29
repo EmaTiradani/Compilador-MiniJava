@@ -1,38 +1,13 @@
 ///[Error:else|9]
-class Pepe extends Fafa{
 
-    static void main () {
-            var c = false;
-            if (b) {
-                if (c == 2) {
+class A extends C{}
 
-                } else if (t == 5) while (x < 2) x+=1;
+class B extends A{}
 
 
-            }
-    }
-    int hola (boolean a, int x) {
 
 
-    }
-
-    int hola (boolean b) {
-
-    }
-}
-class Askjdask{
-
-    public boolean x,y,z;
-
-    void metodito(int d){
 
 
-    }
-}
-
-interface Fafa{
-
-int m1();
-}
 
 
