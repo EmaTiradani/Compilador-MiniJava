@@ -1,8 +1,16 @@
 ///[Error:else|9]
 
-class A extends C{}
+class A{}
 
-class B extends A{}
+class B extends A{
+    static void main(){
+
+    }
+}
+
+interface R extends B{
+
+}
 
 
 

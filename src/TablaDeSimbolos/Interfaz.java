@@ -19,7 +19,7 @@ public class Interfaz extends Clase{
 
     public Interfaz(Token nombreInterface){
         this.nombreInterface = nombreInterface;
-        clasesQueExtiende = new ArrayList<>();
+        implemented = new ArrayList<>();
         metodos = new HashMap<>();
 
         consolidado = false;
@@ -78,7 +78,7 @@ public class Interfaz extends Clase{
     }
 
     public void checkExtends() throws SemanticException {
-        for(String interfaceAncestra : clasesQueExtiende){
+        for(String interfaceAncestra : implemented){
             if(!TablaDeSimbolos.existeClase(interfaceAncestra)){
                 throw new SemanticException("no esta declarada", new Token(idClase, interfaceAncestra, nombreInterface.getLinea()));
             }
@@ -100,7 +100,7 @@ public class Interfaz extends Clase{
     public void checkHerenciaCircular(ArrayList<String> listaClases) throws SemanticException {
         listaClases.add(nombreInterface.getLexema());
 
-        for(String interfaceAncestra : clasesQueExtiende) {
+        for(String interfaceAncestra : implemented) {
             TablaDeSimbolos.getInterfaz(interfaceAncestra).checkExtends();// mmmm TODO
 
             if (!TablaDeSimbolos.getClase(interfaceAncestra).herenciaCircular()) {
@@ -121,7 +121,7 @@ public class Interfaz extends Clase{
     }
 
     public void insertarAncestro(Interfaz interfaz){
-        clasesQueExtiende.add(interfaz.getNombreClase());
+        implemented.add(interfaz.getNombreClase());
     }
 
 

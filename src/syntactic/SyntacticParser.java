@@ -104,6 +104,8 @@ public class SyntacticParser {
             match(kw_interface);
             Token nombreInterfaz = tokenActual;
             match(idClase);
+            Interfaz interfaz = new Interfaz(nombreInterfaz);
+            TablaDeSimbolos.claseActual = interfaz;
             extiendeA();
             match(punt_llaveIzq);
             listaEncabezados();
