@@ -74,10 +74,17 @@ public class Metodo {
                 && */argumento1.getTipoParametro().getType().equals(argumento2.getTipoParametro().getType()));
     }
 
+    public boolean coincideEncabezado(Metodo metodo){ // Chequea si coinciden encabezados VALIDOS (no dos exactamente iguales, eso no es valido)
+        return(metodo.getId().getLexema().equals(idMet.getLexema())
+                &&  metodo.compararListaArgumentos(argumentos));
+    }
+
     public boolean esMain() {
         if(estatico && idMet.getLexema().equals("main") && argumentos.size() == 0 && tipoRetorno.getType().equals("void"))
             return true;
         else
             return false;
     }
+
+
 }

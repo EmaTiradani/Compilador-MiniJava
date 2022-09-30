@@ -8,12 +8,12 @@ import java.util.HashMap;
 
 public abstract class Clase {
 
-    private Token nombreClase;
-    private String nombreClasePadre;
+    public Token nombreClase;
+    public String nombreClasePadre;
     public ArrayList<String> implemented;
 
-    private HashMap<String, Atributo> atributos;
-    private HashMap<String, ArrayList<Metodo>> metodos;
+    public HashMap<String, Atributo> atributos;
+    public HashMap<String, ArrayList<Metodo>> metodos;
 
     boolean consolidado;
     boolean notHerenciaCircular;
@@ -30,6 +30,8 @@ public abstract class Clase {
     public abstract boolean estaBienDeclarada() throws SemanticException;
 
     public abstract void consolidar() throws SemanticException;
+
+    public abstract boolean herenciaCircular();
 
 
 }

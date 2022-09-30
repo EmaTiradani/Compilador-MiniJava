@@ -12,7 +12,7 @@ public class Interfaz extends Clase{
 
     private Token nombreInterface;
     private ArrayList<String> clasesQueExtiende;
-    private HashMap<String, ArrayList<Metodo>>  metodos;
+    //private HashMap<String, ArrayList<Metodo>>  metodos;
 
     boolean consolidado, notHerenciaCircular;
 
@@ -35,6 +35,8 @@ public class Interfaz extends Clase{
         return nombreInterface.getLexema();
     }
 
+    public boolean herenciaCircular(){ return notHerenciaCircular;}
+
     public void insertarAtributo(Atributo atributo) throws SemanticException {
         // Aca no deberia entrar nunca
     }
@@ -48,8 +50,6 @@ public class Interfaz extends Clase{
                     if (met.soloCambiaTipoRetorno(metodo)) {// Java no soporta sobrecarga dep. del contexto si pasa eso, error
                         throw new SemanticException("esta mal redefinido", metodo.getId());
                     } else {
-                    /*ArrayList<Metodo> mets = metodos.get(metodo.getId().getLexema());
-                    mets.add(metodo);*/
                         puedeSerInsertado = true;
                     }
                 }
@@ -105,7 +105,7 @@ public class Interfaz extends Clase{
         for(String interfaceAncestra : implemented) {
             TablaDeSimbolos.getInterfaz(interfaceAncestra).checkExtends();// mmmm TODO
 
-            if (!TablaDeSimbolos.getClase(interfaceAncestra).herenciaCircular()) {
+            if (!TablaDeSimbolos.getInterfaz(interfaceAncestra).herenciaCircular()) {
                 if (listaClases.contains(interfaceAncestra)) {
                     throw new SemanticException(" Hay herencia circular", nombreInterface);
                 }
@@ -125,10 +125,28 @@ public class Interfaz extends Clase{
 
     @Override
     public void consolidar() throws SemanticException {
-        //if(TablaDeSimbolos.getClase())
-
+        for(String interfaceAncestra : implemented) {
+            Interfaz ancestro = TablaDeSimbolos.getInterfaz(interfaceAncestra);
+            ancestro.checkExtends();// mmmm TODO
+            if(ancestro.consolidado){
+                importarMetodosDePadre(ancestro);
+                consolidado = true;
+            }else{
+                ancestro.consolidar();
+                importarMetodosDePadre(ancestro);
+                consolidado = true;
+            }
+        }
     }
 
+    private void importarMetodosDePadre(Interfaz interfaceAncestra) throws SemanticException {
+        HashMap<String, ArrayList<Metodo>> metodosAncestro = interfaceAncestra.metodos;
+        for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodosAncestro.entrySet()){
+            for(Metodo metodo : listaMetodos.getValue()){
+                insertarMetodo(metodo);
+            }
+        }
+    }
     private void checkEncabezadosBienDeclarados(){
 
     }
@@ -137,5 +155,12 @@ public class Interfaz extends Clase{
         implemented.add(interfaz.getNombreClase());
     }
 
+    public void print(){
+        for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            for(Metodo metodo : listaMetodos.getValue()){
+                System.out.println("\nNombre de metodo: " + metodo.getId().getLexema());
+            }
+        }
+    }
 
 }

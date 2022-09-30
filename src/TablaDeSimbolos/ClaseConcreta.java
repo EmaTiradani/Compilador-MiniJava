@@ -127,6 +127,7 @@ public class ClaseConcreta extends Clase{
             checkConstructoresBienDeclarados();
             checkHerenciaCircular(new ArrayList<String>());
             checkMetodosBienDeclarados();
+            checkImplementaTodosLosMetodosDeSuInterfaz();
             tengoMain = checkMain();
         }
         return tengoMain;
@@ -178,7 +179,7 @@ public class ClaseConcreta extends Clase{
         TablaDeSimbolos.getClase(nombreClasePadre).checkHerenciaExplicitaDeclarada();// mmmm TODO
         if (!TablaDeSimbolos.getClase(nombreClasePadre).herenciaCircular()) {
             if (listaClases.contains(nombreClasePadre)) {
-                throw new SemanticException(" Hay herencia circular", nombreClase);
+                throw new SemanticException(" Hay herencia circular", TablaDeSimbolos.getClase(nombreClasePadre).getToken());
             }
             TablaDeSimbolos.getClase(nombreClasePadre).checkHerenciaCircular(listaClases);
         }
@@ -190,6 +191,36 @@ public class ClaseConcreta extends Clase{
                 metodo.checkDec();
             }
         }
+    }
+
+    private void checkImplementaTodosLosMetodosDeSuInterfaz() throws SemanticException {
+        for(String interfaceQueImplementa : implemented){
+            Interfaz interfaceAncestra = TablaDeSimbolos.getInterfaz(interfaceQueImplementa);
+            /*if(!interfaceImplementada(interfaceAncestra)){
+                throw new SemanticException("no esta declarada", new Token(idClase, interfaceAncestra.nombreClase.getLexema(), interfaceAncestra.nombreClase.getLinea()));
+            }*/
+            interfaceImplementada(interfaceAncestra);
+        }
+    }
+
+    private void interfaceImplementada(Interfaz interfaz) throws SemanticException {
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : interfaz.metodos.entrySet()){
+            for(Metodo metodo : listaMetodos.getValue()){
+                if(!estaImplementado(metodo))
+                    throw new SemanticException("El metodo "+ metodo.getId().getLexema()+" de la interfaz "+interfaz.getNombreClase() +
+                            " no está implementado en la clase "+nombreClase.getLexema());
+            }
+        }
+    }
+
+    private boolean estaImplementado(Metodo metodo){
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            for(Metodo met : listaMetodos.getValue()){
+                if(metodo.coincideEncabezado(met))
+                    return true;
+            }
+        }
+        return false;
     }
 
 

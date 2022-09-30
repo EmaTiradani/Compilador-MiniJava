@@ -1,18 +1,32 @@
 ///[Error:else|9]
 
-
-class A implements B{
+class ClaseConMetodoMainParaQueNoSalteElErrorDeQueFaltaElMainJajaReLargoElNombre {
     static void main(){}
-
 }
 
-interface B extends A{
+class A{
+
+    void boenas(){}
+}
+
+interface C{
+
+    int metodardo();
+}
+
+interface B extends C{
 
     int metodox();
 
     int metodor(boolean b);
 
     void metodor(int b);
+}
+
+class Implementadora extends A{
+
+    int boenas(){}
+
 }
 
 

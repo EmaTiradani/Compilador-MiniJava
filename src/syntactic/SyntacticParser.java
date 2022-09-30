@@ -50,7 +50,6 @@ public class SyntacticParser {
 
     private void inicial() throws LexicalException, SyntacticException, IOException, SemanticException {
         listaClases();
-        TablaDeSimbolos.print();
         match(EOF);
     }
 

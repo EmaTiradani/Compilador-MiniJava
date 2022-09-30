@@ -63,6 +63,11 @@ public final class TablaDeSimbolos {
             clase.getValue().print();
             System.out.println("|--------------");
         }
+        for(Map.Entry<String, Interfaz> interfaz : interfaces.entrySet()){
+            System.out.println("-Nombre de clase: " + interfaz.getKey());
+            interfaz.getValue().print();
+            System.out.println("|--------------");
+        }
     }
 
     public static void checkDec() throws SemanticException {
