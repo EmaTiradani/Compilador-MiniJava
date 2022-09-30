@@ -26,7 +26,7 @@ public final class TablaDeSimbolos {
     }
 
     public static void insertClass(String name, ClaseConcreta clase) throws SemanticException {
-        if(clases.containsKey(name)){
+        if(clases.containsKey(name) || interfaces.containsKey(name)){
             throw new SemanticException("ya estaba declarada", clase.getToken());
         }else{
             clases.put(name, clase);
@@ -34,7 +34,7 @@ public final class TablaDeSimbolos {
     }
 
     public static void insertInterface(String name, Interfaz interfaz) throws SemanticException {
-        if(interfaces.containsKey(name)){
+        if(clases.containsKey(name) || interfaces.containsKey(name)){
             throw new SemanticException("ya estaba declarada", interfaz.getToken());
         }else{
             interfaces.put(name, interfaz);
@@ -51,6 +51,10 @@ public final class TablaDeSimbolos {
 
     public static boolean existeClase(String nombreClase){
         return clases.containsKey(nombreClase);
+    }
+
+    public static boolean existeInterfaz(String nombreClase){
+        return interfaces.containsKey(nombreClase);
     }
 
     public static void print(){ //Metodo para ver si se crean bien las cosas de la TS
@@ -93,6 +97,9 @@ public final class TablaDeSimbolos {
                 //Aca le tengo que decir --> clase.consolidar();
                 clase.getValue().consolidar();
             }
+        }
+        for (Map.Entry<String, Interfaz> interfaz : interfaces.entrySet()){
+            interfaz.getValue().consolidar();
         }
         System.out.println("Consolida2");
     }

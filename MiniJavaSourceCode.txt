@@ -1,16 +1,21 @@
 ///[Error:else|9]
 
-class A{}
 
-class B extends A{
-    static void main(){
-
-    }
-}
-
-interface R extends B{
+class A implements B{
+    static void main(){}
 
 }
+
+interface B extends A{
+
+    int metodox();
+
+    int metodor(boolean b);
+
+    void metodor(int b);
+}
+
+
 
 
 

@@ -60,9 +60,11 @@ public class Metodo {
         boolean sonIguales = true;
         if(argumentos.size() != this.argumentos.size())
             sonIguales = false;
-        for(int i=0; i<argumentos.size(); i++){
-            if(!compararArgumentos(argumentos.get(i), this.argumentos.get(i)))
-                sonIguales = false;
+        else {
+            for (int i = 0; i < argumentos.size(); i++) {
+                if (!compararArgumentos(argumentos.get(i), this.argumentos.get(i)))
+                    sonIguales = false;
+            }
         }
         return sonIguales;
     }

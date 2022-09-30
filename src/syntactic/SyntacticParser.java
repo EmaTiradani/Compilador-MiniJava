@@ -107,6 +107,7 @@ public class SyntacticParser {
             Interfaz interfaz = new Interfaz(nombreInterfaz);
             TablaDeSimbolos.claseActual = interfaz;
             extiendeA();
+            TablaDeSimbolos.insertInterface(interfaz.getNombreClase(), interfaz);
             match(punt_llaveIzq);
             listaEncabezados();
             match(punt_llaveDer);

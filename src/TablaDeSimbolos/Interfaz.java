@@ -71,15 +71,17 @@ public class Interfaz extends Clase{
         if(!nombreInterface.getLexema().equals("Object")){
             //checkHerenciaExplicitaDeclarada();
             //checkConstructoresBienDeclarados();
+            checkExtends();
             checkHerenciaCircular(new ArrayList<String>());
             checkMetodosBienDeclarados();
         }
         return false;
     }
 
+
     public void checkExtends() throws SemanticException {
         for(String interfaceAncestra : implemented){
-            if(!TablaDeSimbolos.existeClase(interfaceAncestra)){
+            if(!TablaDeSimbolos.existeInterfaz(interfaceAncestra)){
                 throw new SemanticException("no esta declarada", new Token(idClase, interfaceAncestra, nombreInterface.getLinea()));
             }
         }
@@ -118,6 +120,17 @@ public class Interfaz extends Clase{
                 metodo.checkDec();
             }
         }
+    }
+
+
+    @Override
+    public void consolidar() throws SemanticException {
+        //if(TablaDeSimbolos.getClase())
+
+    }
+
+    private void checkEncabezadosBienDeclarados(){
+
     }
 
     public void insertarAncestro(Interfaz interfaz){

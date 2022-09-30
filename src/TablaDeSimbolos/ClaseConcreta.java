@@ -13,7 +13,7 @@ public class ClaseConcreta extends Clase{
 
     private Token nombreClase;
     private String nombreClasePadre;
-    public ArrayList<String> implemented;
+    //public ArrayList<String> implemented;
 
     private HashMap<String, Atributo> atributos;
     private HashMap<String, ArrayList<Metodo>> metodos;

@@ -29,5 +29,7 @@ public abstract class Clase {
 
     public abstract boolean estaBienDeclarada() throws SemanticException;
 
+    public abstract void consolidar() throws SemanticException;
+
 
 }
