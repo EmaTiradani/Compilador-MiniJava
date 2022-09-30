@@ -10,7 +10,7 @@ public abstract class Clase {
 
     public Token nombreClase;
     public String nombreClasePadre;
-    public ArrayList<String> implemented;
+    public ArrayList<String> listaInterfaces;
 
     public HashMap<String, Atributo> atributos;
     public HashMap<String, ArrayList<Metodo>> metodos;

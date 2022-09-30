@@ -19,7 +19,7 @@ public class Interfaz extends Clase{
 
     public Interfaz(Token nombreInterface){
         this.nombreInterface = nombreInterface;
-        implemented = new ArrayList<>();
+        listaInterfaces = new ArrayList<>();
         metodos = new HashMap<>();
 
         consolidado = false;
@@ -72,15 +72,14 @@ public class Interfaz extends Clase{
             //checkHerenciaExplicitaDeclarada();
             //checkConstructoresBienDeclarados();
             checkExtends();
-            checkHerenciaCircular(new ArrayList<String>());
+            checkHerenciaCircular(new ArrayList<Token>());
             checkMetodosBienDeclarados();
         }
         return false;
     }
 
-
     public void checkExtends() throws SemanticException {
-        for(String interfaceAncestra : implemented){
+        for(String interfaceAncestra : listaInterfaces){
             if(!TablaDeSimbolos.existeInterfaz(interfaceAncestra)){
                 throw new SemanticException("no esta declarada", new Token(idClase, interfaceAncestra, nombreInterface.getLinea()));
             }
@@ -99,19 +98,20 @@ public class Interfaz extends Clase{
         }
     }*/
 
-    public void checkHerenciaCircular(ArrayList<String> listaClases) throws SemanticException {
-        listaClases.add(nombreInterface.getLexema());
+    public void checkHerenciaCircular(ArrayList<Token> listaClases) throws SemanticException {
+        listaClases.add(nombreInterface);
 
-        for(String interfaceAncestra : implemented) {
+        for(String interfaceAncestra : listaInterfaces) {
             TablaDeSimbolos.getInterfaz(interfaceAncestra).checkExtends();// mmmm TODO
 
             if (!TablaDeSimbolos.getInterfaz(interfaceAncestra).herenciaCircular()) {
-                if (listaClases.contains(interfaceAncestra)) {
+                if (listaClases.contains(TablaDeSimbolos.getInterfaz(interfaceAncestra).getToken())) {
                     throw new SemanticException(" Hay herencia circular", nombreInterface);
                 }
                 TablaDeSimbolos.getInterfaz(interfaceAncestra).checkHerenciaCircular(listaClases);
             }
         }
+        listaClases.remove(nombreInterface);
     }
 
     private void checkMetodosBienDeclarados() throws SemanticException {
@@ -125,7 +125,7 @@ public class Interfaz extends Clase{
 
     @Override
     public void consolidar() throws SemanticException {
-        for(String interfaceAncestra : implemented) {
+        for(String interfaceAncestra : listaInterfaces) {
             Interfaz ancestro = TablaDeSimbolos.getInterfaz(interfaceAncestra);
             ancestro.checkExtends();// mmmm TODO
             if(ancestro.consolidado){
@@ -152,7 +152,7 @@ public class Interfaz extends Clase{
     }
 
     public void insertarAncestro(Interfaz interfaz){
-        implemented.add(interfaz.getNombreClase());
+        listaInterfaces.add(interfaz.getNombreClase());
     }
 
     public void print(){

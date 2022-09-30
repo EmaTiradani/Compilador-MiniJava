@@ -143,7 +143,7 @@ public class SyntacticParser {
     }
     private void listaTipoReferencia() throws LexicalException, SyntacticException, IOException {
         Token nombreExtiende = tokenActual;
-        TablaDeSimbolos.claseActual.implemented.add(nombreExtiende.getLexema());
+        TablaDeSimbolos.claseActual.listaInterfaces.add(nombreExtiende.getLexema());
         match(idClase);
         listaTipoReferenciaFact();
     }

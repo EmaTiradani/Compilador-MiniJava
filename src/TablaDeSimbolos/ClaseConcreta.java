@@ -29,7 +29,7 @@ public class ClaseConcreta extends Clase{
         this.nombreClase = nombreClase;
         this.nombreClasePadre = "Object";
         atributos = new HashMap<>();
-        implemented = new ArrayList<>();
+        listaInterfaces = new ArrayList<>();
         metodos = new HashMap<>();
         constructores = new ArrayList<>();
 
@@ -68,7 +68,8 @@ public class ClaseConcreta extends Clase{
         if(!atributos.containsKey(atributo.getId())){
             atributos.put(atributo.getId(), atributo);
         }else{
-            throw new SemanticException("Atributo con el mismo ID", atributo.getToken());
+            Atributo atributoRepetido = atributos.get(atributo.getId());
+            throw new SemanticException("Atributo con el mismo ID", atributoRepetido.getToken());
         }
     }
 
@@ -78,7 +79,7 @@ public class ClaseConcreta extends Clase{
             boolean puedeSerInsertado = false;
             for(Metodo met : metodos.get(metodo.getId().getLexema())){
                 if(met.soloCambiaTipoRetorno(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
-                    throw new SemanticException("esta mal redefinido", metodo.getId());
+                    throw new SemanticException("esta mal redefinido", met.getId());
                 }else{
                     /*ArrayList<Metodo> mets = metodos.get(metodo.getId().getLexema());
                     mets.add(metodo);*/
@@ -100,12 +101,6 @@ public class ClaseConcreta extends Clase{
 
     public void insertarPadre(String nombreClasePadre) throws SemanticException {
         this.nombreClasePadre = nombreClasePadre;
-        /*HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase(nombreClasePadre).getMetodos();
-        for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodosClasePadre.entrySet()){
-            for(Metodo metodo : listaMetodos.getValue()){
-                insertarMetodo(metodo);
-            }
-        }*/
     }
 
     public HashMap<String, Atributo> getAtributos(){
@@ -127,7 +122,7 @@ public class ClaseConcreta extends Clase{
             checkConstructoresBienDeclarados();
             checkHerenciaCircular(new ArrayList<String>());
             checkMetodosBienDeclarados();
-            checkImplementaTodosLosMetodosDeSuInterfaz();
+            checkAtributosBienDeclarados();
             tengoMain = checkMain();
         }
         return tengoMain;
@@ -141,6 +136,7 @@ public class ClaseConcreta extends Clase{
             TablaDeSimbolos.getClase(nombreClasePadre).consolidar();
             consolidar();
         }
+        checkImplementaTodosLosMetodosDeSuInterfaz();
     }
 
     private void insertarMetodoYAtributosDePadre() throws SemanticException {
@@ -194,12 +190,18 @@ public class ClaseConcreta extends Clase{
     }
 
     private void checkImplementaTodosLosMetodosDeSuInterfaz() throws SemanticException {
-        for(String interfaceQueImplementa : implemented){
+        for(String interfaceQueImplementa : listaInterfaces){
             Interfaz interfaceAncestra = TablaDeSimbolos.getInterfaz(interfaceQueImplementa);
             /*if(!interfaceImplementada(interfaceAncestra)){
                 throw new SemanticException("no esta declarada", new Token(idClase, interfaceAncestra.nombreClase.getLexema(), interfaceAncestra.nombreClase.getLinea()));
             }*/
             interfaceImplementada(interfaceAncestra);
+        }
+    }
+
+    private void checkAtributosBienDeclarados(){
+        for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
+            //if(atributo.getValue().getId())
         }
     }
 

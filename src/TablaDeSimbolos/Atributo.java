@@ -29,6 +29,10 @@ public class Atributo {
         return visibilidad;
     }
 
+    public void checkDec(){
+
+    }
+
     public void print(){
         System.out.println("Atributo: " + idVar.getLexema() + " |tipo: " + tipo.getType() + " |visibilidad : " + visibilidad);
     }

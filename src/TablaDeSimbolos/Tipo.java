@@ -31,7 +31,7 @@ public class Tipo {
 
     public void checkExistencia(int numeroLinea) throws SemanticException {
         if(!isPrimitive){
-            if(!TablaDeSimbolos.existeClase(id))
+            if(!TablaDeSimbolos.existeClase(id) && !TablaDeSimbolos.existeInterfaz(id))
                 throw new SemanticException("no esta declarada", new Token(idClase, id, numeroLinea));
         }
     }
