@@ -32,10 +32,6 @@ public class SemanticException extends Exception{
         }else{
             error += (token.getLinea() + message);
         }
-        //String error = ("Error semantico en linea " + linea + ""
-        /*String error = ("Error sintactico en linea " + actualToken.getLinea() + ": Se esperaba " + expectedToken + " y se encontro \"" + actualToken.getLexema()) + "\"";
-        error += "\n\n[Error:" + actualToken.getLexema() + "|" + actualToken.getLinea() + "]";
-        return error;*/
         error += "\n\n[Error:" + token.getLexema() + "|" + token.getLinea() + "]";
         return error;
     }

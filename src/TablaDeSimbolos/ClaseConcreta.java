@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static lexycal.TokenId.idClase;
+import static lexycal.TokenId.*;
 
 public class ClaseConcreta extends Clase{
 
@@ -21,7 +21,7 @@ public class ClaseConcreta extends Clase{
     boolean consolidado;
     boolean notHerenciaCircular;
 
-    private Metodo metodoMain = null;
+    private Metodo metodoMain;
 
     ArrayList<Constructor> constructores;
 
@@ -38,6 +38,8 @@ public class ClaseConcreta extends Clase{
 
         Constructor constructor = new Constructor(nombreClase);
         constructores.add(constructor);
+
+        metodoMain = new Metodo(new Token(idMetVar, "main", 0), new TipoMetodo("void"), true, null);
 
         /*if(nombreClasePadre.equals("Object")){
             consolidado = true;
@@ -95,7 +97,7 @@ public class ClaseConcreta extends Clase{
             listaMetodos.add(metodo);
             metodos.put(metodo.getId().getLexema(), listaMetodos);
         }
-        if(metodo.esMain())
+        if(metodo.esMain() && metodo.getId().getLinea()>metodoMain.getId().getLinea())
             metodoMain = metodo;
     }
 
@@ -120,7 +122,7 @@ public class ClaseConcreta extends Clase{
         if(!nombreClase.getLexema().equals("Object")){
             checkHerenciaExplicitaDeclarada();
             checkConstructoresBienDeclarados();
-            checkHerenciaCircular(new ArrayList<String>());
+            checkHerenciaCircular(new ArrayList<>());
             checkMetodosBienDeclarados();
             checkAtributosBienDeclarados();
             tengoMain = checkMain();
@@ -155,12 +157,17 @@ public class ClaseConcreta extends Clase{
     }
 
     private boolean checkMain(){
-        return (!(metodoMain == null));
+        return (metodoMain.getId().getLinea() == 0);
     }
 
     private void checkHerenciaExplicitaDeclarada() throws SemanticException {
         if(!TablaDeSimbolos.existeClase(nombreClasePadre)){
             throw new SemanticException("no esta declarada", new Token(idClase, nombreClasePadre, nombreClase.getLinea()));
+        }
+        for(String interfaceAncestra : listaInterfaces){
+            if(!TablaDeSimbolos.existeInterfaz(interfaceAncestra)){
+                throw new SemanticException("no esta declarada", new Token(idClase, interfaceAncestra, nombreClase.getLinea()));
+            }
         }
     }
 
@@ -170,15 +177,18 @@ public class ClaseConcreta extends Clase{
         }
     }
 
-    private void checkHerenciaCircular(ArrayList<String> listaClases) throws SemanticException {
-        listaClases.add(nombreClase.getLexema());
-        TablaDeSimbolos.getClase(nombreClasePadre).checkHerenciaExplicitaDeclarada();// mmmm TODO
-        if (!TablaDeSimbolos.getClase(nombreClasePadre).herenciaCircular()) {
-            if (listaClases.contains(nombreClasePadre)) {
-                throw new SemanticException(" Hay herencia circular", TablaDeSimbolos.getClase(nombreClasePadre).getToken());
+    private void checkHerenciaCircular(ArrayList<Token> listaClases) throws SemanticException {
+        listaClases.add(nombreClase);
+        ClaseConcreta claseAncestra = TablaDeSimbolos.getClase(nombreClasePadre);
+        claseAncestra.checkHerenciaExplicitaDeclarada();// mmmm TODO
+
+        if (!claseAncestra.herenciaCircular()) {
+            if (listaClases.contains(claseAncestra.getToken())) {
+                    throw new SemanticException(" Hay herencia circular", new Token(idMetVar, claseAncestra.getNombreClase(), nombreClase.getLinea()));
             }
-            TablaDeSimbolos.getClase(nombreClasePadre).checkHerenciaCircular(listaClases);
+            claseAncestra.checkHerenciaCircular(listaClases);
         }
+        listaClases.remove(nombreClase);
     }
 
     private void checkMetodosBienDeclarados() throws SemanticException {
@@ -199,9 +209,13 @@ public class ClaseConcreta extends Clase{
         }
     }
 
-    private void checkAtributosBienDeclarados(){
+    private void checkAtributosBienDeclarados() throws SemanticException {
         for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
-            //if(atributo.getValue().getId())
+            Tipo tipoAtributo = atributo.getValue().getTipo();
+            if(!tipoAtributo.isPrimitive && !TablaDeSimbolos.existeClase(tipoAtributo.getType())){
+                throw new SemanticException("El atributo: "+atributo.getValue().getId()+
+                        "es de un tipo clase "+tipoAtributo.getType()+" que no esta declarado", new Token(idClase, tipoAtributo.id, atributo.getValue().getToken().getLinea()));
+            }
         }
     }
 
@@ -210,7 +224,7 @@ public class ClaseConcreta extends Clase{
             for(Metodo metodo : listaMetodos.getValue()){
                 if(!estaImplementado(metodo))
                     throw new SemanticException("El metodo "+ metodo.getId().getLexema()+" de la interfaz "+interfaz.getNombreClase() +
-                            " no está implementado en la clase "+nombreClase.getLexema());
+                            " no está implementado en la clase "+nombreClase.getLexema(), metodo.getId());
             }
         }
     }

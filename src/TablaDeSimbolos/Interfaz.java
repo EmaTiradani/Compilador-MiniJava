@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static lexycal.TokenId.idClase;
+import static lexycal.TokenId.idMetVar;
 
 public class Interfaz extends Clase{
 
@@ -63,7 +64,7 @@ public class Interfaz extends Clase{
                 metodos.put(metodo.getId().getLexema(), listaMetodos);
             }
         }else{
-            throw new SemanticException("Metodo estatico en una interfaz");
+            throw new SemanticException("Metodo estatico en una interfaz", metodo.getId());
         }
     }
 
@@ -106,7 +107,7 @@ public class Interfaz extends Clase{
 
             if (!TablaDeSimbolos.getInterfaz(interfaceAncestra).herenciaCircular()) {
                 if (listaClases.contains(TablaDeSimbolos.getInterfaz(interfaceAncestra).getToken())) {
-                    throw new SemanticException(" Hay herencia circular", nombreInterface);
+                    throw new SemanticException(" Hay herencia circular", new Token(idMetVar, interfaceAncestra, nombreInterface.getLinea()));
                 }
                 TablaDeSimbolos.getInterfaz(interfaceAncestra).checkHerenciaCircular(listaClases);
             }

@@ -1,21 +1,12 @@
 ///[Error:else|9]
 
-class ClaseConMetodoMainParaQueNoSalteElErrorDeQueFaltaElMainJajaReLargoElNombre {
-    static void main(){}
+class B extends C{
+
 }
 
-interface I1{}
-
-interface I2 extends I1{}
-
-interface I3 extends I1{}
-
-interface I4 extends I2,I3{}
-
-class A{
+class A extends B{
     static void main(){}
 }
-
 
 
 

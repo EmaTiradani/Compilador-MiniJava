@@ -16,6 +16,7 @@ public final class TablaDeSimbolos {
     public static Clase claseActual;
     public static Metodo metodoActual;
     public static Atributo atributoActual;
+    public static Metodo metodoMain;
 
     public TablaDeSimbolos() throws SemanticException {
         clases = new HashMap<String, ClaseConcreta>();
