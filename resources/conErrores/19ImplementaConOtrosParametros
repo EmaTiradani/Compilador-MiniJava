@@ -1,0 +1,15 @@
+///[Error:I|8]
+
+interface I{
+    void m1();
+    int m2();
+}
+
+class Clase implements I{
+    static void main(){}
+
+    void m1(boolean b){
+
+    }
+
+}

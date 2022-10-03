@@ -1,0 +1,5 @@
+///[Error:A|3]
+
+class A implements A{
+    static void main(){}
+}

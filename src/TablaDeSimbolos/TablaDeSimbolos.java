@@ -74,21 +74,13 @@ public final class TablaDeSimbolos {
     public static void checkDec() throws SemanticException {
         boolean hayMain = false;
         for (Map.Entry<String, ClaseConcreta> clase : clases.entrySet()){
-            /*if(clase.getValue().getNombreClase() != "Object"){
-                checkHerenciaExplicitaDeclarada(clase.getValue());// Chequear si tiene herencia explicita herede de una clase declarada
-                ArrayList<String> listaParaChequearHerencia = new ArrayList<>();
-                checkHerenciaCircular(clase.getValue(), listaParaChequearHerencia);// Chequear que no tenga herencia circular
-                // Que no tenga 2 metodos o variables de instancia con el mismo nombre TODO chequear de nuevo?
-
-                constructoresBienDeclarados(clase.getValue().getConstructores());//Que todos sus mets, vars, de instancia y su constructor esten correctamente declarados
-            }*/
             boolean tieneMain = clase.getValue().estaBienDeclarada();
             if(tieneMain){
                 hayMain = true;
             }
         }
         if(!hayMain){
-            throw new SemanticException("No hay ninguna clase con un metodo main");
+            throw new SemanticException("No hay ninguna clase con un metodo main", new Token(idMetVar, "main", 0));
         }
         for (Map.Entry<String, Interfaz> interfaz : interfaces.entrySet()){
             interfaz.getValue().estaBienDeclarada();
@@ -107,36 +99,8 @@ public final class TablaDeSimbolos {
         for (Map.Entry<String, Interfaz> interfaz : interfaces.entrySet()){
             interfaz.getValue().consolidar();
         }
-        System.out.println("Consolida2");
+        //System.out.println("Consolida2");
     }
-
-    /*private void checkHerenciaExplicitaDeclarada(Clase clase) throws SemanticException {
-        String nombreClasePadre = clases.get(clase.getNombreClase()).getNombreClasePadre();
-        if(!clases.containsKey(nombreClasePadre)){
-            throw new SemanticException("no esta declarada", clases.get(nombreClasePadre).getToken());
-        }
-    }
-
-    private void constructoresBienDeclarados(ArrayList<Constructor> constructores) throws SemanticException {
-        for(Constructor constructor : constructores){
-            for(Argumento argumento : constructor.getArguments()){
-                if(argumento.getIdVar().getTokenId() == idClase)
-                    if(!clases.containsKey(argumento.getTipoParametro().getType()))
-                        throw new SemanticException("El constructor tiene un parametro del Tipo de una clase sin declarar");
-            }
-        }
-    }
-
-    private void checkHerenciaCircular(Clase clase, ArrayList<String> listaClases) throws SemanticException {
-        listaClases.add(clase.getNombreClase());
-        do{
-            if(listaClases.contains(clase.getNombreClasePadre()))
-                throw new SemanticException("Hay herencia circular");
-            checkHerenciaCircular(clases.get(clase.getNombreClasePadre()), listaClases);
-        }while(clase.getNombreClasePadre().equals("Object"));
-    }*/
-
-
 
     private void insertarMetodosYAtributosDeAncestros(ClaseConcreta clase) throws SemanticException {
         if(clase.getNombreClasePadre().equals("Object")){
@@ -219,7 +183,7 @@ public final class TablaDeSimbolos {
         Metodo printIln = new Metodo(new Token(idMetVar,"printIln", 0),new TipoMetodo("void"), true, argumentosPrintIln);
         system.insertarMetodo(printIln);
         ArrayList<Argumento> argumentosPrintSln = new ArrayList<Argumento>();// PrintSln
-        argumentosPrintS.add(new Argumento(new Token(idMetVar, "s", 0), new Tipo("String")));
+        argumentosPrintSln.add(new Argumento(new Token(idMetVar, "s", 0), new Tipo("String")));
         Metodo printSln = new Metodo(new Token(idMetVar,"printSln", 0),new TipoMetodo("void"), true, argumentosPrintSln);
         system.insertarMetodo(printSln);
     }

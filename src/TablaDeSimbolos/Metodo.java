@@ -48,6 +48,21 @@ public class Metodo {
         for(Argumento argumento : argumentos){
             argumento.checkDec();
         }
+        checkRepeatedArguments();
+    }
+
+    private void checkRepeatedArguments() throws SemanticException {
+
+        for(Argumento argumento : argumentos){
+            int contador = 0;
+            for(Argumento argumento2 : argumentos){
+                if(argumento.getIdVar().getLexema().equals(argumento2.getIdVar().getLexema())){
+                    contador++;
+                }
+                if(contador>1)
+                    throw new SemanticException(" El parametro "+argumento.getIdVar().getLexema()+" esta repetido. Metodo: "+idMet.getLexema() , argumento.getIdVar());
+            }
+        }
     }
 
     public boolean soloCambiaTipoRetorno(Metodo metodo){ //Comparo todos los atribs. menos el ID, que se supone que es el mismo
@@ -55,6 +70,7 @@ public class Metodo {
                 && compararListaArgumentos(metodo.getArgumentos())
                 && metodo.getEstatico()==this.estatico);
     }
+
 
     private boolean compararListaArgumentos(ArrayList<Argumento> argumentos){
         boolean sonIguales = true;
@@ -77,6 +93,12 @@ public class Metodo {
     public boolean coincideEncabezado(Metodo metodo){ // Chequea si coinciden encabezados VALIDOS (no dos exactamente iguales, eso no es valido)
         return(metodo.getId().getLexema().equals(idMet.getLexema())
                 &&  metodo.compararListaArgumentos(argumentos));
+    }
+
+    public boolean mismoEncabezado(Metodo metodo){
+        return(metodo.getId().getLexema().equals(idMet.getLexema())
+                && metodo.compararListaArgumentos(argumentos)
+                && metodo.getTipoRetorno().getType().equals(tipoRetorno.getType()));
     }
 
     public boolean esMain() {

@@ -1,0 +1,9 @@
+
+class A{
+    int met1(){}
+}
+
+class B extends A{
+    int met1(boolean b){}
+    static void main(){}
+}

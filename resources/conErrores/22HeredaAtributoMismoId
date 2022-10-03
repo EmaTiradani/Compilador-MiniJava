@@ -1,0 +1,12 @@
+///[Error:a|10]
+
+class Clase{
+
+    public int a;
+    static void main(){}
+}
+
+class C2 extends Clase{
+    public int a;
+
+}

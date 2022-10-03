@@ -18,6 +18,8 @@ public class SemanticException extends Exception{
         if(token.getTokenId()== idMetVar){
             if(message.equals("esta mal redefinido")) {
                 error += (token.getLinea() + ": El metodo " + token.getLexema() + " " + message);
+            }else{
+                error += (token.getLinea() + message);
             }
         } else if(token.getTokenId()==idClase) {
             if (message.equals("ya estaba declarada")) {

@@ -13,7 +13,6 @@ public class ClaseConcreta extends Clase{
 
     private Token nombreClase;
     private String nombreClasePadre;
-    //public ArrayList<String> implemented;
 
     private HashMap<String, Atributo> atributos;
     private HashMap<String, ArrayList<Metodo>> metodos;
@@ -41,11 +40,6 @@ public class ClaseConcreta extends Clase{
 
         metodoMain = new Metodo(new Token(idMetVar, "main", 0), new TipoMetodo("void"), true, null);
 
-        /*if(nombreClasePadre.equals("Object")){
-            consolidado = true;
-            herenciaCircular = true;
-            //herencia circular entra en consolidado? O chequeo por separado?
-        }*/
     }
 
     public String getNombreClase(){
@@ -70,8 +64,7 @@ public class ClaseConcreta extends Clase{
         if(!atributos.containsKey(atributo.getId())){
             atributos.put(atributo.getId(), atributo);
         }else{
-            Atributo atributoRepetido = atributos.get(atributo.getId());
-            throw new SemanticException("Atributo con el mismo ID", atributoRepetido.getToken());
+            throw new SemanticException(" Atributo con el mismo ID", atributo.getToken());
         }
     }
 
@@ -80,18 +73,15 @@ public class ClaseConcreta extends Clase{
         if(metodos.containsKey(metodo.getId().getLexema())){
             boolean puedeSerInsertado = false;
             for(Metodo met : metodos.get(metodo.getId().getLexema())){
-                if(met.soloCambiaTipoRetorno(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
-                    throw new SemanticException("esta mal redefinido", met.getId());
+                if(met.soloCambiaTipoRetorno(metodo) || met.mismoEncabezado(metodo) || met.coincideEncabezado(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
+                    throw new SemanticException("esta mal redefinido", metodo.getId());
                 }else{
-                    /*ArrayList<Metodo> mets = metodos.get(metodo.getId().getLexema());
-                    mets.add(metodo);*/
                     puedeSerInsertado = true;
                 }
             }
             if(puedeSerInsertado){
                 metodos.get(metodo.getId().getLexema()).add(metodo);
             }
-            //throw new SemanticException("esta mal redefinido", metodo.getId());
         }else{
             ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
             listaMetodos.add(metodo);
@@ -125,6 +115,7 @@ public class ClaseConcreta extends Clase{
             checkHerenciaCircular(new ArrayList<>());
             checkMetodosBienDeclarados();
             checkAtributosBienDeclarados();
+            checkImplementsNotRepeated();
             tengoMain = checkMain();
         }
         return tengoMain;
@@ -142,22 +133,54 @@ public class ClaseConcreta extends Clase{
     }
 
     private void insertarMetodoYAtributosDePadre() throws SemanticException {
-        // Inserto los atributos del padre
+        // Inserto los metodos del padre
         HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase(nombreClasePadre).getMetodos();
         for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodosClasePadre.entrySet()){
             for(Metodo metodo : listaMetodos.getValue()){
-                insertarMetodo(metodo);
+                insertarMetodoPadre(metodo);
             }
         }
         // Inserto los atributos del padre
         HashMap<String,Atributo> atributosClasePadre = TablaDeSimbolos.getClase(nombreClasePadre).getAtributos();
         for(Map.Entry<String, Atributo> atributo : atributosClasePadre.entrySet()){
-            insertarAtributo(atributo.getValue());
+            insertarAtributosDeAncestros(atributo.getValue());
+        }
+    }
+
+    // Este metodo es un insertarMetodo especifico, ya que en caso de tener dos metodos exactamente iguales en una clase padre y una clase hijo, no debera dar error, la inserto
+    private void insertarMetodoPadre(Metodo metodo) throws SemanticException {
+        if(metodos.containsKey(metodo.getId().getLexema())){
+            boolean puedeSerInsertado = false;
+            for(Metodo met : metodos.get(metodo.getId().getLexema())){
+                if(met.soloCambiaTipoRetorno(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
+                    throw new SemanticException("esta mal redefinido", met.getId());
+                }else{
+                    puedeSerInsertado = true;
+                }
+            }
+            if(puedeSerInsertado){
+                metodos.get(metodo.getId().getLexema()).add(metodo);
+            }
+        }else{
+            ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
+            listaMetodos.add(metodo);
+            metodos.put(metodo.getId().getLexema(), listaMetodos);
+        }
+        if(metodo.esMain() && metodo.getId().getLinea()>metodoMain.getId().getLinea())
+            metodoMain = metodo;
+    }
+
+    public void insertarAtributosDeAncestros(Atributo atributo) throws SemanticException {
+        if(!atributos.containsKey(atributo.getId())){
+            atributos.put(atributo.getId(), atributo);
+        }else{
+            Atributo atributoRepetido = atributos.get(atributo.getId());
+            throw new SemanticException(" Atributo con el mismo ID", atributoRepetido.getToken());
         }
     }
 
     private boolean checkMain(){
-        return (metodoMain.getId().getLinea() == 0);
+        return !(metodoMain.getId().getLinea() == 0);
     }
 
     private void checkHerenciaExplicitaDeclarada() throws SemanticException {
@@ -168,6 +191,18 @@ public class ClaseConcreta extends Clase{
             if(!TablaDeSimbolos.existeInterfaz(interfaceAncestra)){
                 throw new SemanticException("no esta declarada", new Token(idClase, interfaceAncestra, nombreClase.getLinea()));
             }
+        }
+    }
+
+    private void checkImplementsNotRepeated() throws SemanticException {
+        for(String interfaz : listaInterfaces){
+            int contador = 0;
+            for(String interfaz2 : listaInterfaces){
+                if(interfaz2.equals(interfaz))
+                    contador++;
+            }
+            if(contador>1)
+                throw new SemanticException("Interface repetida", new Token(nombreClase.getTokenId(), interfaz, nombreClase.getLinea()));
         }
     }
 
@@ -201,10 +236,8 @@ public class ClaseConcreta extends Clase{
 
     private void checkImplementaTodosLosMetodosDeSuInterfaz() throws SemanticException {
         for(String interfaceQueImplementa : listaInterfaces){
+            TablaDeSimbolos.getInterfaz(interfaceQueImplementa).consolidar();
             Interfaz interfaceAncestra = TablaDeSimbolos.getInterfaz(interfaceQueImplementa);
-            /*if(!interfaceImplementada(interfaceAncestra)){
-                throw new SemanticException("no esta declarada", new Token(idClase, interfaceAncestra.nombreClase.getLexema(), interfaceAncestra.nombreClase.getLinea()));
-            }*/
             interfaceImplementada(interfaceAncestra);
         }
     }
@@ -212,8 +245,8 @@ public class ClaseConcreta extends Clase{
     private void checkAtributosBienDeclarados() throws SemanticException {
         for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
             Tipo tipoAtributo = atributo.getValue().getTipo();
-            if(!tipoAtributo.isPrimitive && !TablaDeSimbolos.existeClase(tipoAtributo.getType())){
-                throw new SemanticException("El atributo: "+atributo.getValue().getId()+
+            if(!tipoAtributo.isPrimitive && !TablaDeSimbolos.existeClase(tipoAtributo.getType()) && !TablaDeSimbolos.existeInterfaz(tipoAtributo.getType())){
+                throw new SemanticException(" El atributo: "+atributo.getValue().getId()+
                         "es de un tipo clase "+tipoAtributo.getType()+" que no esta declarado", new Token(idClase, tipoAtributo.id, atributo.getValue().getToken().getLinea()));
             }
         }
@@ -223,8 +256,8 @@ public class ClaseConcreta extends Clase{
         for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : interfaz.metodos.entrySet()){
             for(Metodo metodo : listaMetodos.getValue()){
                 if(!estaImplementado(metodo))
-                    throw new SemanticException("El metodo "+ metodo.getId().getLexema()+" de la interfaz "+interfaz.getNombreClase() +
-                            " no está implementado en la clase "+nombreClase.getLexema(), metodo.getId());
+                    throw new SemanticException(" El metodo "+ metodo.getId().getLexema()+" de la interfaz "+interfaz.getNombreClase() +
+                            " no está implementado en la clase "+nombreClase.getLexema(), new Token(idClase, interfaz.getNombreClase(), nombreClase.getLinea()));
             }
         }
     }
@@ -238,7 +271,6 @@ public class ClaseConcreta extends Clase{
         }
         return false;
     }
-
 
     public void print(){
 

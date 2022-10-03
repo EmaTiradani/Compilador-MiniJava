@@ -1,0 +1,10 @@
+///[Error:Clase|8]
+
+class Clase {
+    static void main(){}
+
+}
+
+class Clase {
+
+}

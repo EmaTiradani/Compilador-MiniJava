@@ -29,7 +29,7 @@ public class MainSyntactic {
             // Segunda pasada
             TablaDeSimbolos.checkDec();
             TablaDeSimbolos.consolidar();
-            TablaDeSimbolos.print();
+            //TablaDeSimbolos.print();
 
             System.out.println("Compilacion exitosa\n\n[SinErrores]");
         }

@@ -1,0 +1,11 @@
+///[Error:met|10]
+
+class A{
+
+     B met(){}
+}
+
+class B extends A{
+    static void main(){}
+     int met(){}
+}

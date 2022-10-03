@@ -1,0 +1,8 @@
+///[Error:a|6]
+
+class Clase{
+
+    public int a;
+    public boolean a;
+    static void main(){}
+}

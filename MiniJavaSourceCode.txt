@@ -1,13 +1,17 @@
 ///[Error:else|9]
 
-class B extends C{
+class A {
 
-}
+    static boolean a(){
 
-class A extends B{
+    }
+
+    boolean a() {
+
+    }
+
     static void main(){}
 }
-
 
 
 

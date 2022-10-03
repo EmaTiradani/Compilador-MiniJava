@@ -1,0 +1,10 @@
+///[Error:C|6]
+
+class Clase {
+    static void main(){}
+
+    void m1(C b){
+
+    }
+
+}

@@ -1,0 +1,11 @@
+class A{
+    static void main(){}
+}
+
+class B extends A{
+    int met(){}
+}
+
+class C extends B{
+    boolean met2(boolean a, int x ){}
+}

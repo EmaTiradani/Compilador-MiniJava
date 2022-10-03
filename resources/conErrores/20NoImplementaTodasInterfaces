@@ -1,0 +1,19 @@
+///[Error:I2|12]
+
+interface I1{
+    void m1();
+    int m2();
+}
+
+interface I2 extends I1{
+
+}
+
+class Clase implements I2{
+    static void main(){}
+
+    void m1(){
+
+    }
+
+}

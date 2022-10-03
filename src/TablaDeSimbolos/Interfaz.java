@@ -48,7 +48,7 @@ public class Interfaz extends Clase{
             if (metodos.containsKey(metodo.getId().getLexema())) {
                 boolean puedeSerInsertado = false;
                 for (Metodo met : metodos.get(metodo.getId().getLexema())) {
-                    if (met.soloCambiaTipoRetorno(metodo)) {// Java no soporta sobrecarga dep. del contexto si pasa eso, error
+                    if (met.soloCambiaTipoRetorno(metodo) || met.mismoEncabezado(metodo) || met.coincideEncabezado(metodo)) {// Java no soporta sobrecarga dep. del contexto si pasa eso, error
                         throw new SemanticException("esta mal redefinido", metodo.getId());
                     } else {
                         puedeSerInsertado = true;
@@ -57,7 +57,6 @@ public class Interfaz extends Clase{
                 if (puedeSerInsertado) {
                     metodos.get(metodo.getId().getLexema()).add(metodo);
                 }
-                //throw new SemanticException("esta mal redefinido", metodo.getId());
             } else {
                 ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
                 listaMetodos.add(metodo);
@@ -68,13 +67,13 @@ public class Interfaz extends Clase{
         }
     }
 
+
     public boolean estaBienDeclarada() throws SemanticException{
         if(!nombreInterface.getLexema().equals("Object")){
-            //checkHerenciaExplicitaDeclarada();
-            //checkConstructoresBienDeclarados();
             checkExtends();
             checkHerenciaCircular(new ArrayList<Token>());
             checkMetodosBienDeclarados();
+            checkExtendsNotRepeated();
         }
         return false;
     }
@@ -87,17 +86,6 @@ public class Interfaz extends Clase{
         }
 
     }
-    /*private void checkHerenciaExplicitaDeclarada() throws SemanticException {
-        if(!TablaDeSimbolos.existeClase(nombreClasePadre)){
-            throw new SemanticException("no esta declarada", new Token(idClase, nombreClasePadre, nombreClase.getLinea()));
-        }
-    }*/
-
-    /*private void checkConstructoresBienDeclarados() throws SemanticException {
-        for(Constructor constructor : constructores){
-            constructor.checkDec();
-        }
-    }*/
 
     public void checkHerenciaCircular(ArrayList<Token> listaClases) throws SemanticException {
         listaClases.add(nombreInterface);
@@ -123,7 +111,6 @@ public class Interfaz extends Clase{
         }
     }
 
-
     @Override
     public void consolidar() throws SemanticException {
         for(String interfaceAncestra : listaInterfaces) {
@@ -144,12 +131,41 @@ public class Interfaz extends Clase{
         HashMap<String, ArrayList<Metodo>> metodosAncestro = interfaceAncestra.metodos;
         for(Map.Entry<String, ArrayList<Metodo>> listaMetodos : metodosAncestro.entrySet()){
             for(Metodo metodo : listaMetodos.getValue()){
-                insertarMetodo(metodo);
+                insertarMetodoPadre(metodo);
             }
         }
     }
-    private void checkEncabezadosBienDeclarados(){
 
+    private void insertarMetodoPadre(Metodo metodo) throws SemanticException {
+        if(metodos.containsKey(metodo.getId().getLexema())){
+            boolean puedeSerInsertado = false;
+            for(Metodo met : metodos.get(metodo.getId().getLexema())){
+                if(met.soloCambiaTipoRetorno(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
+                    throw new SemanticException("esta mal redefinido", metodo.getId());
+                }else{
+                    puedeSerInsertado = true;
+                }
+            }
+            if(puedeSerInsertado){
+                metodos.get(metodo.getId().getLexema()).add(metodo);
+            }
+        }else{
+            ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
+            listaMetodos.add(metodo);
+            metodos.put(metodo.getId().getLexema(), listaMetodos);
+        }
+    }
+
+    private void checkExtendsNotRepeated() throws SemanticException {
+        for(String interfaz : listaInterfaces){
+            int contador = 0;
+            for(String interfaz2 : listaInterfaces){
+                if(interfaz2.equals(interfaz))
+                    contador++;
+            }
+            if(contador>1)
+                throw new SemanticException("Interface repetida", new Token(nombreInterface.getTokenId(), interfaz, nombreInterface.getLinea()));
+        }
     }
 
     public void insertarAncestro(Interfaz interfaz){

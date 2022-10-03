@@ -1,0 +1,10 @@
+///[Error:A|8]
+
+class A extends B{
+
+     B met(){}
+}
+
+class B extends A{
+    static void main(){}
+}

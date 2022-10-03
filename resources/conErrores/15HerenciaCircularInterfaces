@@ -1,0 +1,7 @@
+///[Error:I|3]
+
+interface I extends I{}
+
+class Clase{
+    static void main(){}
+}

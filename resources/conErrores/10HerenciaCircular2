@@ -1,0 +1,13 @@
+///[Error:A|7]
+
+class A extends C{
+
+}
+
+class B extends A{
+
+}
+
+class C extends B{
+    static void main(){}
+}

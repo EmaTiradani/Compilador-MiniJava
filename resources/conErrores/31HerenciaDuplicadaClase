@@ -1,0 +1,13 @@
+///[Error:I|11]
+
+class Clase {
+    static void main(){}
+}
+
+interface I{
+    int m2();
+}
+
+class C2 implements I, I{
+    static void main(){}
+}

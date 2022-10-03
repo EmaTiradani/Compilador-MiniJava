@@ -1,0 +1,11 @@
+///[Error:C|8]
+
+class A{
+
+     B met(){}
+}
+
+class B extends C{
+    static void main(){}
+    int met(){}
+}
