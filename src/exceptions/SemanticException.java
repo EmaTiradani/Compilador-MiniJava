@@ -12,7 +12,6 @@ public class SemanticException extends Exception{
         super(errorMessage);
     }
 
-    //TODO cambiar este mensaje de error
     private static String errorConstructor(String message, Token token){
         String error = "Error semantico en linea ";
         if(token.getTokenId()== idMetVar){

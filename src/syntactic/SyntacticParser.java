@@ -81,8 +81,6 @@ public class SyntacticParser {
             clase.insertarPadre(idPadre.getLexema());
 
         TablaDeSimbolos.claseActual = clase;
-        //HashMap<String,ArrayList<Metodo>> metodosClasePadre = TablaDeSimbolos.getClase(clase.getNombreClasePadre()).getMetodos();
-        //insertarMetodos(TablaDeSimbolos.claseActual, metodosClasePadre);
         implementaA();
         TablaDeSimbolos.insertClass(idC.getLexema(), clase);
         match(punt_llaveIzq);

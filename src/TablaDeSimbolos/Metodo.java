@@ -86,8 +86,7 @@ public class Metodo {
     }
 
     private boolean compararArgumentos(Argumento argumento1, Argumento argumento2){ //TODO No tendria que comprar el id, no?
-        return(/*argumento1.getIdVar().getLexema().equals(argumento2.getIdVar().getLexema())
-                && */argumento1.getTipoParametro().getType().equals(argumento2.getTipoParametro().getType()));
+        return(argumento1.getTipoParametro().getType().equals(argumento2.getTipoParametro().getType()));
     }
 
     public boolean coincideEncabezado(Metodo metodo){ // Chequea si coinciden encabezados VALIDOS (no dos exactamente iguales, eso no es valido)
@@ -99,6 +98,11 @@ public class Metodo {
         return(metodo.getId().getLexema().equals(idMet.getLexema())
                 && metodo.compararListaArgumentos(argumentos)
                 && metodo.getTipoRetorno().getType().equals(tipoRetorno.getType()));
+    }
+
+    public boolean soloCambiaEstatico(Metodo metodo){
+
+        return(mismoEncabezado(metodo) && coincideEncabezado(metodo) && estatico!=metodo.getEstatico());
     }
 
     public boolean esMain() {
