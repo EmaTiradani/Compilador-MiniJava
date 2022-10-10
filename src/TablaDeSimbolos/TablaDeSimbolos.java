@@ -58,18 +58,7 @@ public final class TablaDeSimbolos {
         return interfaces.containsKey(nombreClase);
     }
 
-    public static void print(){ //Metodo para ver si se crean bien las cosas de la TS
-        for(Map.Entry<String, ClaseConcreta> clase : clases.entrySet()){
-            System.out.println("-Nombre de clase: " + clase.getKey());
-            clase.getValue().print();
-            System.out.println("|--------------");
-        }
-        for(Map.Entry<String, Interfaz> interfaz : interfaces.entrySet()){
-            System.out.println("-Nombre de clase: " + interfaz.getKey());
-            interfaz.getValue().print();
-            System.out.println("|--------------");
-        }
-    }
+
 
     public static void checkDec() throws SemanticException {
         boolean hayMain = false;
@@ -186,6 +175,19 @@ public final class TablaDeSimbolos {
         argumentosPrintSln.add(new Argumento(new Token(idMetVar, "s", 0), new Tipo("String")));
         Metodo printSln = new Metodo(new Token(idMetVar,"printSln", 0),new TipoMetodo("void"), true, argumentosPrintSln);
         system.insertarMetodo(printSln);
+    }
+
+    public static void print(){ //Metodo para ver si se crean bien las cosas de la TS
+        for(Map.Entry<String, ClaseConcreta> clase : clases.entrySet()){
+            System.out.println("-Nombre de clase: " + clase.getKey());
+            clase.getValue().print();
+            System.out.println("|--------------");
+        }
+        for(Map.Entry<String, Interfaz> interfaz : interfaces.entrySet()){
+            System.out.println("-Nombre de clase: " + interfaz.getKey());
+            interfaz.getValue().print();
+            System.out.println("|--------------");
+        }
     }
 
 

@@ -73,7 +73,7 @@ public class ClaseConcreta extends Clase{
         if(metodos.containsKey(metodo.getId().getLexema())){
             boolean puedeSerInsertado = false;
             for(Metodo met : metodos.get(metodo.getId().getLexema())){
-                if(met.soloCambiaTipoRetorno(metodo) || met.mismoEncabezado(metodo) || met.coincideEncabezado(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
+                if(met.soloCambiaTipoRetorno(metodo) || met.mismoEncabezado(metodo) || met.coincideEncabezado(metodo) || met.soloCambiaEstatico(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
                     throw new SemanticException("esta mal redefinido", metodo.getId());
                 }else{
                     puedeSerInsertado = true;
@@ -152,7 +152,7 @@ public class ClaseConcreta extends Clase{
         if(metodos.containsKey(metodo.getId().getLexema())){
             boolean puedeSerInsertado = false;
             for(Metodo met : metodos.get(metodo.getId().getLexema())){
-                if(met.soloCambiaTipoRetorno(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
+                if(met.soloCambiaTipoRetorno(metodo) || met.soloCambiaEstatico(metodo)){// Java no soporta sobrecarga dep. del contexto si pasa eso, error
                     throw new SemanticException("esta mal redefinido", met.getId());
                 }else{
                     puedeSerInsertado = true;

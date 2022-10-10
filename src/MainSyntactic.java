@@ -19,6 +19,7 @@ public class MainSyntactic {
 
         try {
             FileManager fileManager = new FileManager(sourceCodeFile);
+            // Lo de abajo son cables para testing
             //FileManager fileManager = new FileManager("C:\\Users\\ema_c\\Desktop\\Compiladores\\Etapa 1\\Compilador\\MiniJavaSourceCode.txt"); //Cable
             //FileManager fileManager = new FileManager("C:\\Users\\default.LAPTOP-9ASHTB0Q\\Desktop\\Lenguajes\\Proyecto\\proyecto-ldp\\Compilador-MiniJava\\MiniJavaSourceCode.txt");
 

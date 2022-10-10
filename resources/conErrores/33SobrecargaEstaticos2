@@ -1,0 +1,8 @@
+///[Error:m2|7]
+
+class Clase {
+   static void main(){}
+
+   void m2(){}
+   static void m2(){}
+}

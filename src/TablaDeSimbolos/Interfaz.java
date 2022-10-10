@@ -13,7 +13,6 @@ public class Interfaz extends Clase{
 
     private Token nombreInterface;
     private ArrayList<String> clasesQueExtiende;
-    //private HashMap<String, ArrayList<Metodo>>  metodos;
 
     boolean consolidado, notHerenciaCircular;
 
