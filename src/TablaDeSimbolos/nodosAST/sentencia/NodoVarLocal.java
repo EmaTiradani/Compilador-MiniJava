@@ -1,11 +1,12 @@
-package semantic;
+package TablaDeSimbolos.nodosAST.sentencia;
 
+import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
 import lexycal.Token;
 
-public class NodoVar extends NodoOperando{
+public class NodoVarLocal extends NodoOperando {
     Token nombre;
 
-    public NodoVar(Token nombre) {
+    public NodoVarLocal(Token nombre) {
         this.nombre = nombre;
     }
 

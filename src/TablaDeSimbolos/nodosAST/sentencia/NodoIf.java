@@ -1,10 +1,12 @@
-package semantic;
+package TablaDeSimbolos.nodosAST.sentencia;
 
-public class NodoWhile {
+import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
+
+public class NodoIf extends NodoSentencia {
     NodoExpresion condicion;
     NodoSentencia sentencia;
 
-    public NodoWhile(NodoExpresion condicion, NodoSentencia sentencia) {
+    public NodoIf(NodoExpresion condicion, NodoSentencia sentencia) {
         this.condicion = condicion;
         this.sentencia = sentencia;
     }
@@ -23,5 +25,10 @@ public class NodoWhile {
 
     public void setSentencia(NodoSentencia sentencia) {
         this.sentencia = sentencia;
+    }
+
+    @Override
+    public void chequear() {
+
     }
 }

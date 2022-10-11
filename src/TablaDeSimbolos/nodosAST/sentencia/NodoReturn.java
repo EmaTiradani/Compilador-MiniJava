@@ -1,6 +1,8 @@
-package semantic;
+package TablaDeSimbolos.nodosAST.sentencia;
 
-public class NodoReturn extends NodoSentencia{
+import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
+
+public class NodoReturn extends NodoSentencia {
     NodoExpresion retorno;
 
     public NodoReturn(NodoExpresion retorno) {

@@ -1,8 +1,9 @@
-package semantic;
+package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
 import lexycal.Token;
 
-public class NodoNum extends NodoOperando{
+public class NodoNum extends NodoOperando {
     Token valor;
 
     public NodoNum(Token valor) {

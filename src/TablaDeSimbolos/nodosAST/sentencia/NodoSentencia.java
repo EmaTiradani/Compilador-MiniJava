@@ -1,4 +1,4 @@
-package semantic;
+package TablaDeSimbolos.nodosAST.sentencia;
 
 public abstract class NodoSentencia {
 
