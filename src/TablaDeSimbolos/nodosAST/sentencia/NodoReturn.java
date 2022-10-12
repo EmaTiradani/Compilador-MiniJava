@@ -1,12 +1,15 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
+import lexycal.Token;
 
 public class NodoReturn extends NodoSentencia {
-    NodoExpresion retorno;
 
-    public NodoReturn(NodoExpresion retorno) {
-        this.retorno = retorno;
+    Token tokenReturn;
+    NodoExpresion retorno; // Puede ser null
+
+    public NodoReturn(Token retorno) {
+        this.tokenReturn = retorno;
     }
 
     public NodoExpresion getRetorno() {
@@ -15,6 +18,10 @@ public class NodoReturn extends NodoSentencia {
 
     public void setRetorno(NodoExpresion retorno) {
         this.retorno = retorno;
+    }
+
+    public void insertarExpresion(NodoExpresion expresion){
+        retorno = expresion;
     }
 
     @Override

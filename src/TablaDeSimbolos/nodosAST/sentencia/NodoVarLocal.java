@@ -1,10 +1,11 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
-import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
+import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import lexycal.Token;
 
-public class NodoVarLocal extends NodoOperando {
+public class NodoVarLocal extends NodoSentencia {
     Token nombre;
+    NodoExpresion asignacion;
 
     public NodoVarLocal(Token nombre) {
         this.nombre = nombre;
@@ -16,5 +17,10 @@ public class NodoVarLocal extends NodoOperando {
 
     public void setNombre(Token nombre) {
         this.nombre = nombre;
+    }
+
+    @Override
+    public void chequear() {
+
     }
 }

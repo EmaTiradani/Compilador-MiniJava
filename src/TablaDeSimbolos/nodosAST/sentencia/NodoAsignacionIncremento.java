@@ -1,4 +1,13 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
-public class NodoAsignacionIncremento extends NodoAsignacion{
+import lexycal.Token;
+
+public class NodoAsignacionIncremento  extends NodoAsignacion{
+
+    Token tipoAsignacion;
+
+    @Override
+    public void chequear() {
+
+    }
 }

@@ -2,6 +2,11 @@ package syntactic;
 
 
 import TablaDeSimbolos.*;
+import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
+import TablaDeSimbolos.nodosAST.expresion.NodoExpresionUnaria;
+import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
+import TablaDeSimbolos.nodosAST.expresion.operandos.*;
+import TablaDeSimbolos.nodosAST.sentencia.*;
 import exceptions.SemanticException;
 import exceptions.SyntacticException;
 import lexycal.AnalizadorLexico;
@@ -242,7 +247,8 @@ public class SyntacticParser {
 
     private void metodo() throws LexicalException, SyntacticException, IOException, SemanticException {
         encabezadoMetodo();
-        bloque();
+        NodoBloque nodoBloque = bloque();
+        TablaDeSimbolos.metodoActual.insertarBloque(nodoBloque);
     }
 
     private void encabezadoMetodo() throws LexicalException, SyntacticException, IOException, SemanticException {
@@ -305,28 +311,35 @@ public class SyntacticParser {
         }
     }
 
-    private void bloque() throws LexicalException, SyntacticException, IOException {
+    private NodoBloque bloque() throws LexicalException, SyntacticException, IOException {
         match(punt_llaveIzq);
-        listaSentencias();
+        NodoBloque nodoBloque = new NodoBloque();
+        listaSentencias(nodoBloque);
         match(punt_llaveDer);
+
+        return nodoBloque;
     }
 
-    private void listaSentencias() throws LexicalException, SyntacticException, IOException {
+    private void listaSentencias(NodoBloque nodoBloque) throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Sentencia", tokenActual)){
-            sentencia();
-            listaSentencias();
+            NodoSentencia nodoSentencia = sentencia();
+            nodoBloque.insertarSentencia(nodoSentencia);
+            listaSentencias(nodoBloque);
         }else{
             // Epsilon
         }
     }
 
-    private void sentencia() throws LexicalException, SyntacticException, IOException {
+    private NodoSentencia sentencia() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_puntoYComa){
             match(punt_puntoYComa);
+            return new NodoSentenciaVacia();
         }else if(tokenActual.getTokenId() == kw_var){
-            varLocal();
+            NodoSentencia nodoSentencia = varLocal();
+            return nodoSentencia;
         }else if(tokenActual.getTokenId() == kw_return){
-            return_();
+            NodoSentencia nodoSentencia = return_();
+            return nodoSentencia;
         }else if(tokenActual.getTokenId() == kw_if){
             if_();
         }else if(tokenActual.getTokenId() == kw_while){
@@ -349,9 +362,9 @@ public class SyntacticParser {
         }
     }
 
-    private void expresion() throws LexicalException, SyntacticException, IOException {
-        expresionUnaria();
-        expresionRec();
+    private NodoExpresion expresion() throws LexicalException, SyntacticException, IOException {
+        NodoExpresion nodoExpresionIzq = expresionUnaria();
+        return expresionRec(nodoExpresionIzq);
     }
 
     private void expresionRec() throws LexicalException, SyntacticException, IOException {
@@ -369,27 +382,55 @@ public class SyntacticParser {
         matchFirsts("OperadorBinario");
     }
 
-    private void expresionUnaria() throws LexicalException, SyntacticException, IOException {
+    private NodoExpresion expresionUnaria() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("OperadorUnario", tokenActual)){
-            operadorUnario();
-            operando();
+            Token tokenOperador = operadorUnario();
+            NodoOperando nodoOperando = operando();
+            return new NodoExpresionUnaria(tokenOperador, nodoOperando);
         }else{
-            operando();
+            return operando();
         }
 
     }
 
-    private void operando() throws LexicalException, SyntacticException, IOException {
+    private NodoOperando operando() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Literal",tokenActual)){
-            literal();
+            return literal();
         }else if(firsts.isFirst("Acceso", tokenActual)){
-            acceso();
+            return acceso();
         }else
             throw new SyntacticException("Operando", tokenActual);
     }
 
-    private void literal() throws LexicalException, SyntacticException, IOException {
-        matchFirsts("Literal");
+    private NodoOperando literal() throws LexicalException, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == kw_null){
+            Token tokenNull = tokenActual;
+            matchFirsts("Literal");
+            return new NodoNull(tokenNull);
+        }else if(tokenActual.getTokenId() == stringLiteral){
+            Token tokenString = tokenActual;
+            matchFirsts("Literal");
+            return new NodoString(tokenString);
+        }else if(tokenActual.getTokenId() == intLiteral){
+            Token tokenInt = tokenActual;
+            matchFirsts("Literal");
+            return new NodoNum(tokenInt);
+        }else if(tokenActual.getTokenId() == charLiteral){
+            Token tokenChar = tokenActual;
+            matchFirsts("Literal");
+            return new NodoChar(tokenChar);
+        }else if(tokenActual.getTokenId() == kw_true){
+            Token tokenTrue = tokenActual;
+            matchFirsts("Literal");
+            return new NodoTrue(tokenTrue);
+        }else if(tokenActual.getTokenId() == kw_false){
+            Token tokenFalse = tokenActual;
+            matchFirsts("Literal");
+            return new NodoFalse(tokenFalse);
+        }else{
+            throw new SyntacticException(" literal", tokenActual);
+        }
+        //matchFirsts("Literal"); // Sacar este final, tiene que haber 1 por caso
     }
 
     private void operadorUnario() throws LexicalException, SyntacticException, IOException {
@@ -400,26 +441,32 @@ public class SyntacticParser {
         matchFirsts("TipoDeAsignacion");
     }
 
-    private void acceso() throws LexicalException, SyntacticException, IOException {
-        primario();
-        encadenadoOpt();
+    private NodoOperando acceso() throws LexicalException, SyntacticException, IOException {
+        NodoAcceso nodoAcceso = primario();
+        nodoAcceso.insertarNodoEncadenado(encadenadoOpt());
+        return nodoAcceso;
     }
 
-    private void primario() throws LexicalException, SyntacticException, IOException {
+    private NodoAcceso primario() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == kw_this){ // Acceso this
+            Token tokenThis = tokenActual;
             match(kw_this);
+            return new NodoAccesoThis(tokenThis);
         }else if(tokenActual.getTokenId() == idMetVar){
+            Token tokenIdMetVar = tokenActual;
             match(idMetVar);
-            accesoVarOMetodo();
+            return accesoVarOMetodo(tokenIdMetVar);
         }else if(tokenActual.getTokenId() == kw_new){ //Acceso constructor
             match(kw_new);
+            Token tokenConstructor = tokenActual;
             match(idClase);
             match(punt_parentIzq);
             match(punt_parentDer);
+            return new NodoAccesoConstructor(tokenConstructor);
         }else if(tokenActual.getTokenId() == idClase) {
-            accesoMetodoEstatico();
+            return accesoMetodoEstatico();
         }else if(tokenActual.getTokenId() == punt_parentIzq){
-            expresionParentizada();
+            return expresionParentizada();
         }else{
             throw new SyntacticException("Token Primario", tokenActual);
         }
@@ -447,7 +494,7 @@ public class SyntacticParser {
 
     }
 
-    private void encadenadoOpt() throws LexicalException, SyntacticException, IOException {
+    private NodoEncadenado encadenadoOpt() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_punto){
             match(punt_punto);
             match(idMetVar);
@@ -521,26 +568,33 @@ public class SyntacticParser {
         }
     }
 
-    private void return_() throws LexicalException, SyntacticException, IOException {
+    private NodoSentencia return_() throws LexicalException, SyntacticException, IOException {
+        Token tokenReturn = tokenActual;
         match(kw_return);
-        expresionOpt();
+        NodoReturn nodoReturn = new NodoReturn(tokenReturn);
+        NodoExpresion nodoExpresion = expresionOpt();
+        nodoReturn.insertarExpresion(nodoExpresion);
         match(punt_puntoYComa);
     }
 
-    private void expresionOpt() throws LexicalException, SyntacticException, IOException {
+    private NodoExpresion expresionOpt() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("ExpresionUnaria", tokenActual)){
-            expresion();
+            return expresion();
         }else{
             // Epsilon
+            return null;
         }
     }
 
-    private void varLocal() throws LexicalException, SyntacticException, IOException {
+    private NodoVarLocal varLocal() throws LexicalException, SyntacticException, IOException {
         match(kw_var);
+        String idVar = tokenActual.getLexema();
+        NodoVarLocal nodoVarLocal = new NodoVarLocal(tokenActual);
         match(idMetVar);
         match(asignacion);
-        expresion();
+        nodoVarLocal.setExpresion(expresion());
         match(punt_puntoYComa); //TODO chequear esto, no cambio nada
+        return nodoVarLocal;
     }
 
 

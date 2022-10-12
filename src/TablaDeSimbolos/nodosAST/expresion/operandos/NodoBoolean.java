@@ -1,4 +1,6 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
-public abstract class NodoBoolean {
+import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
+
+public abstract class NodoBoolean extends NodoOperando {
 }
