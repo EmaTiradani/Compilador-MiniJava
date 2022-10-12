@@ -5,7 +5,7 @@ import lexycal.Token;
 
 public class NodoVarLocal extends NodoSentencia {
     Token nombre;
-    NodoExpresion asignacion;
+    NodoExpresion expresion;
 
     public NodoVarLocal(Token nombre) {
         this.nombre = nombre;
@@ -22,5 +22,13 @@ public class NodoVarLocal extends NodoSentencia {
     @Override
     public void chequear() {
 
+    }
+
+    public NodoExpresion getExpresion() {
+        return expresion;
+    }
+
+    public void setExpresion(NodoExpresion expresion) {
+        this.expresion = expresion;
     }
 }

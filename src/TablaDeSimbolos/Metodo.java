@@ -1,5 +1,6 @@
 package TablaDeSimbolos;
 
+import TablaDeSimbolos.nodosAST.sentencia.NodoBloque;
 import exceptions.SemanticException;
 import lexycal.Token;
 
@@ -41,6 +42,10 @@ public class Metodo {
 
     public boolean getEstatico(){
         return estatico;
+    }
+
+    public void insertarBloque(NodoBloque body){
+
     }
 
     public void checkDec() throws SemanticException {

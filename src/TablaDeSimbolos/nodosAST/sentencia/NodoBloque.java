@@ -3,7 +3,7 @@ package TablaDeSimbolos.nodosAST.sentencia;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class NodoBloque {
+public class NodoBloque extends NodoSentencia{
 
     ArrayList<NodoSentencia> sentencias;
     Map<String, NodoVarLocal> variablesLocales;
@@ -35,5 +35,10 @@ public class NodoBloque {
 
     public void setVariablesLocales(Map<String, NodoVarLocal> variablesLocales) {
         this.variablesLocales = variablesLocales;
+    }
+
+    @Override
+    public void chequear() {
+
     }
 }
