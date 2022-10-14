@@ -2,19 +2,18 @@ package TablaDeSimbolos.nodosAST.expresion.operandos;
 
 import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
 
-import java.util.ArrayList;
 
 public abstract class NodoAcceso extends NodoOperando {
 
-    ArrayList<NodoEncadenado> encadenados;
+    protected NodoEncadenado encadenado;
 
 
-    public ArrayList<NodoEncadenado> getNodoEncadenado() {
-        return encadenados;
+    public NodoEncadenado getNodoEncadenado() {
+        return encadenado;
     }
 
-    public void insertarNodoEncadenado(NodoEncadenado nodoEncadenado) {
-        this.encadenados.add(nodoEncadenado);
+    public void setNodoEncadenado(NodoEncadenado nodoEncadenado) {
+        this.encadenado = nodoEncadenado;
     }
 
 }

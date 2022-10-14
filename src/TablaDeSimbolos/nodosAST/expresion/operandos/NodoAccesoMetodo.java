@@ -1,8 +1,19 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import lexycal.Token;
 
-public class NodoAccesoMetodo {
+import java.util.List;
 
-    Token idMet;
+public class NodoAccesoMetodo extends NodoAcceso{
+
+    protected Token idMet;
+    protected List<NodoExpresion> parametrosActuales;
+
+    public NodoAccesoMetodo(Token id, List<NodoExpresion> parametrosActuales){
+        this.idMet = id;
+        this.parametrosActuales = parametrosActuales;
+    }
+
+
 }

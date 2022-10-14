@@ -17,6 +17,7 @@ import lexycal.TokenId;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static lexycal.TokenId.*;
@@ -437,8 +438,22 @@ public class SyntacticParser {
         //matchFirsts("Literal"); // Sacar este final, tiene que haber 1 por caso
     }
 
-    private void operadorUnario() throws LexicalException, SyntacticException, IOException {
-        matchFirsts("OperadorUnario");
+    private Token operadorUnario() throws LexicalException, SyntacticException, IOException {
+        //matchFirsts("OperadorUnario"); Esto estaba solo
+        if(tokenActual.getTokenId() == op_suma){
+            Token suma = tokenActual;
+            matchFirsts("OperadorUnario");
+            return suma;
+        }else if(tokenActual.getTokenId() == op_resta){
+            Token resta = tokenActual;
+            matchFirsts("OperadorUnario");
+            return resta;
+        }else if(tokenActual.getTokenId() == op_negacion){
+            Token negacion = tokenActual;
+            matchFirsts("OperadorUnario");
+            return negacion;
+        }else
+            throw new SyntacticException(" Operador Unario", tokenActual);
     }
 
     private void tipoDeAsignacion() throws LexicalException, SyntacticException, IOException {
@@ -447,7 +462,7 @@ public class SyntacticParser {
 
     private NodoOperando acceso() throws LexicalException, SyntacticException, IOException {
         NodoAcceso nodoAcceso = primario();
-        nodoAcceso.insertarNodoEncadenado(encadenadoOpt());
+        nodoAcceso.setNodoEncadenado(encadenadoOpt());
         return nodoAcceso;
     }
 
@@ -476,27 +491,32 @@ public class SyntacticParser {
         }
     }
 
-    private void expresionParentizada() throws LexicalException, SyntacticException, IOException {
+    private NodoAccesoExpresionParentizada expresionParentizada() throws LexicalException, SyntacticException, IOException {
         match(punt_parentIzq);
-        expresion();
+        NodoExpresion expresion = expresion();
         match(punt_parentDer);
+        return new NodoAccesoExpresionParentizada(expresion);
     }
 
-    private void accesoMetodoEstatico() throws LexicalException, SyntacticException, IOException {
+    private NodoAcceso accesoMetodoEstatico() throws LexicalException, SyntacticException, IOException {
         Token tokenClaseEstatica = tokenActual;
         match(idClase);
         match(punt_punto);
         Token tokenMetodoEstatico = tokenActual;
         match(idMetVar);
-        NodoAccesoMetodoEstatico nodoAccesoMetodoEstatico = new NodoAccesoMetodoEstatico(tokenClaseEstatica, tokenMetodoEstatico);
-        argsActuales(nodoAccesoMetodoEstatico);
+        List<NodoExpresion> parametros = argsActuales();
+        NodoAccesoMetodoEstatico nodoAccesoMetodoEstatico = new NodoAccesoMetodoEstatico(tokenClaseEstatica, tokenMetodoEstatico, parametros);
+        return nodoAccesoMetodoEstatico;
     }
 
-    private NodoAcceso accesoVarOMetodo() throws LexicalException, SyntacticException, IOException {
-        if(tokenActual.getTokenId() == punt_parentIzq)
-            argsActuales();
+    private NodoAcceso accesoVarOMetodo(Token idMetVar) throws LexicalException, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == punt_parentIzq) {
+            List<NodoExpresion> listaParametrosActuales = argsActuales();
+            return new NodoAccesoMetodo(idMetVar, listaParametrosActuales);
+        }
         else{
             // Epsilon
+            return new NodoAccesoVar(idMetVar);
         }
 
     }
@@ -504,47 +524,62 @@ public class SyntacticParser {
     private NodoEncadenado encadenadoOpt() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_punto){
             match(punt_punto);
+            Token idMV = tokenActual;
             match(idMetVar);
-            varOMetEncadenado();
+            NodoEncadenado nodoEncadenado = varOMetEncadenado(idMV);
+            NodoEncadenado proximoNodoEncadenado = encadenadoOpt();// Esto estaba en varOMetEncadenado()
+            nodoEncadenado.setNodoEncadenado(proximoNodoEncadenado); //TODO  se va a agregar un nodoEncadenado null, no hay drama?
+            return nodoEncadenado;
         }else{
             // Epsilon
+            return null;
         }
     }
 
-    private void varOMetEncadenado() throws LexicalException, SyntacticException, IOException {
+    private NodoEncadenado varOMetEncadenado(Token idMV) throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_parentIzq){
-            argsActuales();
-            encadenadoOpt();
+            List<NodoExpresion> parametros = argsActuales();
+            NodoMetodoEncadenado nodoMetodoEncadenado = new NodoMetodoEncadenado(idMV);
+            nodoMetodoEncadenado.setParametros(parametros);
+            return nodoMetodoEncadenado;
+            // Aca estaba encadenadoOpt()
         }else{
-            encadenadoOpt();
+            return new NodoVarEncadenada(idMV);
+            // Epsilon
+            // Aca estaba encadenadoOpt()
         }
     }
 
-    private void argsActuales(NodoAcceso nodoAccesoVarOMet) throws LexicalException, SyntacticException, IOException {
+    private List<NodoExpresion> argsActuales() throws LexicalException, SyntacticException, IOException {
         match(punt_parentIzq);
-        listaExpsOpt(nodoAccesoVarOMet);
+        List<NodoExpresion> listaParametros = listaExpsOpt();
         match(punt_parentDer);
+        return listaParametros;
     }
 
-    private void listaExpsOpt(NodoAcceso nodoAccesoVarOMet) throws LexicalException, SyntacticException, IOException {
+    private List<NodoExpresion> listaExpsOpt() throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("Operando", tokenActual)){
-            listaExps(nodoAccesoVarOMet);
+            return listaExps();
         }else{
             // Epsilon
+            return new ArrayList<NodoExpresion>();
         }
     }
 
-    private void listaExps(NodoAcceso nodoAccesoVarOMet) throws LexicalException, SyntacticException, IOException {
-        expresion(nodoAccesoVarOMet);
-        listaExpsFact(nodoAccesoVarOMet);
+    private List<NodoExpresion> listaExps() throws LexicalException, SyntacticException, IOException {
+        NodoExpresion nodoExpresion = expresion();
+        List<NodoExpresion> listaParametros = listaExpsFact();
+        listaParametros.add(nodoExpresion);
+        return listaParametros;
     }
 
-    private void listaExpsFact(NodoAcceso nodoAccesoVarOMet) throws LexicalException, SyntacticException, IOException {
+    private List<NodoExpresion> listaExpsFact() throws LexicalException, SyntacticException, IOException {
         if(tokenActual.getTokenId() == punt_coma){
             match(punt_coma);
-            listaExps(nodoAccesoVarOMet);
+            return listaExps();
         }else{
             // Epsilon
+            return new ArrayList<NodoExpresion>();
         }
     }
 

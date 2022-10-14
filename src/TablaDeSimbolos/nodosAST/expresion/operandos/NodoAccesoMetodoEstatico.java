@@ -1,15 +1,20 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import lexycal.Token;
 
-public class NodoAccesoMetodoEstatico {
+import java.util.List;
 
-    Token idClaseEstatica;
-    Token idMetodoEstatico;
+public class NodoAccesoMetodoEstatico extends NodoAcceso{
 
-    public NodoAccesoMetodoEstatico(Token idClaseEstatica, Token idMetodoEstatico) {
+    protected Token idClaseEstatica;
+    protected Token idMetodoEstatico;
+    protected List<NodoExpresion> parametrosActuales;
+
+    public NodoAccesoMetodoEstatico(Token idClaseEstatica, Token idMetodoEstatico, List<NodoExpresion> parametros) {
         this.idClaseEstatica = idClaseEstatica;
         this.idMetodoEstatico = idMetodoEstatico;
+        this.parametrosActuales = parametros;
     }
 
     public Token getIdClaseEstatica() {
