@@ -1,14 +1,21 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
+import lexycal.Token;
 
 public class NodoIf extends NodoSentencia {
-    NodoExpresion condicion;
-    NodoSentencia sentencia;
 
-    public NodoIf(NodoExpresion condicion, NodoSentencia sentencia) {
+    Token tokenIf;
+    NodoExpresion condicion;
+    NodoSentencia sentenciaIf;
+    NodoSentencia sentenciaElse;
+
+    public NodoIf(Token tokenIf, NodoExpresion condicion, NodoSentencia sentencia, NodoSentencia sentenciaElse) {
+
+        this.tokenIf = tokenIf;
         this.condicion = condicion;
-        this.sentencia = sentencia;
+        this.sentenciaIf = sentencia;
+        this.sentenciaElse = sentenciaElse;
     }
 
     public NodoExpresion getCondicion() {
@@ -19,12 +26,20 @@ public class NodoIf extends NodoSentencia {
         this.condicion = condicion;
     }
 
-    public NodoSentencia getSentencia() {
-        return sentencia;
+    public NodoSentencia getSentenciaIf() {
+        return sentenciaIf;
     }
 
-    public void setSentencia(NodoSentencia sentencia) {
-        this.sentencia = sentencia;
+    public void setSentenciaIf(NodoSentencia sentencia) {
+        this.sentenciaIf = sentencia;
+    }
+
+    public NodoSentencia getSentenciaElse() {
+        return sentenciaElse;
+    }
+
+    public void setSentenciaElse(NodoSentencia sentencia) {
+        this.sentenciaElse = sentencia;
     }
 
     @Override
