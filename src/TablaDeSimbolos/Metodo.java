@@ -12,6 +12,7 @@ public class Metodo {
     private TipoMetodo tipoRetorno;
     private ArrayList<Argumento> argumentos;
     private boolean estatico;
+    protected NodoBloque body;
 
 
     public Metodo(Token idMet, TipoMetodo tipoRetorno, boolean estatico, ArrayList<Argumento> argumentos){
@@ -45,7 +46,7 @@ public class Metodo {
     }
 
     public void insertarBloque(NodoBloque body){
-
+        this.body = body;
     }
 
     public void checkDec() throws SemanticException {

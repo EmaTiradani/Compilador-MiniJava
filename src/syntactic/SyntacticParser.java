@@ -255,8 +255,7 @@ public class SyntacticParser {
     }
 
     private void encabezadoMetodo() throws LexicalException, SyntacticException, IOException, SemanticException {
-        boolean estatico;
-        estatico = estaticoOpt();
+        boolean estatico = estaticoOpt();
         TipoMetodo tipoMetodo = tipoMetodo();
         Token idMetodo = tokenActual;
         match(idMetVar);
@@ -527,7 +526,7 @@ public class SyntacticParser {
         }
     }
 
-    private NodoOperando acceso() throws LexicalException, SyntacticException, IOException {
+    private NodoAcceso acceso() throws LexicalException, SyntacticException, IOException {
         NodoAcceso nodoAcceso = primario();
         nodoAcceso.setNodoEncadenado(encadenadoOpt());
         return nodoAcceso;
@@ -651,12 +650,15 @@ public class SyntacticParser {
     }
 
 
-    private void while_() throws LexicalException, SyntacticException, IOException {
+    private NodoWhile while_() throws LexicalException, SyntacticException, IOException {
+        Token tokenWhile = tokenActual;
         match(kw_while);
         match(punt_parentIzq);
-        expresion();
+        NodoExpresion condicion = expresion();
         match(punt_parentDer);
-        sentencia();
+        NodoSentencia sentenciaWhile = sentencia();
+        NodoWhile nodoWhile = new NodoWhile(tokenWhile, condicion, sentenciaWhile);
+        return nodoWhile;
     }
 
     private NodoIf if_() throws LexicalException, SyntacticException, IOException {
