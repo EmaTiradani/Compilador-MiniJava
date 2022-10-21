@@ -360,7 +360,7 @@ public class SyntacticParser {
     private NodoSentencia asignacionOLlamada(NodoAcceso nodoAcceso) throws LexicalException, SyntacticException, IOException {
         if(firsts.isFirst("TipoDeAsignacion",tokenActual)){
             NodoAsignacion nodoAsignacion = tipoDeAsignacion(nodoAcceso);
-            expresion();
+            nodoAsignacion.setNodoExpresion(expresion());
             match(punt_puntoYComa);
             return nodoAsignacion;
         }else if(tokenActual.getTokenId() == punt_puntoYComa){
@@ -513,8 +513,8 @@ public class SyntacticParser {
         Token tokenAsignacion = tokenActual;
         if(tokenActual.getTokenId() == asignacion){
             matchFirsts("TipoDeAsignacion");
-            NodoExpresion nodoExpresion = expresion();
-            return new NodoAsignacionExp(tokenAsignacion, nodoAcceso, nodoExpresion);
+            //NodoExpresion nodoExpresion = expresion();
+            return new NodoAsignacionExp(tokenAsignacion, nodoAcceso);
         }else if(tokenActual.getTokenId() == incremento){
             matchFirsts("TipoDeAsignacion");
             return new NodoAsignacionIncremento(tokenAsignacion, nodoAcceso);

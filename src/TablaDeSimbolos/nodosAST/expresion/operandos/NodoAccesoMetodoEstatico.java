@@ -1,6 +1,8 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 import java.util.List;
@@ -31,5 +33,10 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
 
     public void setIdMetodoEstatico(Token idMetodoEstatico) {
         this.idMetodoEstatico = idMetodoEstatico;
+    }
+
+    @Override
+    public Tipo chequear() throws SemanticException {
+        return null;
     }
 }

@@ -80,15 +80,20 @@ public final class TablaDeSimbolos {
     public static void consolidar() throws SemanticException {
         for (Map.Entry<String, ClaseConcreta> clase : clases.entrySet()){
             if(clase.getValue().getNombreClase() != "Object"){
-                //insertarMetodosYAtributosDeAncestros(clase.getValue()); Esto no va
-                //Aca le tengo que decir --> clase.consolidar();
                 clase.getValue().consolidar();
             }
         }
         for (Map.Entry<String, Interfaz> interfaz : interfaces.entrySet()){
             interfaz.getValue().consolidar();
         }
-        //System.out.println("Consolida2");
+    }
+
+    public static void checkSentencias() throws SemanticException {
+        for (Map.Entry<String, ClaseConcreta> clase : clases.entrySet()){
+            if(clase.getValue().getNombreClase() != "Object"){
+                clase.getValue().checkSentencias();
+            }
+        }
     }
 
     private void insertarMetodosYAtributosDeAncestros(ClaseConcreta clase) throws SemanticException {

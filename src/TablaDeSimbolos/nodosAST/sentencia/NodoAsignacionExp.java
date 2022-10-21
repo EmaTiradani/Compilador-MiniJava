@@ -10,7 +10,7 @@ public class NodoAsignacionExp extends NodoAsignacion{
     NodoAcceso nodoAcceso;
     NodoExpresion nodoExpresion;
 
-    public NodoAsignacionExp(Token tipoAsignacion, NodoAcceso nodoAcceso, NodoExpresion nodoExpresion) {
+    public NodoAsignacionExp(Token tipoAsignacion, NodoAcceso nodoAcceso) {
         this.tipoAsignacion = tipoAsignacion;
         this.nodoAcceso = nodoAcceso;
         this.nodoExpresion = nodoExpresion;
@@ -41,7 +41,4 @@ public class NodoAsignacionExp extends NodoAsignacion{
         return nodoExpresion;
     }
 
-    public void setNodoExpresion(NodoExpresion nodoExpresion) {
-        this.nodoExpresion = nodoExpresion;
-    }
 }

@@ -119,4 +119,8 @@ public class Metodo {
     }
 
 
+    public void checkSentencias() throws SemanticException {
+        TablaDeSimbolos.metodoActual = this;
+        body.chequear();
+    }
 }

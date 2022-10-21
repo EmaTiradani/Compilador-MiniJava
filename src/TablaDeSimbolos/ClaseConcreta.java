@@ -272,6 +272,14 @@ public class ClaseConcreta extends Clase{
         return false;
     }
 
+    public void checkSentencias() throws SemanticException {
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            for(Metodo metodo : listaMetodos.getValue()){
+                metodo.checkSentencias();
+            }
+        }
+    }
+
     public void print(){
 
         for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){

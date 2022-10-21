@@ -1,6 +1,8 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public class NodoNull extends NodoOperando {
@@ -26,5 +28,10 @@ public class NodoNull extends NodoOperando {
 
     public void setNodoEncadenado(NodoEncadenado nodoEncadenado) {
         this.nodoEncadenado = nodoEncadenado;
+    }
+
+    @Override
+    public Tipo chequear() throws SemanticException {
+        return null;
     }
 }

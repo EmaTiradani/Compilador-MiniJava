@@ -32,6 +32,8 @@ public class MainSyntactic {
             TablaDeSimbolos.consolidar();
             //TablaDeSimbolos.print();
 
+            //TablaDeSimbolos.checkSentencias();
+
             System.out.println("Compilacion exitosa\n\n[SinErrores]");
         }
         catch (LexicalException | SyntacticException | SemanticException e) {

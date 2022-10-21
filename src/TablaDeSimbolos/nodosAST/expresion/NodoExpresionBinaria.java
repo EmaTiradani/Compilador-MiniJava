@@ -1,6 +1,8 @@
 package TablaDeSimbolos.nodosAST.expresion;
 
+import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public class NodoExpresionBinaria extends NodoExpresion {
@@ -34,5 +36,10 @@ public class NodoExpresionBinaria extends NodoExpresion {
 
     public void setOperador(Token operador) {
         this.operador = operador;
+    }
+
+    @Override
+    public Tipo chequear() throws SemanticException {
+        return null;
     }
 }

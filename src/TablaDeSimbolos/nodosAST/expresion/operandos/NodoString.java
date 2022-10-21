@@ -1,6 +1,8 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public class NodoString extends NodoOperando {
@@ -17,5 +19,10 @@ public class NodoString extends NodoOperando {
 
     public void setStringLit(Token stringLit) {
         this.stringLit = stringLit;
+    }
+
+    @Override
+    public Tipo chequear() throws SemanticException {
+        return null;
     }
 }

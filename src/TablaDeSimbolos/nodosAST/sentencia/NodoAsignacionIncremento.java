@@ -1,6 +1,9 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
+import TablaDeSimbolos.Tipo;
+import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import TablaDeSimbolos.nodosAST.expresion.operandos.NodoAcceso;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public class NodoAsignacionIncremento  extends NodoAsignacion{
@@ -14,7 +17,9 @@ public class NodoAsignacionIncremento  extends NodoAsignacion{
     }
 
     @Override
-    public void chequear() {
+    public void chequear() throws SemanticException {
+        Tipo tipoAcceso = nodoAcceso.chequear();
+
 
     }
 

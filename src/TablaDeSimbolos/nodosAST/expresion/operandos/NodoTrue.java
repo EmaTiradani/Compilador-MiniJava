@@ -1,5 +1,7 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.Tipo;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public class NodoTrue extends NodoBoolean{
@@ -16,5 +18,10 @@ public class NodoTrue extends NodoBoolean{
 
     public void setTokenTrue(Token tokenTrue) {
         this.tokenTrue = tokenTrue;
+    }
+
+    @Override
+    public Tipo chequear() throws SemanticException {
+        return null;
     }
 }
