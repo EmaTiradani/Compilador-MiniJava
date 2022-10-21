@@ -44,4 +44,10 @@ public class Tipo {
         isPrimitive = true;
     }
 
+    public boolean tipoCompatible(Tipo tipo) {
+        if(tipo.getType().equals(this.id) || tipo.getType().equals("null"))
+            return true;
+        else
+            return false;
+    }
 }

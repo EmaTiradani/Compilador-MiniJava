@@ -5,7 +5,6 @@ import TablaDeSimbolos.nodosAST.expresion.operandos.NodoAcceso;
 import exceptions.SemanticException;
 
 public abstract class NodoAsignacion extends NodoSentencia{
-    //protected NodoAcceso ladoIzq; Implementar NodoAcceso
     protected NodoExpresion ladoDer;
     protected NodoAcceso ladoIzq;
 

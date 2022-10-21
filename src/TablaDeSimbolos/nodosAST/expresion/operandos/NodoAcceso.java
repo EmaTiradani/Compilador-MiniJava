@@ -7,7 +7,6 @@ public abstract class NodoAcceso extends NodoOperando {
 
     protected NodoEncadenado encadenado;
 
-
     public NodoEncadenado getNodoEncadenado() {
         return encadenado;
     }
@@ -16,4 +15,7 @@ public abstract class NodoAcceso extends NodoOperando {
         this.encadenado = nodoEncadenado;
     }
 
+    public boolean esAsignable() {
+
+    }
 }
