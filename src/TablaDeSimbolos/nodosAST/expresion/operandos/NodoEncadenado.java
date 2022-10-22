@@ -1,5 +1,7 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.Tipo;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public abstract class NodoEncadenado {
@@ -28,5 +30,9 @@ public abstract class NodoEncadenado {
         this.tokenNodoEncadenado = tokenNodoEncadenado;
     }
 
+    public abstract Tipo chequear(Tipo tipo) throws SemanticException;
+
     public abstract boolean esAsignable();
+
+    public abstract boolean esLlamable();
 }

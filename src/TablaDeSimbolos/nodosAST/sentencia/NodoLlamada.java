@@ -1,6 +1,7 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
 import TablaDeSimbolos.nodosAST.expresion.operandos.NodoAcceso;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public class NodoLlamada extends NodoSentencia{
@@ -14,8 +15,11 @@ public class NodoLlamada extends NodoSentencia{
     }
 
     @Override
-    public void chequear() {
-
+    public void chequear() throws SemanticException {
+        acceso.chequear();
+        if(!acceso.esLlamable()){
+            throw new SemanticException("el acceso no es llamable", tokenLlamada);
+        }
     }
 
     public Token getTokenLlamada() {

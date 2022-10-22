@@ -1,6 +1,8 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
+import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public class NodoWhile extends NodoSentencia{
@@ -40,7 +42,12 @@ public class NodoWhile extends NodoSentencia{
     }
 
     @Override
-    public void chequear() {
+    public void chequear() throws SemanticException {
+        if(condicion.chequear().mismoTipo(new Tipo("boolean"))){
 
+            // Todo lo mismo del if? Asi no son cosas visibles fuera del if/while
+
+            sentencia.chequear();
+        }
     }
 }

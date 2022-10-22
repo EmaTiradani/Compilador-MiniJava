@@ -14,6 +14,29 @@ public class NodoAccesoExpresionParentizada extends NodoAcceso{
 
     @Override
     public Tipo chequear() throws SemanticException {
-        return null;
+        if(encadenado == null){
+            return expresion.chequear();
+        }else{
+            return encadenado.chequear(expresion.chequear());
+        }
+
+    }
+
+    @Override
+    public boolean esAsignable() {
+        if(encadenado == null){
+            return false;
+        }else{
+            return encadenado.esAsignable();
+        }
+    }
+
+    @Override
+    public boolean esLlamable() {
+        if(encadenado == null){
+            return false;
+        }else{
+            return encadenado.esLlamable();
+        }
     }
 }

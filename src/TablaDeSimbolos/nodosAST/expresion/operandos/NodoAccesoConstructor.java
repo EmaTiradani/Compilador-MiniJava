@@ -17,4 +17,14 @@ public class NodoAccesoConstructor extends NodoAcceso{
     public Tipo chequear() throws SemanticException {
         return null;
     }
+
+    @Override
+    public boolean esAsignable() {
+        return false;
+    }
+
+    @Override
+    public boolean esLlamable() {
+        return false;
+    }
 }

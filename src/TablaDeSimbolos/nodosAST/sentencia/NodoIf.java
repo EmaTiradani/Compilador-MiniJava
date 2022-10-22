@@ -1,6 +1,8 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
+import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public class NodoIf extends NodoSentencia {
@@ -43,7 +45,22 @@ public class NodoIf extends NodoSentencia {
     }
 
     @Override
-    public void chequear() {
+    public void chequear() throws SemanticException {
+        if(condicion.chequear().mismoTipo(new Tipo("boolean"))){
 
+            // TODO Meto el bloque del if por si el if usa un bloque en vez de una sentencia pelada?
+
+            sentenciaIf.chequear();
+
+            // Todo aca lo saco a la wea
+
+            if(sentenciaElse != null){
+                // Todo lo mismo que los comments del bloque del if
+                sentenciaElse.chequear();
+            }
+
+        }else{
+            throw new SemanticException(" La condicion del if debe ser una expresion booleana", tokenIf);
+        }
     }
 }

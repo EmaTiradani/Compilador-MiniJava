@@ -57,7 +57,7 @@ public class Tipo {
         }
     }
 
-    public boolean checkSubtipo(Tipo tipo){
+    public boolean checkSubtipo(Tipo tipo){// Obtengo los ancestros de tipo y veo si estoy entre ellos.
         ArrayList<String> ancestros = new ArrayList<>();
         if(TablaDeSimbolos.existeClase(tipo.getType())){
             ancestros = TablaDeSimbolos.getClase(tipo.getType()).getAncestros();
@@ -66,7 +66,7 @@ public class Tipo {
         }
 
         if(ancestros.contains(id))
-            return true;
+            return true;// tipo es un subtipo mio
         else
             return false;
     }
