@@ -16,6 +16,15 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
         parametros = new ArrayList<>();
     }
 
+    @Override
+    public boolean esAsignable() {
+        if(nodoEncadenado == null){
+            return false;
+        }else{
+            return nodoEncadenado.esAsignable();
+        }
+    }
+
 
     public List<NodoExpresion> getParametros() {
         return parametros;
@@ -24,4 +33,6 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
     public void setParametros(List<NodoExpresion> parametros) {
         this.parametros = parametros;
     }
+
+
 }

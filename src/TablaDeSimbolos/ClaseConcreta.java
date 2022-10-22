@@ -2,6 +2,8 @@ package TablaDeSimbolos;
 
 import exceptions.SemanticException;
 import lexycal.Token;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +56,19 @@ public class ClaseConcreta extends Clase{
 
     public boolean herenciaCircular(){
         return notHerenciaCircular;
+    }
+
+    @Override
+    public ArrayList<String> getAncestros() {
+        ArrayList<String> ancestros = new ArrayList<>();
+        ancestros.add(nombreClase.getLexema());
+
+        for(String interfaz : listaInterfaces){
+            ancestros.addAll(TablaDeSimbolos.getInterfaz(interfaz).getAncestros());
+        }
+        ancestros.add(nombreClasePadre);
+        ancestros.addAll(TablaDeSimbolos.getClase(nombreClasePadre).getAncestros());
+        return ancestros;
     }
 
     public void noTieneHerenciaCircular(){

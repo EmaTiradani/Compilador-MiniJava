@@ -20,11 +20,11 @@ public class NodoAsignacionIncremento  extends NodoAsignacion{
     public void chequear() throws SemanticException {
         Tipo tipoAcceso = nodoAcceso.chequear();
 
-        if(!tipoAcceso.tipoCompatible(new Tipo("int"))){
-            throw new SemanticException(tipoAsignacion, " se esperaba un entero");
+        if(!tipoAcceso.mismoTipo(new Tipo("int"))){
+            throw new SemanticException(" se esperaba un entero", tipoAsignacion);
         }
         if (!nodoAcceso.esAsignable()) {
-            //throw new SemanticException(tipoAsignacion, "")
+            throw new SemanticException("Lado izquierdo incompatible, se esperaba una variable ",tipoAsignacion);
         }
     }
 

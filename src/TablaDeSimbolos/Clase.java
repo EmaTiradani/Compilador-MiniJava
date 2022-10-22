@@ -33,5 +33,6 @@ public abstract class Clase {
 
     public abstract boolean herenciaCircular();
 
+    public abstract ArrayList<String> getAncestros();
 
 }

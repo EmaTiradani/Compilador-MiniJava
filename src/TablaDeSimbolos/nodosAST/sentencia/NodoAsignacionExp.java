@@ -1,7 +1,9 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
+import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import TablaDeSimbolos.nodosAST.expresion.operandos.NodoAcceso;
+import exceptions.SemanticException;
 import lexycal.Token;
 
 public class NodoAsignacionExp extends NodoAsignacion{
@@ -17,8 +19,15 @@ public class NodoAsignacionExp extends NodoAsignacion{
     }
 
     @Override
-    public void chequear() {
+    public void chequear() throws SemanticException {
+        Tipo tipoAcceso = nodoAcceso.chequear();
 
+        if(!tipoAcceso.tipoCompatible(new Tipo("int"))){
+            throw new SemanticException(" se esperaba un entero", tipoAsignacion);
+        }
+        if (!nodoAcceso.esAsignable()) {
+            throw new SemanticException("Lado izquierdo incompatible, se esperaba una variable ",tipoAsignacion);
+        }
     }
 
     public Token getTipoAsignacion() {

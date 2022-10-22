@@ -15,7 +15,5 @@ public abstract class NodoAcceso extends NodoOperando {
         this.encadenado = nodoEncadenado;
     }
 
-    public boolean esAsignable() {
-
-    }
+    public abstract boolean esAsignable();
 }

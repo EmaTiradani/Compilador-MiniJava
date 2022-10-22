@@ -4,6 +4,8 @@ import exceptions.SemanticException;
 import lexycal.Token;
 
 
+import java.util.ArrayList;
+
 import static lexycal.TokenId.*;
 
 public class Tipo {
@@ -45,9 +47,36 @@ public class Tipo {
     }
 
     public boolean tipoCompatible(Tipo tipo) {
+        if(tipo.isPrimitive){
+            if(tipo.getType().equals(this.id) || tipo.getType().equals("null"))
+                return true;
+            else
+                return false;
+        }else{
+            return checkSubtipo(tipo);
+        }
+    }
+
+    public boolean checkSubtipo(Tipo tipo){
+        ArrayList<String> ancestros = new ArrayList<>();
+        if(TablaDeSimbolos.existeClase(tipo.getType())){
+            ancestros = TablaDeSimbolos.getClase(tipo.getType()).getAncestros();
+        }else if(TablaDeSimbolos.existeInterfaz(tipo.getType())){
+            ancestros = TablaDeSimbolos.getInterfaz(tipo.getType()).getAncestros();
+        }
+
+        if(ancestros.contains(id))
+            return true;
+        else
+            return false;
+    }
+
+    public boolean mismoTipo(Tipo tipo) {
         if(tipo.getType().equals(this.id) || tipo.getType().equals("null"))
             return true;
         else
             return false;
     }
+
+
 }

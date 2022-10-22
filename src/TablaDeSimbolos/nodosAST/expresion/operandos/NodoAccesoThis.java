@@ -15,4 +15,14 @@ public class NodoAccesoThis extends NodoAcceso{
     public Tipo chequear() throws SemanticException {
         return null;
     }
+
+
+    @Override
+    public boolean esAsignable() {
+        if(encadenado == null){
+            return false;
+        }else{
+            return encadenado.esAsignable();
+        }
+    }
 }

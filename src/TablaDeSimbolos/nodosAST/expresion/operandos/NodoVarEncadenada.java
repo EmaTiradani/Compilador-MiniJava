@@ -9,4 +9,13 @@ public class NodoVarEncadenada extends NodoEncadenado {
     public NodoVarEncadenada(Token tokenVarEncadenada) {
         super(tokenVarEncadenada);
     }
+
+    @Override
+    public boolean esAsignable() {
+        if(nodoEncadenado == null){
+            return true;
+        }else{
+            return nodoEncadenado.esAsignable();
+        }
+    }
 }

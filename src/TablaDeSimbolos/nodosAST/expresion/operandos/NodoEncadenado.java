@@ -27,4 +27,6 @@ public abstract class NodoEncadenado {
     public void setTokenNodoEncadenado(Token tokenNodoEncadenado) {
         this.tokenNodoEncadenado = tokenNodoEncadenado;
     }
+
+    public abstract boolean esAsignable();
 }

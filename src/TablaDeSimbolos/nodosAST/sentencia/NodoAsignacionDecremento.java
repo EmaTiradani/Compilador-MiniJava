@@ -19,6 +19,13 @@ public class NodoAsignacionDecremento extends NodoAsignacion{
     @Override
     public void chequear() throws SemanticException {
         Tipo tipoAcceso = nodoAcceso.chequear();
+
+        if(!tipoAcceso.mismoTipo(new Tipo("int"))){
+            throw new SemanticException(" se esperaba un entero", tipoAsignacion);
+        }
+        if (!nodoAcceso.esAsignable()) {
+            throw new SemanticException("Lado izquierdo incompatible, se esperaba una variable ",tipoAsignacion);
+        }
     }
 
 
