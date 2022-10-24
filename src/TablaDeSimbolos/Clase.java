@@ -1,10 +1,12 @@
 package TablaDeSimbolos;
 
+import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
 import lexycal.Token;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class Clase {
 
@@ -34,5 +36,15 @@ public abstract class Clase {
     public abstract boolean herenciaCircular();
 
     public abstract ArrayList<String> getAncestros();
+
+    public Metodo getMetodoQueConformaParametros(Token idMet, List<NodoExpresion> parametros) throws SemanticException {
+        List<Tipo> tiposDeLosParametros = new ArrayList<>();
+        for(NodoExpresion parametro : parametros){
+            tiposDeLosParametros.add(parametro.chequear());
+        }
+
+
+        return null; // TODO sacar esto cuando termine de hacerlo bien
+    }
 
 }

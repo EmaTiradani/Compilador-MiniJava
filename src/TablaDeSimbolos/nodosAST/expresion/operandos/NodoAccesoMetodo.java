@@ -23,11 +23,20 @@ public class NodoAccesoMetodo extends NodoAcceso{
     @Override
     public Tipo chequear() throws SemanticException {
 
-        Metodo metodo = TablaDeSimbolos.claseActual.getMetodo(idMet, parametrosActuales);
+        Metodo metodo = TablaDeSimbolos.claseActual.getMetodoQueConformaParametros(idMet, parametrosActuales);
         if(metodo == null){
             throw new SemanticException("No existe el metodo "+metodo.getId().getLexema(), idMet);
         }
-        if(!Tabla)
+        // Todo tengo que chequear que no sea un metodo estatico? O eso lo hago directamente desde el acceso met Estatico?
+        if(!TablaDeSimbolos.metodoActual.getEstatico() && metodo.getEstatico()){
+            throw new SemanticException("Se intento acceder a un metodo dinamico desde un metodo estatico", idMet);
+        }
+
+        if(encadenado == null){
+            return metodo.getTipoRetorno();
+        }else{
+            return encadenado.chequear(metodo.getTipoRetorno());
+        }
     }
 
     @Override

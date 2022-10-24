@@ -1,9 +1,12 @@
 package TablaDeSimbolos;
 
+import TablaDeSimbolos.nodosAST.sentencia.NodoBloque;
+import TablaDeSimbolos.nodosAST.sentencia.NodoVarLocal;
 import exceptions.SemanticException;
 import lexycal.Token;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static lexycal.TokenId.*;
@@ -18,9 +21,12 @@ public final class TablaDeSimbolos {
     public static Atributo atributoActual;
     public static Metodo metodoMain;
 
+    public static List<NodoBloque> pilaDeBloques;
+
     public TablaDeSimbolos() throws SemanticException {
         clases = new HashMap<String, ClaseConcreta>();
         interfaces = new HashMap<String, Interfaz>();
+        pilaDeBloques = new ArrayList<>();
         crearClaseObject();
         crearClaseSystem();
         crearClaseString();
@@ -200,5 +206,14 @@ public final class TablaDeSimbolos {
         }
     }
 
+    public static NodoVarLocal getVarLocalClaseActual(String idVar){
+        for(NodoBloque bloque : pilaDeBloques){
+            NodoVarLocal varLocal = bloque.getVarLocalBloque(idVar);
+            if(varLocal != null){
+                return varLocal;
+            }
+        }
+        return null;
+    }
 
 }

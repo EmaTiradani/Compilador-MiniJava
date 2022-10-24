@@ -35,4 +35,6 @@ public abstract class NodoEncadenado {
     public abstract boolean esAsignable();
 
     public abstract boolean esLlamable();
+
+    public abstract Tipo chequearThis(Tipo tipoClase);
 }
