@@ -22,7 +22,7 @@ public class NodoNum extends NodoOperando {
 
     @Override
     public Tipo chequear() throws SemanticException {
-        return null;
+        return new Tipo("int");
     }
 }
 

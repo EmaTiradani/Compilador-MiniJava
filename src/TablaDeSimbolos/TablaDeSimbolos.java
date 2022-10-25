@@ -106,10 +106,6 @@ public final class TablaDeSimbolos {
         }
     }
 
-    /*public static ArrayList<String> getSubtipos(String id) {
-        ArrayList<String> subtipos = new ArrayList<>();
-
-    }*/
 
     private void insertarMetodosYAtributosDeAncestros(ClaseConcreta clase) throws SemanticException {
         if(clase.getNombreClasePadre().equals("Object")){

@@ -19,6 +19,7 @@ public class Metodo {
         this.idMet = idMet;
         this.tipoRetorno = tipoRetorno;
         this.estatico = estatico;
+        body = new NodoBloque(); // Sino explota con Object y System
         if(argumentos == null)
             this.argumentos = new ArrayList<>();
         else

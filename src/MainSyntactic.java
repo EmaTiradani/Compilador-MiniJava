@@ -32,7 +32,7 @@ public class MainSyntactic {
             TablaDeSimbolos.consolidar();
             //TablaDeSimbolos.print();
 
-            //TablaDeSimbolos.checkSentencias();
+            TablaDeSimbolos.checkSentencias();
 
             System.out.println("Compilacion exitosa\n\n[SinErrores]");
         }

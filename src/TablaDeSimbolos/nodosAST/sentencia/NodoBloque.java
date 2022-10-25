@@ -52,6 +52,7 @@ public class NodoBloque extends NodoSentencia{
 
     @Override
     public void chequear() throws SemanticException {
+        TablaDeSimbolos.apilarBloque(this);
         for(NodoSentencia sentencia : sentencias){
             sentencia.chequear();
         }

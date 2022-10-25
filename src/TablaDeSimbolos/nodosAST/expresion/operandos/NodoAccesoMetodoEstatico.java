@@ -1,5 +1,7 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.Metodo;
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
@@ -37,7 +39,17 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
 
     @Override
     public Tipo chequear() throws SemanticException {
-        return null;
+        Metodo metodo = TablaDeSimbolos.claseActual.getMetodoQueConformaParametros(idMetodoEstatico, parametrosActuales);
+        if(metodo == null){
+            throw new SemanticException("No existe el metodo "+metodo.getId().getLexema(), idMetodoEstatico);
+        }
+
+        if(encadenado == null){
+            return metodo.getTipoRetorno();
+        }else{
+            return encadenado.chequear(metodo.getTipoRetorno());
+        }
+
     }
 
     @Override

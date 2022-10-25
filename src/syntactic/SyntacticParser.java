@@ -259,9 +259,14 @@ public class SyntacticParser {
         TipoMetodo tipoMetodo = tipoMetodo();
         Token idMetodo = tokenActual;
         match(idMetVar);
-        TablaDeSimbolos.metodoActual = new Metodo(idMetodo, tipoMetodo, estatico, null);
+        Metodo metodoActual = new Metodo(idMetodo, tipoMetodo, estatico, null);
+
+        TablaDeSimbolos.metodoActual = metodoActual;
         argsFormales();
-        TablaDeSimbolos.claseActual.insertarMetodo((TablaDeSimbolos.metodoActual));
+        TablaDeSimbolos.claseActual.insertarMetodo(metodoActual);
+
+        //NodoBloque bloque = bloque();
+        //metodoActual.insertarBloque(bloque);
     }
 
     private boolean estaticoOpt() throws LexicalException, SyntacticException, IOException {
