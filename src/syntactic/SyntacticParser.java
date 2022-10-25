@@ -624,7 +624,7 @@ public class SyntacticParser {
     }
 
     private List<NodoExpresion> listaExpsOpt() throws LexicalException, SyntacticException, IOException {
-        if(firsts.isFirst("Operando", tokenActual)){
+        if(firsts.isFirst("Expresion", tokenActual)){
             return listaExps();
         }else{
             // Epsilon

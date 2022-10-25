@@ -35,6 +35,14 @@ public abstract class Clase {
 
     public abstract boolean herenciaCircular();
 
+    public HashMap<String, Atributo> getAtributos(){
+        return atributos;
+    }
+
+    public Atributo getAtributo(String idVar){
+        return atributos.get(idVar);
+    }
+
     public abstract ArrayList<String> getAncestros();
 
     public Metodo getMetodoQueConformaParametros(Token idMet, List<NodoExpresion> parametros) throws SemanticException {

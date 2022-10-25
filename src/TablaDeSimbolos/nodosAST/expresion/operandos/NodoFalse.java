@@ -15,6 +15,6 @@ public class NodoFalse extends NodoBoolean{
 
     @Override
     public Tipo chequear() throws SemanticException {
-        return null;
+        return new Tipo("boolean");
     }
 }

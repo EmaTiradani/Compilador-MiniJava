@@ -37,6 +37,15 @@ public class Metodo {
         return argumentos;
     }
 
+    public Argumento getArgumento(String idArg){
+        for(Argumento argumento : argumentos){
+            if(argumento.getIdVar().getLexema().equals(idArg)){
+                return argumento;
+            }
+        }
+        return null;
+    }
+
     public void addArgumento(Argumento argumento){
         argumentos.add(argumento);
     }

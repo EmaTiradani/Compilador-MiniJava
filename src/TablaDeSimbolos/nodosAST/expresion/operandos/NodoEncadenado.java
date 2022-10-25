@@ -6,13 +6,8 @@ import lexycal.Token;
 
 public abstract class NodoEncadenado {
 
-    Token tokenNodoEncadenado;
     NodoEncadenado nodoEncadenado;
 
-    public NodoEncadenado(Token tokenNodoEncadenado) {
-        this.tokenNodoEncadenado = tokenNodoEncadenado;
-        this.nodoEncadenado = null;
-    }
 
     public NodoEncadenado getNodoEncadenado() {
         return nodoEncadenado;
@@ -22,12 +17,12 @@ public abstract class NodoEncadenado {
         this.nodoEncadenado = nodoEncadenado;
     }
 
-    public Token getTokenNodoEncadenado() {
-        return tokenNodoEncadenado;
+    public NodoEncadenado getTokenNodoEncadenado() {
+        return nodoEncadenado;
     }
 
-    public void setTokenNodoEncadenado(Token tokenNodoEncadenado) {
-        this.tokenNodoEncadenado = tokenNodoEncadenado;
+    public void setTokenNodoEncadenado(NodoEncadenado tokenNodoEncadenado) {
+        this.nodoEncadenado = tokenNodoEncadenado;
     }
 
     public abstract Tipo chequear(Tipo tipo) throws SemanticException;
@@ -36,5 +31,5 @@ public abstract class NodoEncadenado {
 
     public abstract boolean esLlamable();
 
-    public abstract Tipo chequearThis(Tipo tipoClase);
+    public abstract Tipo chequearThis(Tipo tipoClase) throws SemanticException;
 }

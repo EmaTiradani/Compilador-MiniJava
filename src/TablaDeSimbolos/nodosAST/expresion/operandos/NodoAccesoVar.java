@@ -5,6 +5,7 @@ import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.sentencia.NodoVarLocal;
 import exceptions.SemanticException;
 import lexycal.Token;
+import TablaDeSimbolos.*;
 
 public class NodoAccesoVar extends NodoAcceso{
 
@@ -18,7 +19,31 @@ public class NodoAccesoVar extends NodoAcceso{
     public Tipo chequear() throws SemanticException {
         Tipo tipoVar;
         NodoVarLocal nodoVarLocal = TablaDeSimbolos.getVarLocalClaseActual(idVar.getLexema());
+        if(nodoVarLocal != null){
+            tipoVar = nodoVarLocal.getTipo();
+        }else{
+            Argumento argumento = TablaDeSimbolos.metodoActual.getArgumento(idVar.getLexema());
+            if(argumento != null){
+                tipoVar = argumento.getTipoParametro();
+            }else{
+                Atributo atributo = TablaDeSimbolos.claseActual.getAtributo(idVar.getLexema());
+                if(atributo != null){
+                    if(!TablaDeSimbolos.metodoActual.getEstatico()){
+                        tipoVar = atributo.getTipo();
+                    }else{
+                        throw new SemanticException("Se intento acceder a un atributo de instancia desde un entorno estatico", idVar);
+                    }
+                }else{
+                    throw new SemanticException("Se intento acceder al atributo "+idVar.getLexema()+"pero no existe(o no es accesible)");
+                }
+            }
+        }
 
+        // Chequeo el encadenado si es que tiene uno TODO (revisar si me olvide de otro mas)
+        if(encadenado != null){
+            return encadenado.chequear(tipoVar);
+        }
+        return tipoVar;
     }
 
     @Override

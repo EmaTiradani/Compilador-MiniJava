@@ -195,6 +195,22 @@ public class Firsts {
         map.get("ExpresionUnaria").add(stringLiteral);
         map.get("ExpresionUnaria").add(idClase);
 
+        map.get("Expresion").add(op_suma);
+        map.get("Expresion").add(op_resta);
+        map.get("Expresion").add(op_negacion);
+        map.get("Expresion").add(kw_null);
+        map.get("Expresion").add(kw_true);
+        map.get("Expresion").add(kw_false);
+        map.get("Expresion").add(intLiteral);
+        map.get("Expresion").add(charLiteral);
+        map.get("Expresion").add(stringLiteral);
+        map.get("Expresion").add(kw_this);
+        map.get("Expresion").add(idMetVar);
+        map.get("Expresion").add(kw_new);
+        map.get("Expresion").add(punt_parentIzq);
+        map.get("Expresion").add(idClase);
+
+
         map.get("Operando").add(kw_null);// Los de literal
         map.get("Operando").add(kw_true);
         map.get("Operando").add(kw_false);

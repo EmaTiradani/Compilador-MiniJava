@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
@@ -12,9 +13,8 @@ public class NodoVarLocal extends NodoSentencia {
     NodoExpresion expresion;
     Tipo tipo;
 
-    public NodoVarLocal(Token nombre, Tipo tipo) {
+    public NodoVarLocal(Token nombre) {
         this.nombre = nombre;
-        this.tipo = tipo;
     }
 
     public Token getNombre() {
@@ -28,11 +28,14 @@ public class NodoVarLocal extends NodoSentencia {
     @Override
     public void chequear() throws SemanticException {
         tipo.checkExistencia(nombre.getLinea());
+        TablaDeSimbolos.getBloqueActual().insertarVariableLocal(this);// Lanza error si ya hay otra variable con este mismo nombre
+
         if(expresion != null){
             if(!tipo.checkSubtipo(expresion.chequear())){
                 throw new SemanticException(" la expresion no es de un tipo compatible con la variable", nombre);
             }
         }
+
     }
 
     public NodoExpresion getExpresion() {
@@ -41,5 +44,13 @@ public class NodoVarLocal extends NodoSentencia {
 
     public void setExpresion(NodoExpresion expresion) {
         this.expresion = expresion;
+    }
+
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
 }
