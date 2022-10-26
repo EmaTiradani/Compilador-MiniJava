@@ -9,11 +9,15 @@ import lexycal.TokenId;
 
 public class NodoVarEncadenada extends NodoEncadenado {
 
-    private Token idVar;
+    public Token idVar;
 
 
     public NodoVarEncadenada(Token idVarEncadenada) {
         idVar = idVarEncadenada;
+    }
+
+    public Token getToken(){
+        return idVar;
     }
 
     @Override
@@ -23,6 +27,7 @@ public class NodoVarEncadenada extends NodoEncadenado {
         if(claseContenedora != null){
             Atributo atributo = claseContenedora.getAtributo(idVar.getLexema());
             if(atributo != null){
+                // TODO poner el chequeo de que el padre no tenga el atributo privado para poder acceder a mis privados que esta en NodoAccesoThis
                 if(atributo.getVisibilidad() == TokenId.kw_public){
                     tipoAtributo = atributo.getTipo();
                 }else{

@@ -31,6 +31,10 @@ public class NodoAsignacionExp extends NodoAsignacion{
             throw new SemanticException(" la expresion no es de un tipo compatible", tipoAsignacion);
         }
 
+        if(!nodoAcceso.chequear().checkSubtipo(ladoDer.chequear())){
+            throw new SemanticException(" La expresion no es de un tipo compatible", tipoAsignacion);
+        }
+
     }
 
     public Token getTipoAsignacion() {

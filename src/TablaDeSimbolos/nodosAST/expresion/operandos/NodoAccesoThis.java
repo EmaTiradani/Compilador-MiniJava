@@ -1,9 +1,12 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
 import TablaDeSimbolos.TablaDeSimbolos;
-import TablaDeSimbolos.Tipo;
+import TablaDeSimbolos.*;
 import exceptions.SemanticException;
 import lexycal.Token;
+import lexycal.TokenId;
+
+import java.util.ArrayList;
 
 public class NodoAccesoThis extends NodoAcceso{
     Token nodoThis;
@@ -18,6 +21,20 @@ public class NodoAccesoThis extends NodoAcceso{
             throw new SemanticException("Referencia a this desde un metodo estatico", nodoThis);
         }
         Tipo tipoClaseActual = new Tipo(TablaDeSimbolos.claseActual.getNombreClase());
+
+        ArrayList<String> ancestros = TablaDeSimbolos.claseActual.getAncestros();
+        ancestros.remove(TablaDeSimbolos.claseActual.getNombreClase());
+        for(String ancestro : ancestros){
+            Clase claseConcreta = TablaDeSimbolos.getClase(ancestro);
+            if(encadenado != null){
+                Atributo atributo = claseConcreta.getAtributo(encadenado.getToken().getLexema());
+                if(atributo != null && atributo.getVisibilidad() == TokenId.kw_private){
+                    throw new SemanticException("Se intento acceder a un atributo privado", encadenado.getToken());
+                }
+            }
+
+        }
+
 
         if(encadenado != null){
             return encadenado.chequearThis(tipoClaseActual);

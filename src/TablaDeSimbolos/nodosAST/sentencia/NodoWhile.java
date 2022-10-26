@@ -53,6 +53,8 @@ public class NodoWhile extends NodoSentencia{
             sentencia.chequear();
 
             TablaDeSimbolos.desapilarBloqueActual();
+        }else{
+            throw new SemanticException(" La condicion del while debe ser una expresion booleana", tokenWhile);
         }
     }
 }

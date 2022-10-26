@@ -43,10 +43,16 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
         if(claseEstatica == null){
             throw new SemanticException("La clase estatica "+idClaseEstatica.getLexema()+" no existe",idClaseEstatica);
         }
+
         Metodo metodo = claseEstatica.getMetodoQueConformaParametros(idMetodoEstatico, parametrosActuales);
         if(metodo == null){
             throw new SemanticException("No existe el metodo "+idMetodoEstatico.getLexema(), idMetodoEstatico);
+        }else{
+            if(!metodo.getEstatico()){
+                throw new SemanticException("El metodo no es estatico", idMetodoEstatico);
+            }
         }
+
 
         if(encadenado == null){
             return metodo.getTipoRetorno();

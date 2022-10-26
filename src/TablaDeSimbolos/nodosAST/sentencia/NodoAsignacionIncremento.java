@@ -26,6 +26,11 @@ public class NodoAsignacionIncremento  extends NodoAsignacion{
         if (!nodoAcceso.esAsignable()) {
             throw new SemanticException("Lado izquierdo incompatible, se esperaba una variable ",tipoAsignacion);
         }
+
+        Tipo tipoExpresion = ladoDer.chequear();
+        if(!tipoExpresion.mismoTipo(new Tipo("int"))){
+            throw new SemanticException("Lado derecho incompatible, se esperaba un entero ",tipoAsignacion);
+        }
     }
 
     public Token getTipoAsignacion() {

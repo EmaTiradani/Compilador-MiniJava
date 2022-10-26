@@ -46,6 +46,11 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
     }
 
     @Override
+    public Token getToken() {
+        return idMet;
+    }
+
+    @Override
     public boolean esAsignable() {
         if(nodoEncadenado == null){
             return false;

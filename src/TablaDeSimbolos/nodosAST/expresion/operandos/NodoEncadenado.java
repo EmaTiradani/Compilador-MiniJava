@@ -27,6 +27,8 @@ public abstract class NodoEncadenado {
 
     public abstract Tipo chequear(Tipo tipo) throws SemanticException;
 
+    public abstract Token getToken();
+
     public abstract boolean esAsignable();
 
     public abstract boolean esLlamable();

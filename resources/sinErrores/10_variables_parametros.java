@@ -1,8 +1,6 @@
 //Prueba resolucion de nombres de variables y de parametros
 
-class C{
-    public int c1;
-}
+
 
 class B extends C{
     public int b1;
@@ -18,6 +16,10 @@ class B extends C{
         }
         b1 -= p;
     }
+}
+
+class C{
+    public int c1;
 }
 
 class A extends B{

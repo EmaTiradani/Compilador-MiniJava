@@ -1,4 +1,4 @@
-///[Error:x|6]
+///[Error:null|6]
 
 class A {
 
