@@ -26,7 +26,10 @@ public class NodoVarEncadenada extends NodoEncadenado {
                 if(atributo.getVisibilidad() == TokenId.kw_public){
                     tipoAtributo = atributo.getTipo();
                 }else{
-                    throw new SemanticException("Se esta intentando acceder a un atributo privado", idVar);
+                    if(!atributo.getTipo().getType().equals(claseContenedora.getNombreClase()))
+                        throw new SemanticException("Se esta intentando acceder a un atributo privado", idVar);
+                    else
+                        tipoAtributo = atributo.getTipo();
                 }
             }else{
                 throw new SemanticException("El atributo "+idVar.getLexema()+" no existe", idVar);

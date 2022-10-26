@@ -1,11 +1,13 @@
 package TablaDeSimbolos;
 
+import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
 import lexycal.Token;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static lexycal.TokenId.*;
@@ -298,11 +300,30 @@ public class ClaseConcreta extends Clase{
         return false;
     }
 
-    public void checkSentencias() throws SemanticException {
-        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
-            for(Metodo metodo : listaMetodos.getValue()){
-                metodo.checkSentencias();
+    public Metodo getMetodoQueConformaParametros(Token idMet, List<NodoExpresion> parametros) throws SemanticException {
+        List<Tipo> tiposDeLosParametros = new ArrayList<>();
+        for(NodoExpresion parametro : parametros){
+            tiposDeLosParametros.add(parametro.chequear());
+        }
+
+        ArrayList<Metodo> metodosPosibles = metodos.get(idMet.getLexema());
+
+        if(metodosPosibles != null){
+            for(Metodo metodo : metodosPosibles){
+                if(metodo.conformanParametros(tiposDeLosParametros)){
+                    return metodo;
+                }
             }
+        }
+        return null;
+    }
+
+    public void checkSentencias() throws SemanticException {
+        TablaDeSimbolos.claseActual = this;
+
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            Metodo metodo = listaMetodos.getValue().get(0);
+            metodo.checkSentencias();
         }
     }
 

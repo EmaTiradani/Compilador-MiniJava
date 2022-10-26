@@ -5,6 +5,7 @@ import exceptions.SemanticException;
 import lexycal.Token;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Metodo {
 
@@ -119,6 +120,18 @@ public class Metodo {
     public boolean soloCambiaEstatico(Metodo metodo){
 
         return(mismoEncabezado(metodo) && coincideEncabezado(metodo) && estatico!=metodo.getEstatico());
+    }
+
+    public boolean conformanParametros(List<Tipo> parametros){
+        if(parametros.size() == argumentos.size()){
+            for(int i=0; i<parametros.size(); i++){
+                if(!argumentos.get(i).getTipoParametro().checkSubtipo(parametros.get(parametros.size()-i-1))){
+                    return false;
+                }
+            }
+        }
+        return true;
+
     }
 
     public boolean esMain() {

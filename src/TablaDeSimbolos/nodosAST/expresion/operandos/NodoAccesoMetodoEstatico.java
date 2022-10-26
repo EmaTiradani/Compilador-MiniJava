@@ -2,7 +2,7 @@ package TablaDeSimbolos.nodosAST.expresion.operandos;
 
 import TablaDeSimbolos.Metodo;
 import TablaDeSimbolos.TablaDeSimbolos;
-import TablaDeSimbolos.Tipo;
+import TablaDeSimbolos.*;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
 import lexycal.Token;
@@ -39,7 +39,11 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
 
     @Override
     public Tipo chequear() throws SemanticException {
-        Metodo metodo = TablaDeSimbolos.claseActual.getMetodoQueConformaParametros(idMetodoEstatico, parametrosActuales);
+        Clase claseEstatica = TablaDeSimbolos.getClase(idClaseEstatica.getLexema());
+        if(claseEstatica == null){
+            throw new SemanticException("La clase estatica "+idClaseEstatica.getLexema()+" no existe",idClaseEstatica);
+        }
+        Metodo metodo = claseEstatica.getMetodoQueConformaParametros(idMetodoEstatico, parametrosActuales);
         if(metodo == null){
             throw new SemanticException("No existe el metodo "+idMetodoEstatico.getLexema(), idMetodoEstatico);
         }

@@ -11,10 +11,12 @@ public class NodoBloque extends NodoSentencia{
 
     ArrayList<NodoSentencia> sentencias;
     Map<String, NodoVarLocal> variablesLocales;
+    boolean chequeado;
 
     public NodoBloque(){
         sentencias = new ArrayList<NodoSentencia>();
         variablesLocales = new HashMap<>();
+        chequeado = false;
     }
 
     public void insertarSentencia(NodoSentencia sentencia){
@@ -52,11 +54,14 @@ public class NodoBloque extends NodoSentencia{
 
     @Override
     public void chequear() throws SemanticException {
-        TablaDeSimbolos.apilarBloque(this);
-        for(NodoSentencia sentencia : sentencias){
-            sentencia.chequear();
-        }
+        if(!chequeado){
+            TablaDeSimbolos.apilarBloque(this);
+            for(NodoSentencia sentencia : sentencias){
+                sentencia.chequear();
+            }
 
-        TablaDeSimbolos.desapilarBloqueActual();
+            TablaDeSimbolos.desapilarBloqueActual();
+        }
+        chequeado = true;
     }
 }

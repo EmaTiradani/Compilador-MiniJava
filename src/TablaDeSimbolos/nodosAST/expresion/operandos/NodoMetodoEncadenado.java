@@ -25,6 +25,8 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
     public Tipo chequear(Tipo tipoEncadenadoLadoIzq) throws SemanticException {
         Tipo tipoMetodo;
         Clase claseContenedora = TablaDeSimbolos.getClase(tipoEncadenadoLadoIzq.getType());
+        if(claseContenedora == null)
+            claseContenedora = TablaDeSimbolos.getInterfaz(tipoEncadenadoLadoIzq.getType());
         if(claseContenedora != null){
             Metodo metodo = claseContenedora.getMetodoQueConformaParametros(idMet, parametros);
             if(metodo == null){

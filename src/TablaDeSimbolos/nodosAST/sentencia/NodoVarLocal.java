@@ -34,7 +34,7 @@ public class NodoVarLocal extends NodoSentencia {
         if(expresion != null){
             this.tipo = expresion.chequear();
         }
-        if(this.tipo.mismoTipo(new Tipo("null"))){
+        if(this.tipo == null || this.tipo.mismoTipo(new Tipo("null"))){
             throw new SemanticException(" No se le puede asginar un nulo a una variable local", expresion.getToken());
         }
     }

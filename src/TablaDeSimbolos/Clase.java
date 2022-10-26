@@ -56,8 +56,16 @@ public abstract class Clase {
             tiposDeLosParametros.add(parametro.chequear());
         }
 
+        ArrayList<Metodo> metodosPosibles = metodos.get(idMet.getLexema());
 
-        return null; // TODO sacar esto cuando termine de hacerlo bien
+        if(metodosPosibles != null){
+            for(Metodo metodo : metodosPosibles){
+                if(metodo.conformanParametros(tiposDeLosParametros)){
+                    return metodo;
+                }
+            }
+        }
+        return null;
     }
 
 }
