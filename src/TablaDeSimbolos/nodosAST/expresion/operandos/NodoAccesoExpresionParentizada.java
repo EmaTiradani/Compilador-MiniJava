@@ -3,6 +3,7 @@ package TablaDeSimbolos.nodosAST.expresion.operandos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
+import lexycal.Token;
 
 public class NodoAccesoExpresionParentizada extends NodoAcceso{
 
@@ -20,6 +21,11 @@ public class NodoAccesoExpresionParentizada extends NodoAcceso{
             return encadenado.chequear(expresion.chequear());
         }
 
+    }
+
+    @Override
+    public Token getToken() {
+        return null;
     }
 
     @Override

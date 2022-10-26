@@ -12,7 +12,7 @@ public class NodoNum extends NodoOperando {
         this.valor = valor;
     }
 
-    public Token getValor() {
+    public Token getToken() {
         return valor;
     }
 

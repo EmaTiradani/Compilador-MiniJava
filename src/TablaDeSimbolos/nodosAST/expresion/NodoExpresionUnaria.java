@@ -23,7 +23,7 @@ public class NodoExpresionUnaria extends NodoExpresion {
         this.ladoDer = ladoDer;
     }
 
-    public Token getOperador() {
+    public Token getToken() {
         return operador;
     }
 

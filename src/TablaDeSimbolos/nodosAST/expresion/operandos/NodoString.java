@@ -13,7 +13,7 @@ public class NodoString extends NodoOperando {
         this.stringLit = stringLit;
     }
 
-    public Token getStringLit() {
+    public Token getToken() {
         return stringLit;
     }
 

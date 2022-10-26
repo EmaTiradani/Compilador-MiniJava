@@ -40,4 +40,8 @@ public abstract class NodoExpresionBinaria extends NodoExpresion {
 
     @Override
     public abstract Tipo chequear() throws SemanticException;
+
+    public Token getToken(){
+        return operador;
+    }
 }

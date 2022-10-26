@@ -14,7 +14,7 @@ public class NodoNull extends NodoOperando {
         this.tokenNull = token;
     }
 
-    public Token getTokenNull() {
+    public Token getToken() {
         return tokenNull;
     }
 

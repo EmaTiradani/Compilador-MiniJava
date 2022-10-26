@@ -40,6 +40,11 @@ public class NodoAccesoMetodo extends NodoAcceso{
     }
 
     @Override
+    public Token getToken() {
+        return idMet;
+    }
+
+    @Override
     public boolean esAsignable() {
         if(encadenado == null){
             return false;

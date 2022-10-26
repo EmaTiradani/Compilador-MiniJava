@@ -29,7 +29,7 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
         this.idClaseEstatica = idClaseEstatica;
     }
 
-    public Token getIdMetodoEstatico() {
+    public Token getToken() {
         return idMetodoEstatico;
     }
 

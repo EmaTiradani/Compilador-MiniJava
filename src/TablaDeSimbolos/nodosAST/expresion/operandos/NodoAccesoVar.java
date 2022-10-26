@@ -47,6 +47,11 @@ public class NodoAccesoVar extends NodoAcceso{
     }
 
     @Override
+    public Token getToken() {
+        return idVar;
+    }
+
+    @Override
     public boolean esAsignable() {
         if(encadenado == null){
             return true;

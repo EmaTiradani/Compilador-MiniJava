@@ -31,6 +31,11 @@ public class NodoAccesoConstructor extends NodoAcceso{
     }
 
     @Override
+    public Token getToken() {
+        return idClase;
+    }
+
+    @Override
     public boolean esAsignable() {
         if(encadenado == null){
             return false;

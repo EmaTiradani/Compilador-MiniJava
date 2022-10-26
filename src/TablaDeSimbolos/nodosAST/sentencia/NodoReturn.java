@@ -33,7 +33,9 @@ public class NodoReturn extends NodoSentencia {
 
         if(retorno == null){
             if(!(tipoMetodo.mismoTipo(new Tipo(tokenReturn.getLexema())))){
-                throw new SemanticException("se esperaba un retorno de tipo "+tipoMetodo.getType(), tokenReturn);
+                if(!tipoMetodo.mismoTipo(new Tipo("void"))){
+                    throw new SemanticException(" se esperaba un retorno de tipo "+tipoMetodo.getType(), tokenReturn);
+                }
             }
         }else{
             if(TablaDeSimbolos.metodoActual.getTipoRetorno().mismoTipo(new Tipo("void"))){

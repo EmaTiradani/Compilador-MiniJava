@@ -17,4 +17,9 @@ public class NodoFalse extends NodoBoolean{
     public Tipo chequear() throws SemanticException {
         return new Tipo("boolean");
     }
+
+    @Override
+    public Token getToken() {
+        return tokenFalse;
+    }
 }

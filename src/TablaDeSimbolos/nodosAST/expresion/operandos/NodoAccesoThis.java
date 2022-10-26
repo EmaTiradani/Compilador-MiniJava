@@ -27,6 +27,11 @@ public class NodoAccesoThis extends NodoAcceso{
     }
 
     @Override
+    public Token getToken() {
+        return nodoThis;
+    }
+
+    @Override
     public boolean esAsignable() {
         if(encadenado == null){
             return false;

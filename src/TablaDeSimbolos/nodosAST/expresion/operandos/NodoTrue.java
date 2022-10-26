@@ -12,7 +12,7 @@ public class NodoTrue extends NodoBoolean{
         this.tokenTrue = tokenTrue;
     }
 
-    public Token getTokenTrue() {
+    public Token getToken() {
         return tokenTrue;
     }
 

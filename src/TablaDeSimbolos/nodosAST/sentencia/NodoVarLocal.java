@@ -37,6 +37,9 @@ public class NodoVarLocal extends NodoSentencia {
                 throw new SemanticException(" la expresion no es de un tipo compatible con la variable", nombre);
             }*/
         }
+        if(this.tipo.mismoTipo(new Tipo("null"))){
+            throw new SemanticException(" No se le puede asginar un nulo a una variable local", expresion.getToken());
+        }
     }
 
     public NodoExpresion getExpresion() {

@@ -18,4 +18,5 @@ public class NodoExpresionBinariaAnd extends NodoExpresionBinaria {
             throw new SemanticException("Ambos lados del operador AND deben ser de tipo boolean", operador);
         }
     }
+
 }

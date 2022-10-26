@@ -14,7 +14,7 @@ public class NodoChar extends NodoOperando {
     }
 
 
-    public Token getCharLit() {
+    public Token getToken() {
         return charLit;
     }
 
