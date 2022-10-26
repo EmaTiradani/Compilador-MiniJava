@@ -80,13 +80,7 @@ public class ClaseConcreta extends Clase{
         notHerenciaCircular = true;
     }
 
-    public void insertarAtributo(Atributo atributo) throws SemanticException {
-        if(!atributos.containsKey(atributo.getId())){
-            atributos.put(atributo.getId(), atributo);
-        }else{
-            throw new SemanticException(" Atributo con el mismo ID", atributo.getToken());
-        }
-    }
+
 
     public void insertarMetodo(Metodo metodo) throws SemanticException {
 
@@ -117,6 +111,10 @@ public class ClaseConcreta extends Clase{
 
     public HashMap<String, Atributo> getAtributos(){
         return atributos;
+    }
+
+    public Atributo getAtributo(String idVar){
+        return atributos.get(idVar);
     }
 
     public HashMap<String,ArrayList<Metodo>> getMetodos(){
@@ -188,6 +186,14 @@ public class ClaseConcreta extends Clase{
         }
         if(metodo.esMain() && metodo.getId().getLinea()>metodoMain.getId().getLinea())
             metodoMain = metodo;
+    }
+
+    public void insertarAtributo(Atributo atributo) throws SemanticException {
+        if(!atributos.containsKey(atributo.getId())){
+            atributos.put(atributo.getId(), atributo);
+        }else{
+            throw new SemanticException(" Atributo con el mismo ID", atributo.getToken());
+        }
     }
 
     public void insertarAtributosDeAncestros(Atributo atributo) throws SemanticException {

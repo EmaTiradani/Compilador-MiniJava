@@ -33,9 +33,6 @@ public class NodoVarLocal extends NodoSentencia {
 
         if(expresion != null){
             this.tipo = expresion.chequear();
-            /*if(!tipo.checkSubtipo(expresion.chequear())){
-                throw new SemanticException(" la expresion no es de un tipo compatible con la variable", nombre);
-            }*/
         }
         if(this.tipo.mismoTipo(new Tipo("null"))){
             throw new SemanticException(" No se le puede asginar un nulo a una variable local", expresion.getToken());

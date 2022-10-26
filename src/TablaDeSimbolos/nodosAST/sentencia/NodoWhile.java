@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
@@ -45,9 +46,13 @@ public class NodoWhile extends NodoSentencia{
     public void chequear() throws SemanticException {
         if(condicion.chequear().mismoTipo(new Tipo("boolean"))){
 
-            // Todo lo mismo del if? Asi no son cosas visibles fuera del if/while
+            // Lo de los bloques es lo mismo que lo del if
+            NodoBloque bloqueWhile = new NodoBloque();
+            TablaDeSimbolos.apilarBloque(bloqueWhile);
 
             sentencia.chequear();
+
+            TablaDeSimbolos.desapilarBloqueActual();
         }
     }
 }

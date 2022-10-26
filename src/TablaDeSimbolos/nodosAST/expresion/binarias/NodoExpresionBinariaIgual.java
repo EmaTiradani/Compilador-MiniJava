@@ -15,7 +15,7 @@ public class NodoExpresionBinariaIgual extends NodoExpresionBinaria {
         Tipo tipoLadoIzq = ladoIzquierdo.chequear();
         Tipo tipoLadoDer = ladoDerecho.chequear();
 
-        if(tipoLadoDer.checkSubtipo(tipoLadoIzq) || tipoLadoIzq.checkSubtipo(tipoLadoDer)){
+        if(tipoLadoDer.checkSubtipo(tipoLadoIzq) || tipoLadoIzq.checkSubtipo(tipoLadoDer) || tipoLadoDer.mismoTipo(new Tipo("null"))){
             return new Tipo("boolean");
         }else{
             throw new SemanticException("Ambos lados del operador == deben ser subtipos entre si", operador);

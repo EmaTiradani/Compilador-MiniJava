@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
@@ -48,15 +49,21 @@ public class NodoIf extends NodoSentencia {
     public void chequear() throws SemanticException {
         if(condicion.chequear().mismoTipo(new Tipo("boolean"))){
 
-            // TODO Meto el bloque del if por si el if usa un bloque en vez de una sentencia pelada?
+            // Meto un bloque artificial del if para tener el scope aca, sino se va a agregar en el bloque que contiene al if
+            NodoBloque bloqueIf = new NodoBloque();
+            TablaDeSimbolos.apilarBloque(bloqueIf);
 
             sentenciaIf.chequear();
 
-            // Todo aca lo saco a la wea
+            TablaDeSimbolos.desapilarBloqueActual(); //Una vez que chequee las variables con el alcance correcto, elimino el bloque
+
 
             if(sentenciaElse != null){
-                // Todo lo mismo que los comments del bloque del if
+
+                NodoBloque bloqueElse = new NodoBloque();// Lo mismo que los comments del bloque del if
+                TablaDeSimbolos.apilarBloque(bloqueElse);
                 sentenciaElse.chequear();
+                TablaDeSimbolos.desapilarBloqueActual();
             }
 
         }else{

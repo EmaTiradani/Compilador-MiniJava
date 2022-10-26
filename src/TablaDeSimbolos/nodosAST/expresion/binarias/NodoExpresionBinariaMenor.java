@@ -13,7 +13,7 @@ public class NodoExpresionBinariaMenor extends NodoExpresionBinaria {
     @Override
     public Tipo chequear() throws SemanticException {
         if(ladoIzquierdo.chequear().mismoTipo(new Tipo("int")) && ladoDerecho.chequear().mismoTipo(new Tipo("int"))){
-            return new Tipo("int");
+            return new Tipo("boolean");
         }else{
             throw new SemanticException("Ambos lados del operador < deben ser numeros enteros", operador);
         }

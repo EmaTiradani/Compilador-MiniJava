@@ -31,10 +31,10 @@ public class NodoAccesoVar extends NodoAcceso{
                     if(!TablaDeSimbolos.metodoActual.getEstatico()){
                         tipoVar = atributo.getTipo();
                     }else{
-                        throw new SemanticException("Se intento acceder a un atributo de instancia desde un entorno estatico", idVar);
+                        throw new SemanticException(" Se intento acceder a un atributo de instancia desde un entorno estatico", idVar);
                     }
                 }else{
-                    throw new SemanticException("Se intento acceder al atributo "+idVar.getLexema()+"pero no existe(o no es accesible)");
+                    throw new SemanticException(" Se intento acceder al atributo "+idVar.getLexema()+"pero no existe(o no es accesible)", idVar);
                 }
             }
         }

@@ -41,11 +41,11 @@ public class NodoBloque extends NodoSentencia{
     public void insertarVariableLocal(NodoVarLocal variableLocal) throws SemanticException {
         // Chequeo que no haya otra var con ese id
         if(TablaDeSimbolos.metodoActual.getArgumento(variableLocal.getNombre().getLexema()) != null){
-            throw new SemanticException("Ya habia una variable local declarada con este identificador en el scope", variableLocal.getNombre());
+            throw new SemanticException(" Ya habia una variable local declarada con este identificador en el scope", variableLocal.getNombre());
         }
         // Chequeo que no haya otra var local con ese id
         if(TablaDeSimbolos.getVarLocalClaseActual(variableLocal.getNombre().getLexema())!= null){
-            throw new SemanticException("Ya habia una variable local con este identificador", variableLocal.getNombre());
+            throw new SemanticException(" Ya habia una variable local con este identificador", variableLocal.getNombre());
         }
         this.variablesLocales.put(variableLocal.getNombre().getLexema(), variableLocal);
     }

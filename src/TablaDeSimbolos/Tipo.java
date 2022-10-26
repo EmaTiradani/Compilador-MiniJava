@@ -72,7 +72,7 @@ public class Tipo {
     }
 
     public boolean mismoTipo(Tipo tipo) {
-        if(tipo.getType().equals(this.id) || tipo.getType().equals("null"))
+        if(tipo.getType().equals(this.id))
             return true;
         else
             return false;
