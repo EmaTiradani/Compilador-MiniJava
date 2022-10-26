@@ -65,7 +65,7 @@ public class Tipo {
             ancestros = TablaDeSimbolos.getInterfaz(tipo.getType()).getAncestros();
         }
 
-        if(ancestros.contains(id))
+        if(ancestros.contains(id) || mismoTipo(tipo))
             return true;// tipo es un subtipo mio
         else
             return false;

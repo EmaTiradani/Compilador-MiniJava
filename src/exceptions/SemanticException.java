@@ -27,7 +27,7 @@ public class SemanticException extends Exception{
             } else if (message.equals("no esta declarada")){
                 error += (token.getLinea() + ": La clase " + token.getLexema() + " " + message);
             }else{
-                error += (token.getLinea() + message);
+                error += (token.getLinea() + " " +message);
             }
 
         }else{

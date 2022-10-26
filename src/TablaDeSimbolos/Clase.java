@@ -20,6 +20,11 @@ public abstract class Clase {
     boolean consolidado;
     boolean notHerenciaCircular;
 
+    public Clase(){
+        atributos = new HashMap<>();
+        metodos = new HashMap<>();
+        listaInterfaces = new ArrayList<>();
+    }
 
     public abstract Token getToken();
 

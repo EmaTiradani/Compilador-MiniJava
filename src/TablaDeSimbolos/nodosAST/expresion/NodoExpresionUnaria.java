@@ -33,6 +33,22 @@ public class NodoExpresionUnaria extends NodoExpresion {
 
     @Override
     public Tipo chequear() throws SemanticException {
-        return null;
+        if(operador != null){
+            if(operador.getLexema().equals("+") || operador.getLexema().equals("-")){
+                if(ladoDer.chequear().mismoTipo(new Tipo("int"))){
+                    return new Tipo("int");
+                }else{
+                    throw new SemanticException(" El operador unario "+operador.getLexema()+" trabaja con tipos enteros", operador);
+                }
+            }else{// Operador = "!", trabaja con un booleano
+                if(ladoDer.chequear().mismoTipo(new Tipo("boolean"))){
+                    return new Tipo("boolean");
+                }else{
+                    throw new SemanticException(" El operador '!' funciona con una expresion booleana unicamente", operador);
+                }
+            }
+        }else{// Si el operador es null
+            return ladoDer.chequear();
+        }
     }
 }

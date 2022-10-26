@@ -27,22 +27,23 @@ public class NodoVarLocal extends NodoSentencia {
 
     @Override
     public void chequear() throws SemanticException {
-        tipo.checkExistencia(nombre.getLinea());
+        //tipo.checkExistencia(nombre.getLinea()); // TODO preguntar que onda con los tipos
+
         TablaDeSimbolos.getBloqueActual().insertarVariableLocal(this);// Lanza error si ya hay otra variable con este mismo nombre
 
         if(expresion != null){
-            if(!tipo.checkSubtipo(expresion.chequear())){
+            this.tipo = expresion.chequear();
+            /*if(!tipo.checkSubtipo(expresion.chequear())){
                 throw new SemanticException(" la expresion no es de un tipo compatible con la variable", nombre);
-            }
+            }*/
         }
-
     }
 
     public NodoExpresion getExpresion() {
         return expresion;
     }
 
-    public void setExpresion(NodoExpresion expresion) {
+    public void setExpresion(NodoExpresion expresion){
         this.expresion = expresion;
     }
 

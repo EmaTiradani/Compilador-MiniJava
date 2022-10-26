@@ -19,6 +19,7 @@ public class Interfaz extends Clase{
 
     public Interfaz(Token nombreInterface){
         this.nombreInterface = nombreInterface;
+        clasesQueExtiende = new ArrayList<>();
         listaInterfaces = new ArrayList<>();
         metodos = new HashMap<>();
 

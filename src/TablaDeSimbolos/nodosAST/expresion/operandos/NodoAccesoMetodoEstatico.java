@@ -41,7 +41,7 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
     public Tipo chequear() throws SemanticException {
         Metodo metodo = TablaDeSimbolos.claseActual.getMetodoQueConformaParametros(idMetodoEstatico, parametrosActuales);
         if(metodo == null){
-            throw new SemanticException("No existe el metodo "+metodo.getId().getLexema(), idMetodoEstatico);
+            throw new SemanticException("No existe el metodo "+idMetodoEstatico.getLexema(), idMetodoEstatico);
         }
 
         if(encadenado == null){

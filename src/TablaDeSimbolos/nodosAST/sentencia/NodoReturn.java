@@ -31,7 +31,7 @@ public class NodoReturn extends NodoSentencia {
     public void chequear() throws SemanticException {
         Tipo tipoMetodo = TablaDeSimbolos.metodoActual.getTipoRetorno();
 
-        if(tokenReturn == null){
+        if(retorno == null){
             if(!(tipoMetodo.mismoTipo(new Tipo(tokenReturn.getLexema())))){
                 throw new SemanticException("se esperaba un retorno de tipo "+tipoMetodo.getType(), tokenReturn);
             }

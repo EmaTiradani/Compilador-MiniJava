@@ -67,8 +67,13 @@ public class ClaseConcreta extends Clase{
             ancestros.addAll(TablaDeSimbolos.getInterfaz(interfaz).getAncestros());
         }
         ancestros.add(nombreClasePadre);
-        ancestros.addAll(TablaDeSimbolos.getClase(nombreClasePadre).getAncestros());
-        return ancestros;
+        if(nombreClasePadre.equals("Object")){
+            return ancestros;
+        }else{
+            ancestros.addAll(TablaDeSimbolos.getClase(nombreClasePadre).getAncestros());
+            return ancestros;
+        }
+
     }
 
     public void noTieneHerenciaCircular(){
