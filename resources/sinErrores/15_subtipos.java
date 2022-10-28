@@ -1,4 +1,6 @@
 //Prueba subtipos
+
+
 interface I0{}
 interface I1{}
 interface I2 extends I1{}
@@ -15,6 +17,7 @@ class Init2{
     private I3 i3;
     private I4 i4;
 
+    static void main(){}
     void m1(){
         i1 = new A();
         i1 = new B();
@@ -31,41 +34,5 @@ class Init2{
         i4 = new A();
         i4 = new B();
         i4 = new C();
-    }
-}
-
-class Init{
-    private A a;
-    private B b;
-    private C c;
-
-    static void main(){}
-
-    int m1(boolean p1){
-        if(a == b){
-            if(a == c){
-                if(c == b){}
-            }
-        }
-        if(b == a){
-            if(c == a){
-                if(b == c){}
-            }
-        }
-    }
-
-    int m2(){
-        a = new A();
-        a = new B();
-        a = new C();
-        b = new B();
-        b = new C();
-        c = new C();
-    }
-
-    int m3(){
-        a = b;
-        a = c;
-        b = c;
     }
 }

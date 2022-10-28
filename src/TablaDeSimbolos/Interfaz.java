@@ -43,7 +43,7 @@ public class Interfaz extends Clase{
         ArrayList<String> ancestros = new ArrayList<>();
         ancestros.add(nombreInterface.getLexema());
 
-        for(String clase : clasesQueExtiende){
+        for(String clase : listaInterfaces){
             ancestros.addAll(TablaDeSimbolos.getInterfaz(clase).getAncestros());
         }
         //ancestros.add(nombreClasePadre); Esto no va porque las interfacves solo extienden interfaces

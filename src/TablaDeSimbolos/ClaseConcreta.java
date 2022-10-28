@@ -142,14 +142,17 @@ public class ClaseConcreta extends Clase{
     }
 
     public void consolidar() throws SemanticException {
-        if(TablaDeSimbolos.getClase(nombreClasePadre).consolidado){
-            insertarMetodoYAtributosDePadre();
-            consolidado = true;
-        }else{
-            TablaDeSimbolos.getClase(nombreClasePadre).consolidar();
-            consolidar();
+        if(!consolidado){
+            if(TablaDeSimbolos.getClase(nombreClasePadre).consolidado){
+                insertarMetodoYAtributosDePadre();
+                consolidado = true;
+            }else{
+                TablaDeSimbolos.getClase(nombreClasePadre).consolidar();
+                consolidar();
+                consolidado = true;
+            }
+            checkImplementaTodosLosMetodosDeSuInterfaz();
         }
-        checkImplementaTodosLosMetodosDeSuInterfaz();
     }
 
     private void insertarMetodoYAtributosDePadre() throws SemanticException {

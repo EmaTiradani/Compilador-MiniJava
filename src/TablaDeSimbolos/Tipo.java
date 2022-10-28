@@ -67,20 +67,19 @@ public class Tipo {
             }else{
                 return false;
             }
+        }else{
+            ArrayList<String> ancestros = new ArrayList<>();
+            ancestros.add(this.id);
+            if(TablaDeSimbolos.existeClase(tipo.getType())){
+                ancestros = TablaDeSimbolos.getClase(tipo.getType()).getAncestros();
+            }else if(TablaDeSimbolos.existeInterfaz(tipo.getType())){
+                ancestros = TablaDeSimbolos.getInterfaz(tipo.getType()).getAncestros();
+            }
+            if(ancestros.contains(id) || mismoTipo(tipo))
+                return true;// tipo es un subtipo mio
+            else
+                return false;
         }
-        ArrayList<String> ancestros = new ArrayList<>();
-        ancestros.add(this.id);
-        if(TablaDeSimbolos.existeClase(tipo.getType())){
-            ancestros = TablaDeSimbolos.getClase(tipo.getType()).getAncestros();
-        }else if(TablaDeSimbolos.existeInterfaz(tipo.getType())){
-            ancestros = TablaDeSimbolos.getInterfaz(tipo.getType()).getAncestros();
-        }
-
-
-        if(ancestros.contains(id) || mismoTipo(tipo))
-            return true;// tipo es un subtipo mio
-        else
-            return false;
     }
 
     public boolean mismoTipo(Tipo tipo) {

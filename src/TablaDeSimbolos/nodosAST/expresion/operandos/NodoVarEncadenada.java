@@ -7,6 +7,8 @@ import exceptions.SemanticException;
 import lexycal.Token;
 import lexycal.TokenId;
 
+import java.util.ArrayList;
+
 public class NodoVarEncadenada extends NodoEncadenado {
 
     public Token idVar;
@@ -27,14 +29,30 @@ public class NodoVarEncadenada extends NodoEncadenado {
         if(claseContenedora != null){
             Atributo atributo = claseContenedora.getAtributo(idVar.getLexema());
             if(atributo != null){
-                // TODO poner el chequeo de que el padre no tenga el atributo privado para poder acceder a mis privados que esta en NodoAccesoThis
-                if(atributo.getVisibilidad() == TokenId.kw_public){
+                // DONE poner el chequeo de que el padre no tenga el atributo privado para poder acceder a mis privados que esta en NodoAccesoThis
+                if(atributo.getVisibilidad() == TokenId.kw_public || claseContenedora.getNombreClase().equals(TablaDeSimbolos.claseActual.getNombreClase())){
                     tipoAtributo = atributo.getTipo();
-                }else{
-                    if(!atributo.getTipo().getType().equals(claseContenedora.getNombreClase()))
-                        throw new SemanticException("Se esta intentando acceder a un atributo privado", idVar);
-                    else
+                }else{ // Si es privado
+                    /*if(atributo.getTipo().isPrimitive()){// Si es primitivo, busco entre los ancestros si esta definido.
+                        ArrayList<String> ancestros = TablaDeSimbolos.claseActual.getAncestros();
+                        ancestros.remove(TablaDeSimbolos.claseActual.getNombreClase());
+                        if(ancestros.size() == 1) {
+                            for (String ancestro : ancestros) {
+                                Clase clasePadre = TablaDeSimbolos.getClase(ancestro);
+                                Atributo atributoDelPadre = clasePadre.getAtributo(idVar.getLexema());
+                                if (atributoDelPadre != null && atributo.getVisibilidad() == TokenId.kw_private) {
+                                    throw new SemanticException("Se intento acceder a un atributo privado", idVar);
+                                }
+                            }
+                        }
                         tipoAtributo = atributo.getTipo();
+                    }else{
+                        if(!atributo.getTipo().getType().equals(claseContenedora.getNombreClase()))
+                            throw new SemanticException("Se esta intentando acceder a un atributo privado", idVar);
+                        else
+                            tipoAtributo = atributo.getTipo();
+                    }*/
+                    throw new SemanticException("Se esta intentando acceder al atributo privado "+idVar.getLexema()+" de la clase "+claseContenedora.getNombreClase(), idVar);
                 }
             }else{
                 throw new SemanticException("El atributo "+idVar.getLexema()+" no existe", idVar);
