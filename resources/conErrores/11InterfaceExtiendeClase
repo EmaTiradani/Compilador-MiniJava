@@ -1,8 +1,0 @@
-///[Error:Clase|7]
-
-class Clase{
-    static void main(){}
-}
-
-interface Int extends Clase{}
-

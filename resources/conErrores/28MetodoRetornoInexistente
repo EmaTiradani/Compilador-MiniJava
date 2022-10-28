@@ -1,7 +1,0 @@
-///[Error:B|6]
-
-class Clase {
-    static void main(){}
-
-    B m1(){}
-}

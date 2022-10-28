@@ -1,9 +1,0 @@
-///[Error:I1|5]
-
-interface I1 extends I2{}
-
-interface I2 extends I1{}
-
-class Clase{
-    static void main(){}
-}

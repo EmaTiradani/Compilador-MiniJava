@@ -1,9 +1,0 @@
-///[Error:Interfaz|7]
-
-interface Interfaz{
-
-}
-
-class Clase extends Interfaz{
-    static void main(){}
-}

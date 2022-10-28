@@ -1,7 +1,0 @@
-///[Error:met|6]
-
-class B {
-    static void main(){}
-     int met(){}
-     void met(){}
-}

@@ -1,8 +1,0 @@
-///[Error:a|6]
-
-class Clase{
-
-    public int a;
-    public int a;
-    static void main(){}
-}

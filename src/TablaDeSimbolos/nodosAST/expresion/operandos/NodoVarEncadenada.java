@@ -33,25 +33,6 @@ public class NodoVarEncadenada extends NodoEncadenado {
                 if(atributo.getVisibilidad() == TokenId.kw_public || claseContenedora.getNombreClase().equals(TablaDeSimbolos.claseActual.getNombreClase())){
                     tipoAtributo = atributo.getTipo();
                 }else{ // Si es privado
-                    /*if(atributo.getTipo().isPrimitive()){// Si es primitivo, busco entre los ancestros si esta definido.
-                        ArrayList<String> ancestros = TablaDeSimbolos.claseActual.getAncestros();
-                        ancestros.remove(TablaDeSimbolos.claseActual.getNombreClase());
-                        if(ancestros.size() == 1) {
-                            for (String ancestro : ancestros) {
-                                Clase clasePadre = TablaDeSimbolos.getClase(ancestro);
-                                Atributo atributoDelPadre = clasePadre.getAtributo(idVar.getLexema());
-                                if (atributoDelPadre != null && atributo.getVisibilidad() == TokenId.kw_private) {
-                                    throw new SemanticException("Se intento acceder a un atributo privado", idVar);
-                                }
-                            }
-                        }
-                        tipoAtributo = atributo.getTipo();
-                    }else{
-                        if(!atributo.getTipo().getType().equals(claseContenedora.getNombreClase()))
-                            throw new SemanticException("Se esta intentando acceder a un atributo privado", idVar);
-                        else
-                            tipoAtributo = atributo.getTipo();
-                    }*/
                     throw new SemanticException("Se esta intentando acceder al atributo privado "+idVar.getLexema()+" de la clase "+claseContenedora.getNombreClase(), idVar);
                 }
             }else{

@@ -1,7 +1,0 @@
-///[Error:met|6]
-
-class Clase{
-
-    int met(){}
-    int met(){}
-}

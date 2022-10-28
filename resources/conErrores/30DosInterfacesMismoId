@@ -1,8 +1,0 @@
-///[Error:I|7]
-
-interface I{
-    int m2();
-}
-
-interface I{
-}

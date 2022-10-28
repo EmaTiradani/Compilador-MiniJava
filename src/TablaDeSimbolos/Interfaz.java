@@ -46,7 +46,6 @@ public class Interfaz extends Clase{
         for(String clase : listaInterfaces){
             ancestros.addAll(TablaDeSimbolos.getInterfaz(clase).getAncestros());
         }
-        //ancestros.add(nombreClasePadre); Esto no va porque las interfacves solo extienden interfaces
         return ancestros;
     }
 
