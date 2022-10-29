@@ -5,6 +5,7 @@ import exceptions.SyntacticException;
 import fileManager.FileManager;
 import lexycal.AnalizadorLexico;
 import syntactic.SyntacticParser;
+import java.io.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,9 +31,11 @@ public class MainSyntactic {
             // Segunda pasada
             TablaDeSimbolos.checkDec();
             TablaDeSimbolos.consolidar();
-            //TablaDeSimbolos.print();
-
+            // Chequeo de sentencias
             TablaDeSimbolos.checkSentencias();
+
+
+            generateOutputFile(null);
 
             System.out.println("Compilacion exitosa\n\n[SinErrores]");
         }
@@ -45,5 +48,43 @@ public class MainSyntactic {
         catch (IOException e){
             e.printStackTrace();
         }
+    }
+
+    private static void generateOutputFile(String outputFileName) throws IOException {
+        /*FileManager fileManager;
+        if(outputFileName == null){
+            fileManager = new FileManager("OutputFile");
+        }else{
+            fileManager = new FileManager(outputFileName);
+        }
+        fileManager.*/
+        File file;
+        FileWriter writer;
+        BufferedWriter bufferedWriter;
+        PrintWriter printWriter;
+
+        try{
+            if(outputFileName == null){
+                file = new File("Output_File");
+            }else{
+                file = new File(outputFileName);
+            }
+            writer = new FileWriter(file);
+            bufferedWriter = new BufferedWriter(writer);
+            printWriter = new PrintWriter(bufferedWriter);
+
+            writer.write("Pala");
+            writer.append("\n pala linea 2");
+
+            writer.close();
+            bufferedWriter.close();
+
+
+        } catch (Exception e){
+            System.out.println("Error al generar el archivo de salida");
+        }
+
+
+
     }
 }
