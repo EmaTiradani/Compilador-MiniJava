@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.expresion.binarias;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresionBinaria;
 import exceptions.SemanticException;
@@ -18,5 +19,12 @@ public class NodoExpresionBinariaAnd extends NodoExpresionBinaria {
             throw new SemanticException("Ambos lados del operador AND deben ser de tipo boolean", operador);
         }
     }
+
+    @Override
+    public void generar() {
+        TablaDeSimbolos.gen("PUSH "+operador.getLexema());
+
+    }
+
 
 }

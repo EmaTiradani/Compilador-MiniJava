@@ -4,6 +4,7 @@ import TablaDeSimbolos.Metodo;
 import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
+import TablaDeSimbolos.nodosAST.sentencia.NodoBloque;
 import exceptions.SemanticException;
 import lexycal.Token;
 
@@ -13,6 +14,8 @@ public class NodoAccesoMetodo extends NodoAcceso{
 
     protected Token idMet;
     protected List<NodoExpresion> parametrosActuales;
+    protected Metodo metodo;
+
 
     public NodoAccesoMetodo(Token id, List<NodoExpresion> parametrosActuales){
         this.idMet = id;
@@ -23,7 +26,7 @@ public class NodoAccesoMetodo extends NodoAcceso{
     @Override
     public Tipo chequear() throws SemanticException {
 
-        Metodo metodo = TablaDeSimbolos.claseActual.getMetodoQueConformaParametros(idMet, parametrosActuales);
+        metodo = TablaDeSimbolos.claseActual.getMetodoQueConformaParametros(idMet, parametrosActuales);
         if(metodo == null){
             throw new SemanticException("No existe el metodo "+idMet.getLexema(), idMet);
         }
@@ -61,5 +64,17 @@ public class NodoAccesoMetodo extends NodoAcceso{
         }else{
             return encadenado.esLlamable();
         }
+    }
+
+    @Override
+    public void generar() {
+        if(metodo.getEstatico()){
+            for(NodoExpresion prametro : parametrosActuales){
+                prametro.generar();
+            }
+            TablaDeSimbolos.gen("PUSH "+metodo.getId().getLexema());
+            TablaDeSimbolos.gen("CALL");
+        }
+
     }
 }

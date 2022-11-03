@@ -10,4 +10,9 @@ public class NodoSentenciaVacia extends NodoSentencia{
     public void chequear() {
         // Esto esta bien vacío
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

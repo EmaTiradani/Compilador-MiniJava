@@ -44,4 +44,6 @@ public abstract class NodoExpresionBinaria extends NodoExpresion {
     public Token getToken(){
         return operador;
     }
+
+    public abstract void generar();
 }

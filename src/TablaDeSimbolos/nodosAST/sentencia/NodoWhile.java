@@ -57,4 +57,9 @@ public class NodoWhile extends NodoSentencia{
             throw new SemanticException(" La condicion del while debe ser una expresion booleana", tokenWhile);
         }
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

@@ -70,4 +70,9 @@ public class NodoIf extends NodoSentencia {
             throw new SemanticException(" La condicion del if debe ser una expresion booleana", tokenIf);
         }
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

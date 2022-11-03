@@ -330,6 +330,15 @@ public class ClaseConcreta extends Clase{
         }
     }
 
+    public void generar(){
+        TablaDeSimbolos.claseActual = this;
+
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            Metodo metodo = listaMetodos.getValue().get(0);
+            metodo.generar();
+        }
+    }
+
     public void print(){
 
         for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){

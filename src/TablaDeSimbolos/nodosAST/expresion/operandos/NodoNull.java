@@ -34,4 +34,9 @@ public class NodoNull extends NodoOperando {
     public Tipo chequear() throws SemanticException {
         return new Tipo("null");
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

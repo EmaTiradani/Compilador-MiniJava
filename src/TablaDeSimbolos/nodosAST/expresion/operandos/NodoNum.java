@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
 import exceptions.SemanticException;
@@ -23,6 +24,12 @@ public class NodoNum extends NodoOperando {
     @Override
     public Tipo chequear() throws SemanticException {
         return new Tipo("int");
+    }
+
+
+    @Override
+    public void generar() {
+        TablaDeSimbolos.gen("PUSH "+valor.getLexema());
     }
 }
 

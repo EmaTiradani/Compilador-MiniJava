@@ -25,4 +25,9 @@ public class NodoString extends NodoOperando {
     public Tipo chequear() throws SemanticException {
         return new Tipo("String");
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

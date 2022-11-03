@@ -45,4 +45,9 @@ public class NodoAccesoExpresionParentizada extends NodoAcceso{
             return encadenado.esLlamable();
         }
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

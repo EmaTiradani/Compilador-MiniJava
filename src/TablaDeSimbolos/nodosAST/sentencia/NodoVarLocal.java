@@ -39,6 +39,11 @@ public class NodoVarLocal extends NodoSentencia {
         }
     }
 
+    @Override
+    public void generar() {
+
+    }
+
     public NodoExpresion getExpresion() {
         return expresion;
     }

@@ -21,4 +21,9 @@ public class NodoExpresionBinariaIgual extends NodoExpresionBinaria {
             throw new SemanticException("Ambos lados del operador == deben ser subtipos entre si", operador);
         }
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

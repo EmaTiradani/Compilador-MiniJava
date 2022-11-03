@@ -22,6 +22,11 @@ public class NodoLlamada extends NodoSentencia{
         }
     }
 
+    @Override
+    public void generar() {
+        acceso.generar();
+    }
+
     public Token getTokenLlamada() {
         return tokenLlamada;
     }

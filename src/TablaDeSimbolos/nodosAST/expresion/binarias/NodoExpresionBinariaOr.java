@@ -19,4 +19,9 @@ public class NodoExpresionBinariaOr extends NodoExpresionBinaria {
             throw new SemanticException("Ambos lados del operador OR deben ser de tipo boolean", operador);
         }
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

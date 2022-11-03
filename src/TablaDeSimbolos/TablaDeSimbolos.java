@@ -1,6 +1,7 @@
 package TablaDeSimbolos;
 
 import TablaDeSimbolos.nodosAST.sentencia.NodoBloque;
+import TablaDeSimbolos.nodosAST.sentencia.NodoBloqueDebugPrint;
 import TablaDeSimbolos.nodosAST.sentencia.NodoVarLocal;
 import exceptions.SemanticException;
 import lexycal.Token;
@@ -23,6 +24,9 @@ public final class TablaDeSimbolos {
 
     public static List<NodoBloque> pilaDeBloques;
 
+    public static ArrayList<String> listaInstrucciones;
+    public static String stringInstrucciones;
+
     public TablaDeSimbolos() throws SemanticException {
         clases = new HashMap<String, ClaseConcreta>();
         interfaces = new HashMap<String, Interfaz>();
@@ -30,6 +34,8 @@ public final class TablaDeSimbolos {
         crearClaseObject();
         crearClaseSystem();
         crearClaseString();
+
+        listaInstrucciones = new ArrayList<>();
     }
 
     public static void insertClass(String name, ClaseConcreta clase) throws SemanticException {
@@ -149,6 +155,7 @@ public final class TablaDeSimbolos {
         argumentosObject.add(new Argumento(new Token(idMetVar, "i", 0), new Tipo("int")));
         Metodo debugPrint = new Metodo(new Token(idMetVar, "debugPrint", 0), new TipoMetodo("void"), true, argumentosObject);
         object.insertarMetodo(debugPrint);
+        debugPrint.insertarBloque(new NodoBloqueDebugPrint());
         object.noTieneHerenciaCircular();
         object.consolidado = true;
         clases.put("Object", object);
@@ -191,6 +198,8 @@ public final class TablaDeSimbolos {
         argumentosPrintSln.add(new Argumento(new Token(idMetVar, "s", 0), new Tipo("String")));
         Metodo printSln = new Metodo(new Token(idMetVar,"printSln", 0),new TipoMetodo("void"), true, argumentosPrintSln);
         system.insertarMetodo(printSln);
+
+
     }
 
     public static void print(){ //Metodo para ver si se crean bien las cosas de la TS
@@ -222,6 +231,45 @@ public final class TablaDeSimbolos {
             }
         }
         return null;
+    }
+
+    public static void generar(){
+        generarInicial();
+        for(ClaseConcreta clase : clases.values()){
+            clase.generar();
+        }
+    }
+
+    public static void generarInicial(){
+        // Code
+        listaInstrucciones.add(".CODE");
+        listaInstrucciones.add("PUSH main");
+        listaInstrucciones.add("CALL");
+        listaInstrucciones.add("HALT");
+
+        // Simple malloc
+        listaInstrucciones.add("simple_malloc:");
+        listaInstrucciones.add("LOADFP	; Inicialización unidad");
+        listaInstrucciones.add("LOADSP");
+        listaInstrucciones.add("STOREFP ; Finaliza inicialización del RA");
+        listaInstrucciones.add("LOADHL	; hl");
+        listaInstrucciones.add("DUP	; hl");
+        listaInstrucciones.add("PUSH 1	; 1");
+        listaInstrucciones.add("ADD	; hl+1");
+        listaInstrucciones.add("STORE 4 ; Guarda el resultado (un puntero a la primer celda de la región de memoria)");
+        listaInstrucciones.add("LOAD 3	; Carga la cantidad de celdas a alojar (parámetro que debe ser positivo)");
+        listaInstrucciones.add("ADD");
+        listaInstrucciones.add("STOREHL ; Mueve el heap limit (hl). Expande el heap");
+        listaInstrucciones.add("STOREFP");
+        listaInstrucciones.add("RET 1	; Retorna eliminando el parámetro)");
+        // System
+
+        // Object
+
+    }
+
+    public static void gen(String instruction){
+        listaInstrucciones.add(instruction);
     }
 
 }

@@ -9,4 +9,6 @@ public abstract class NodoExpresion {
     public abstract Tipo chequear() throws SemanticException;
 
     public abstract Token getToken();
+
+    public abstract void generar();
 }

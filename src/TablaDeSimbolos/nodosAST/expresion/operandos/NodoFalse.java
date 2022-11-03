@@ -22,4 +22,9 @@ public class NodoFalse extends NodoBoolean{
     public Token getToken() {
         return tokenFalse;
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

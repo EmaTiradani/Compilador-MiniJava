@@ -52,4 +52,9 @@ public class NodoAccesoConstructor extends NodoAcceso{
             return encadenado.esLlamable();
         }
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

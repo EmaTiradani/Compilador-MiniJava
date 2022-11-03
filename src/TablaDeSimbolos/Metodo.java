@@ -147,4 +147,14 @@ public class Metodo {
         TablaDeSimbolos.metodoActual = this;
         body.chequear();
     }
+
+    public void  generar(){
+        TablaDeSimbolos.metodoActual = this;
+        TablaDeSimbolos.gen(idMet.getLexema()+": LOADFP"); // mas de 1 metodo, poner un if
+        TablaDeSimbolos.gen("LOADSP");
+        TablaDeSimbolos.gen("STOREFP");
+        body.generar();
+        TablaDeSimbolos.gen("STOREFP");
+        TablaDeSimbolos.gen("RET "+argumentos.size()); // Si el metodo es dynamic es +1
+    }
 }

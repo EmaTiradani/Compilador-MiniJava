@@ -24,4 +24,9 @@ public class NodoTrue extends NodoBoolean{
     public Tipo chequear() throws SemanticException {
         return new Tipo("boolean");
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

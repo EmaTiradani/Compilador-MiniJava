@@ -22,5 +22,10 @@ public class NodoExpresionBinariaMenorIgual extends NodoExpresionBinaria {
 
     }
 
+    @Override
+    public void generar() {
+
+    }
+
 
 }

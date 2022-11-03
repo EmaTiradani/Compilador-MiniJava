@@ -22,4 +22,9 @@ public class NodoExpresionBinariaDistinto extends NodoExpresionBinaria {
         }
 
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

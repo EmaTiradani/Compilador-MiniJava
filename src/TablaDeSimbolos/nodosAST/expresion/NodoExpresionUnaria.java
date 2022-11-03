@@ -27,6 +27,11 @@ public class NodoExpresionUnaria extends NodoExpresion {
         return operador;
     }
 
+    @Override
+    public void generar() {
+
+    }
+
     public void setOperador(Token operador) {
         this.operador = operador;
     }

@@ -18,4 +18,9 @@ public class NodoExpresionBinariaMultiplicacion extends NodoExpresionBinaria {
             throw new SemanticException("Ambos lados del operador * deben ser numeros enteros", operador);
         }
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

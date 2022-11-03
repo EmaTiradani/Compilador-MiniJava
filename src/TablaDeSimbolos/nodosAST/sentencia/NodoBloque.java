@@ -12,11 +12,13 @@ public class NodoBloque extends NodoSentencia{
     ArrayList<NodoSentencia> sentencias;
     Map<String, NodoVarLocal> variablesLocales;
     boolean chequeado;
+    boolean generado;
 
     public NodoBloque(){
         sentencias = new ArrayList<NodoSentencia>();
         variablesLocales = new HashMap<>();
         chequeado = false;
+        generado = false;
     }
 
     public void insertarSentencia(NodoSentencia sentencia){
@@ -63,5 +65,17 @@ public class NodoBloque extends NodoSentencia{
             TablaDeSimbolos.desapilarBloqueActual();
         }
         chequeado = true;
+    }
+
+    public void generar(){
+        if(!generado){
+            TablaDeSimbolos.apilarBloque(this);
+            for(NodoSentencia sentencia : sentencias){
+                sentencia.generar();
+            }
+
+            TablaDeSimbolos.desapilarBloqueActual();
+        }
+        generado = true;
     }
 }

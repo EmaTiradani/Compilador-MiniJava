@@ -26,4 +26,9 @@ public class NodoChar extends NodoOperando {
     public Tipo chequear() throws SemanticException {
         return new Tipo("char");
     }
+
+    @Override
+    public void generar() {
+
+    }
 }

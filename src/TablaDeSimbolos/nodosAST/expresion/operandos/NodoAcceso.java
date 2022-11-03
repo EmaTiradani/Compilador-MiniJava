@@ -19,4 +19,6 @@ public abstract class NodoAcceso extends NodoOperando {
 
     public abstract boolean esLlamable();
 
+    public abstract void generar();
+
 }

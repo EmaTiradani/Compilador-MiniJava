@@ -35,7 +35,7 @@ public class MainSyntactic {
             TablaDeSimbolos.checkSentencias();
 
 
-            generateOutputFile(null);
+            generate(null);
 
             System.out.println("Compilacion exitosa\n\n[SinErrores]");
         }
@@ -50,7 +50,7 @@ public class MainSyntactic {
         }
     }
 
-    private static void generateOutputFile(String outputFileName) throws IOException {
+    private static void generate(String outputFileName) throws IOException {
         /*FileManager fileManager;
         if(outputFileName == null){
             fileManager = new FileManager("OutputFile");
@@ -63,9 +63,11 @@ public class MainSyntactic {
         BufferedWriter bufferedWriter;
         PrintWriter printWriter;
 
+        TablaDeSimbolos.generar();
+
         try{
             if(outputFileName == null){
-                file = new File("Output_File");
+                file = new File("Output_File.txt");
             }else{
                 file = new File(outputFileName);
             }
@@ -73,8 +75,13 @@ public class MainSyntactic {
             bufferedWriter = new BufferedWriter(writer);
             printWriter = new PrintWriter(bufferedWriter);
 
-            writer.write("Pala");
-            writer.append("\n pala linea 2");
+            //writer.write("Hola");
+
+            for(String instruction : TablaDeSimbolos.listaInstrucciones){
+                writer.write(instruction);
+                writer.write("\n");
+            }
+
 
             writer.close();
             bufferedWriter.close();

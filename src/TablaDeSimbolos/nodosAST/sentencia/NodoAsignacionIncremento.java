@@ -33,6 +33,11 @@ public class NodoAsignacionIncremento  extends NodoAsignacion{
         }
     }
 
+    @Override
+    public void generar() {
+
+    }
+
     public Token getTipoAsignacion() {
         return tipoAsignacion;
     }
