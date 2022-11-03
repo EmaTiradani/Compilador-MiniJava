@@ -29,7 +29,7 @@ public class NodoNum extends NodoOperando {
 
     @Override
     public void generar() {
-        TablaDeSimbolos.gen("PUSH "+valor.getLexema());
+        TablaDeSimbolos.gen("PUSH "+valor.getLexema()+" ; Entero");
     }
 }
 

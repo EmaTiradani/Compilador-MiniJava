@@ -72,6 +72,11 @@ public class NodoVarEncadenada extends NodoEncadenado {
     }
 
     @Override
+    public void generar() {
+
+    }
+
+    @Override
     public boolean esAsignable() {
         if(nodoEncadenado == null){
             return true;

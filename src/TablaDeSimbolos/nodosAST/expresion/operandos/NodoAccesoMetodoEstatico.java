@@ -14,6 +14,7 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
     protected Token idClaseEstatica;
     protected Token idMetodoEstatico;
     protected List<NodoExpresion> parametrosActuales;
+    protected Metodo metodo;
 
     public NodoAccesoMetodoEstatico(Token idClaseEstatica, Token idMetodoEstatico, List<NodoExpresion> parametros) {
         this.idClaseEstatica = idClaseEstatica;
@@ -44,7 +45,7 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
             throw new SemanticException("La clase estatica "+idClaseEstatica.getLexema()+" no existe",idClaseEstatica);
         }
 
-        Metodo metodo = claseEstatica.getMetodoQueConformaParametros(idMetodoEstatico, parametrosActuales);
+        metodo = claseEstatica.getMetodoQueConformaParametros(idMetodoEstatico, parametrosActuales);
         if(metodo == null){
             throw new SemanticException("No existe el metodo "+idMetodoEstatico.getLexema(), idMetodoEstatico);
         }else{
@@ -82,6 +83,13 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
 
     @Override
     public void generar() {
-
+        // TODO esto lo copie del AccesoMetodo comun, claramente va a dar true la condicion del if
+        if(metodo.getEstatico()){
+            for(NodoExpresion parametro : parametrosActuales){
+                parametro.generar();
+            }
+            TablaDeSimbolos.gen("PUSH "+metodo.getId().getLexema());
+            TablaDeSimbolos.gen("CALL");
+        }
     }
 }

@@ -69,8 +69,8 @@ public class NodoAccesoMetodo extends NodoAcceso{
     @Override
     public void generar() {
         if(metodo.getEstatico()){
-            for(NodoExpresion prametro : parametrosActuales){
-                prametro.generar();
+            for(NodoExpresion parametro : parametrosActuales){// TODO esto lo tendria que mandar al metodo estatico, no?
+                parametro.generar();
             }
             TablaDeSimbolos.gen("PUSH "+metodo.getId().getLexema());
             TablaDeSimbolos.gen("CALL");

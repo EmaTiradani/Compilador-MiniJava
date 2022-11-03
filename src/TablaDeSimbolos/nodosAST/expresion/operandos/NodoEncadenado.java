@@ -34,4 +34,6 @@ public abstract class NodoEncadenado {
     public abstract boolean esLlamable();
 
     public abstract Tipo chequearThis(Tipo tipoClase) throws SemanticException;
+
+    public abstract void generar();
 }

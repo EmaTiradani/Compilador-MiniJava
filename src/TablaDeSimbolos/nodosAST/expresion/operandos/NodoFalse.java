@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.expresion.operandos;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import exceptions.SemanticException;
 import lexycal.Token;
@@ -25,6 +26,6 @@ public class NodoFalse extends NodoBoolean{
 
     @Override
     public void generar() {
-
+        TablaDeSimbolos.gen("PUSH 0 ; False");
     }
 }

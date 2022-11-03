@@ -22,8 +22,9 @@ public class NodoExpresionBinariaAnd extends NodoExpresionBinaria {
 
     @Override
     public void generar() {
+        ladoIzquierdo.generar();
+        ladoDerecho.generar();
         TablaDeSimbolos.gen("PUSH "+operador.getLexema());
-
     }
 
 

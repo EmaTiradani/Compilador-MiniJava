@@ -17,10 +17,10 @@ public class NodoAccesoThis extends NodoAcceso{
 
     @Override
     public Tipo chequear() throws SemanticException {
+
         if(TablaDeSimbolos.metodoActual.getEstatico()){ // Si el metodo es estatico, error
             throw new SemanticException("Referencia a this desde un metodo estatico", nodoThis);
         }
-        Tipo tipoClaseActual = new Tipo(TablaDeSimbolos.claseActual.getNombreClase());
 
         ArrayList<String> ancestros = TablaDeSimbolos.claseActual.getAncestros();
         ancestros.remove(TablaDeSimbolos.claseActual.getNombreClase());
@@ -32,10 +32,9 @@ public class NodoAccesoThis extends NodoAcceso{
                     throw new SemanticException("Se intento acceder a un atributo privado", encadenado.getToken());
                 }
             }
-
         }
 
-
+        Tipo tipoClaseActual = new Tipo(TablaDeSimbolos.claseActual.getNombreClase());
         if(encadenado != null){
             return encadenado.chequearThis(tipoClaseActual);
         }
@@ -68,6 +67,12 @@ public class NodoAccesoThis extends NodoAcceso{
 
     @Override
     public void generar() {
+        TablaDeSimbolos.gen("LOAD 3 ; Apilo la referencia al objeto actual (this)");
 
+        if(encadenado != null){
+            //encadenado
+            // Todo aca tengo que ver lo de indicar si es lado izquierdo
+            encadenado.generar();
+        }
     }
 }

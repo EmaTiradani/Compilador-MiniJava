@@ -72,6 +72,11 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
         return chequear(tipoEncadenadoLadoIzq);
     }
 
+    @Override
+    public void generar() {
+
+    }
+
 
     public List<NodoExpresion> getParametros() {
         return parametros;

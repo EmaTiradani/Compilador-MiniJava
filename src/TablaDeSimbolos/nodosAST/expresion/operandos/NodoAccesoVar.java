@@ -10,9 +10,18 @@ import TablaDeSimbolos.*;
 public class NodoAccesoVar extends NodoAcceso{
 
     Token idVar;
+    private int offset;
 
     public NodoAccesoVar(Token idVar) {
         this.idVar = idVar;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     @Override
@@ -71,6 +80,11 @@ public class NodoAccesoVar extends NodoAcceso{
 
     @Override
     public void generar() {
-
+        TablaDeSimbolos.gen("RMEM 1 ; Reserva memoria para variable local");
+        if(encadenado != null){
+            encadenado.generar();
+            TablaDeSimbolos.gen("STORE " + this.offset + " ; Almaceno el tope de la pila en una variable, el valor numerico es el offset en el RA");
+            // TODO todavia ni idea como calcular el offset jajaja
+        }
     }
 }
