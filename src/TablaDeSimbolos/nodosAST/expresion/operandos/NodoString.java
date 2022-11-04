@@ -31,6 +31,15 @@ public class NodoString extends NodoOperando {
     public void generar() {// TODO lo que tengo anotado aca y en notion
         //TablaDeSimbolos.gen("PUSH "+stringLit.getLexema());
         TablaDeSimbolos.gen(".DATA"); // Es necesario este .data?
-        TablaDeSimbolos.gen("litString_"+stringLit.getLexema()+": DW \""+stringLit.getLexema()+"\",0");
+        String lexemaSinComillas = sacarComillasInicioFinLexema(stringLit.getLexema());
+        TablaDeSimbolos.gen("litString_"+lexemaSinComillas+": DW \""+lexemaSinComillas+"\",0");
+    }
+
+    private String sacarComillasInicioFinLexema(String lex){
+        String newLex = "";
+        for(int i=1; i<lex.length()-1; i++){ // TODO guarda con esto que explota con una String vacia ""
+            newLex+=lex.charAt(i);
+        }
+        return newLex;
     }
 }
