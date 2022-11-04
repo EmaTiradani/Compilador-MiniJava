@@ -51,13 +51,6 @@ public class MainSyntactic {
     }
 
     private static void generate(String outputFileName) throws IOException {
-        /*FileManager fileManager;
-        if(outputFileName == null){
-            fileManager = new FileManager("OutputFile");
-        }else{
-            fileManager = new FileManager(outputFileName);
-        }
-        fileManager.*/
         File file;
         FileWriter writer;
         BufferedWriter bufferedWriter;
@@ -82,16 +75,11 @@ public class MainSyntactic {
                 writer.write("\n");
             }
 
-
             writer.close();
             bufferedWriter.close();
-
 
         } catch (Exception e){
             System.out.println("Error al generar el archivo de salida");
         }
-
-
-
     }
 }

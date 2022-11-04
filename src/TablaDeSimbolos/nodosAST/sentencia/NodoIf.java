@@ -13,6 +13,9 @@ public class NodoIf extends NodoSentencia {
     NodoSentencia sentenciaIf;
     NodoSentencia sentenciaElse;
 
+    private static int contadorEtiquetaIf = 0;
+    private static int contadorEtiquetaElse = 0;
+
     public NodoIf(Token tokenIf, NodoExpresion condicion, NodoSentencia sentencia, NodoSentencia sentenciaElse) {
 
         this.tokenIf = tokenIf;
@@ -73,6 +76,35 @@ public class NodoIf extends NodoSentencia {
 
     @Override
     public void generar() {
+        condicion.generar();
 
+        String etiquetaOutIf = nuevaEtiquetaIf();
+        String etiquetaElse = nuevaEtiquetaElse(); // Lo pongo igual aunque no tenga sentencia else, asi quedan con el mismo numero todos los if-else
+
+        if(sentenciaElse == null){
+            TablaDeSimbolos.gen("BF " + etiquetaOutIf + " ; Salta afuera del if si la condicion es falsa");
+            sentenciaIf.generar();
+            // Hay que ponerle el NOP porque los saltos condicionales eliminan el valor del tope de la pila
+            TablaDeSimbolos.gen(etiquetaOutIf +": NOP");
+        }else{
+            TablaDeSimbolos.gen("BF " + etiquetaElse + " ; Salta a la sentencia else la condicion es falsa");
+            sentenciaIf.generar();
+            TablaDeSimbolos.gen("JUMP " + etiquetaOutIf + "Salteo el else");
+            TablaDeSimbolos.gen(etiquetaElse + ": NOP"); // Aca le tendria que poner el NOP? O me puede comer una instruccion?
+            sentenciaElse.generar();
+            TablaDeSimbolos.gen(etiquetaOutIf + ": NOP") ;
+        }
+    }
+
+    private String nuevaEtiquetaIf(){
+        String nuevaEtiquetaIf = "label_outIf" + contadorEtiquetaIf;
+        contadorEtiquetaIf++;
+        return nuevaEtiquetaIf;
+    }
+
+    private String nuevaEtiquetaElse(){
+        String nuevaEtiquetaElse = "label_else" + contadorEtiquetaElse;
+        contadorEtiquetaElse++;
+        return nuevaEtiquetaElse;
     }
 }

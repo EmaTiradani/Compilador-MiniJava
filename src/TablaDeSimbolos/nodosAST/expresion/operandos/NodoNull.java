@@ -38,6 +38,6 @@ public class NodoNull extends NodoOperando {
 
     @Override
     public void generar() {
-        TablaDeSimbolos.gen("PUSH 0 ; Null");
+        TablaDeSimbolos.gen("PUSH ; Null");
     }
 }

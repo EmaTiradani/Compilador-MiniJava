@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.expresion;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
@@ -27,16 +28,10 @@ public class NodoExpresionUnaria extends NodoExpresion {
         return operador;
     }
 
-    @Override
-    public void generar() {
-
-    }
-
     public void setOperador(Token operador) {
         this.operador = operador;
     }
 
-    @Override
     public Tipo chequear() throws SemanticException {
         if(operador != null){
             if(operador.getLexema().equals("+") || operador.getLexema().equals("-")){
@@ -54,6 +49,17 @@ public class NodoExpresionUnaria extends NodoExpresion {
             }
         }else{// Si el operador es null
             return ladoDer.chequear();
+        }
+    }
+
+    public void generar() {
+        ladoDer.generar();
+        if(operador.getLexema().equals("+")){
+            // le estoy diciendo positivo a un positivo, no hago nada no? No hay un operador
+        }else if(operador.getLexema().equals("-")){
+            TablaDeSimbolos.gen("NEG ; Menos unario");
+        }else{ // Operador = "!"
+            TablaDeSimbolos.gen("NOT ; Negacion logica");
         }
     }
 }
