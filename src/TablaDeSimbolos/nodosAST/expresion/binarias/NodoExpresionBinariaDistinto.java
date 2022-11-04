@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.expresion.binarias;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresionBinaria;
 import exceptions.SemanticException;
@@ -25,6 +26,9 @@ public class NodoExpresionBinariaDistinto extends NodoExpresionBinaria {
 
     @Override
     public void generar() {
-
+        ladoIzquierdo.generar();
+        ladoDerecho.generar();
+        //TODO importa el orden de estos dos de arriba? Creo que no, total van a quedar los ultimos 2 en el tope de la pila y la instruccion viene despues
+        TablaDeSimbolos.gen("NE ; Comparacion por desigual");
     }
 }

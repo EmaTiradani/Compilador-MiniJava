@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.expresion.binarias;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresionBinaria;
 import exceptions.SemanticException;
@@ -24,6 +25,8 @@ public class NodoExpresionBinariaIgual extends NodoExpresionBinaria {
 
     @Override
     public void generar() {
-
+        ladoIzquierdo.generar();
+        ladoDerecho.generar();
+        TablaDeSimbolos.gen("EQ ; Compracion por igual");
     }
 }

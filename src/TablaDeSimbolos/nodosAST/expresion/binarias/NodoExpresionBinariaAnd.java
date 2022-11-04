@@ -24,7 +24,7 @@ public class NodoExpresionBinariaAnd extends NodoExpresionBinaria {
     public void generar() {
         ladoIzquierdo.generar();
         ladoDerecho.generar();
-        TablaDeSimbolos.gen("PUSH "+operador.getLexema());
+        TablaDeSimbolos.gen("AND ; Conjuncion logica");
     }
 
 

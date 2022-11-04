@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.expresion.binarias;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresionBinaria;
 import exceptions.SemanticException;
@@ -24,7 +25,9 @@ public class NodoExpresionBinariaMenorIgual extends NodoExpresionBinaria {
 
     @Override
     public void generar() {
-
+        ladoIzquierdo.generar();
+        ladoDerecho.generar();
+        TablaDeSimbolos.gen("LE ; Comparacion por menor o igual");
     }
 
 
