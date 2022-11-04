@@ -9,6 +9,7 @@ import lexycal.Token;
 public class NodoString extends NodoOperando {
 
     Token stringLit;
+    private static int offset = 0;
 
     public NodoString(Token stringLit) {
         this.stringLit = stringLit;
@@ -27,12 +28,20 @@ public class NodoString extends NodoOperando {
         return new Tipo("String");
     }
 
+    private static int getOffset(){
+        offset++;
+        return offset;
+    }
+
     @Override
     public void generar() {// TODO lo que tengo anotado aca y en notion
         //TablaDeSimbolos.gen("PUSH "+stringLit.getLexema());
+        int offset = getOffset();
         TablaDeSimbolos.gen(".DATA"); // Es necesario este .data?
         String lexemaSinComillas = sacarComillasInicioFinLexema(stringLit.getLexema());
-        TablaDeSimbolos.gen("litString_"+lexemaSinComillas+": DW \""+lexemaSinComillas+"\",0");
+        TablaDeSimbolos.gen("litString_"+offset+lexemaSinComillas+": DW \""+lexemaSinComillas+"\",0");
+        TablaDeSimbolos.gen(".CODE");
+        TablaDeSimbolos.gen("PUSH litstring_"+offset+lexemaSinComillas);
     }
 
     private String sacarComillasInicioFinLexema(String lex){
