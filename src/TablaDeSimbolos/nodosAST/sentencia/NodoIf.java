@@ -89,7 +89,7 @@ public class NodoIf extends NodoSentencia {
         }else{
             TablaDeSimbolos.gen("BF " + etiquetaElse + " ; Salta a la sentencia else la condicion es falsa");
             sentenciaIf.generar();
-            TablaDeSimbolos.gen("JUMP " + etiquetaOutIf + "Salteo el else");
+            TablaDeSimbolos.gen("JUMP " + etiquetaOutIf + " ; Salteo el else");
             TablaDeSimbolos.gen(etiquetaElse + ": NOP"); // Aca le tendria que poner el NOP? O me puede comer una instruccion?
             sentenciaElse.generar();
             TablaDeSimbolos.gen(etiquetaOutIf + ": NOP") ;

@@ -62,12 +62,12 @@ public class NodoWhile extends NodoSentencia{
 
     @Override
     public void generar() {
-        condicion.generar();
 
         String etiquetaWhile = nuevaEtiquetaWhile();
         String etiquetaOutWhile = nuevaEtiquetaOutWhile();
 
         TablaDeSimbolos.gen(etiquetaWhile+ ": NOP");
+        condicion.generar();
         TablaDeSimbolos.gen("BF " + etiquetaOutWhile + " ; Salta afuera del while si la condicion es falsa");
         sentencia.generar();
         TablaDeSimbolos.gen("JUMP " + etiquetaWhile + " ; Vuelvo a la etiqueta donde se analiza la condicion");
