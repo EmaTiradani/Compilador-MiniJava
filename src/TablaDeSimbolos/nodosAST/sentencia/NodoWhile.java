@@ -11,6 +11,8 @@ public class NodoWhile extends NodoSentencia{
     Token tokenWhile;
     NodoExpresion condicion;
     NodoSentencia sentencia;
+    private static int contadorEtiquetaWhile = 0;
+    private static int contadorEtiquetaOutWhile = 0;
 
     public NodoWhile(Token tokenWhile, NodoExpresion condicion, NodoSentencia sentencia) {
         this.tokenWhile = tokenWhile;
@@ -60,6 +62,27 @@ public class NodoWhile extends NodoSentencia{
 
     @Override
     public void generar() {
+        condicion.generar();
 
+        String etiquetaWhile = nuevaEtiquetaWhile();
+        String etiquetaOutWhile = nuevaEtiquetaOutWhile();
+
+        TablaDeSimbolos.gen(etiquetaWhile+ ": NOP");
+        TablaDeSimbolos.gen("BF " + etiquetaOutWhile + " ; Salta afuera del while si la condicion es falsa");
+        sentencia.generar();
+        TablaDeSimbolos.gen("JUMP " + etiquetaWhile + " ; Vuelvo a la etiqueta donde se analiza la condicion");
+        TablaDeSimbolos.gen(etiquetaOutWhile + ": NOP");
+    }
+
+    private String nuevaEtiquetaWhile(){
+        String nuevaEtiquetaWhile = "label_while" + contadorEtiquetaWhile;
+        contadorEtiquetaWhile++;
+        return nuevaEtiquetaWhile;
+    }
+
+    private String nuevaEtiquetaOutWhile(){
+        String nuevaEtiquetaOutWhile = "label_outWhile" + contadorEtiquetaOutWhile;
+        contadorEtiquetaOutWhile++;
+        return nuevaEtiquetaOutWhile;
     }
 }

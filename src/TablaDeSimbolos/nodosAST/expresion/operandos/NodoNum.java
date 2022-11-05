@@ -26,7 +26,6 @@ public class NodoNum extends NodoOperando {
         return new Tipo("int");
     }
 
-
     @Override
     public void generar() {
         TablaDeSimbolos.gen("PUSH "+valor.getLexema()+" ; Entero");

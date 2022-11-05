@@ -335,7 +335,9 @@ public class ClaseConcreta extends Clase{
 
         for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
             Metodo metodo = listaMetodos.getValue().get(0);
-            metodo.generar();
+            if(metodo.getClaseContenedora().equals(this.getNombreClase())){
+                metodo.generar();
+            }
         }
     }
 

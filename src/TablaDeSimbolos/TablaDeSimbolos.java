@@ -157,6 +157,7 @@ public final class TablaDeSimbolos {
         Metodo debugPrint = new Metodo(new Token(idMetVar, "debugPrint", 0), new TipoMetodo("void"), true, argumentosObject);
         object.insertarMetodo(debugPrint);
         debugPrint.insertarBloque(new NodoBloqueDebugPrint());
+        debugPrint.insertClaseContenedora("Object");
         object.noTieneHerenciaCircular();
         object.consolidado = true;
         clases.put("Object", object);
@@ -165,51 +166,60 @@ public final class TablaDeSimbolos {
     private void crearMetodosSystem(ClaseConcreta system) throws SemanticException {
         Metodo read = new Metodo(new Token(idMetVar,"read", 0),new TipoMetodo("int"), true, null);// Read
         read.insertarBloque(new NodoBloqueRead());
+        read.insertClaseContenedora("System");
         system.insertarMetodo(read);
         ArrayList<Argumento> argumentosPrintB = new ArrayList<Argumento>();// PrintB
         argumentosPrintB.add(new Argumento(new Token(idMetVar, "b", 0), new Tipo("boolean")));
         Metodo print = new Metodo(new Token(idMetVar,"printB", 0),new TipoMetodo("void"), true, argumentosPrintB);
         print.insertarBloque(new NodoBloquePrintB());
+        print.insertClaseContenedora("System");
         system.insertarMetodo(print);
         ArrayList<Argumento> argumentosPrintC = new ArrayList<Argumento>();// PrintC
         argumentosPrintC.add(new Argumento(new Token(idMetVar, "c", 0), new Tipo("char")));
         Metodo printC = new Metodo(new Token(idMetVar,"printC", 0),new TipoMetodo("void"), true, argumentosPrintC);
-        print.insertarBloque(new NodoBloquePrintC());
+        printC.insertarBloque(new NodoBloquePrintC());
+        printC.insertClaseContenedora("System");
         system.insertarMetodo(printC);
         ArrayList<Argumento> argumentosPrintI = new ArrayList<Argumento>();// PrintI
         argumentosPrintI.add(new Argumento(new Token(idMetVar, "i", 0), new Tipo("int")));
         Metodo printI = new Metodo(new Token(idMetVar,"printI", 0),new TipoMetodo("void"), true, argumentosPrintI);
         printI.insertarBloque(new NodoBloquePrintI());
+        printI.insertClaseContenedora("System");
         system.insertarMetodo(printI);
         ArrayList<Argumento> argumentosPrintS = new ArrayList<Argumento>();// PrintS
         argumentosPrintS.add(new Argumento(new Token(idMetVar, "s", 0), new Tipo("String")));
         Metodo printS = new Metodo(new Token(idMetVar,"printS", 0),new TipoMetodo("void"), true, argumentosPrintS);
         printS.insertarBloque(new NodoBloquePrintS());
+        printS.insertClaseContenedora("System");
         system.insertarMetodo(printS);
         Metodo println = new Metodo(new Token(idMetVar,"println", 0),new TipoMetodo("void"), true, null);// Println
         println.insertarBloque(new NodoBloquePrintln());
+        println.insertClaseContenedora("System");
         system.insertarMetodo(println);
         ArrayList<Argumento> argumentosPrintBln = new ArrayList<Argumento>();// PrintBln
         argumentosPrintBln.add(new Argumento(new Token(idMetVar, "b", 0), new Tipo("boolean")));
         Metodo printBln = new Metodo(new Token(idMetVar,"printBln", 0),new TipoMetodo("void"), true, argumentosPrintBln);
         printBln.insertarBloque(new NodoBloquePrintBln());
+        printBln.insertClaseContenedora("System");
         system.insertarMetodo(printBln);
         ArrayList<Argumento> argumentosPrintCln = new ArrayList<Argumento>();// PrintCln
         argumentosPrintCln.add(new Argumento(new Token(idMetVar, "c", 0), new Tipo("char")));
         Metodo printCln = new Metodo(new Token(idMetVar,"printCln", 0),new TipoMetodo("void"), true, argumentosPrintCln);
         printCln.insertarBloque(new NodoBloquePrintCln());
+        printCln.insertClaseContenedora("System");
         system.insertarMetodo(printCln);
         ArrayList<Argumento> argumentosPrintIln = new ArrayList<Argumento>();// PrintIln
         argumentosPrintIln.add(new Argumento(new Token(idMetVar, "i", 0), new Tipo("int")));
         Metodo printIln = new Metodo(new Token(idMetVar,"printIln", 0),new TipoMetodo("void"), true, argumentosPrintIln);
         printIln.insertarBloque(new NodoBloquePrintIln());
+        printIln.insertClaseContenedora("System");
         system.insertarMetodo(printIln);
         ArrayList<Argumento> argumentosPrintSln = new ArrayList<Argumento>();// PrintSln
         argumentosPrintSln.add(new Argumento(new Token(idMetVar, "s", 0), new Tipo("String")));
         Metodo printSln = new Metodo(new Token(idMetVar,"printSln", 0),new TipoMetodo("void"), true, argumentosPrintSln);
         printSln.insertarBloque(new NodoBloquePrintSln());
+        printSln.insertClaseContenedora("System");
         system.insertarMetodo(printSln);
-
 
     }
 

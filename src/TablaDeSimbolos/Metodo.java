@@ -14,7 +14,7 @@ public class Metodo {
     private ArrayList<Argumento> argumentos;
     private boolean estatico;
     protected NodoBloque body;
-
+    protected String claseContenedora;
 
     public Metodo(Token idMet, TipoMetodo tipoRetorno, boolean estatico, ArrayList<Argumento> argumentos){
         this.idMet = idMet;
@@ -46,6 +46,14 @@ public class Metodo {
             }
         }
         return null;
+    }
+
+    public void insertClaseContenedora(String claseContenedora){
+        this.claseContenedora = claseContenedora;
+    }
+
+    public String getClaseContenedora(){
+        return claseContenedora;
     }
 
     public void addArgumento(Argumento argumento){

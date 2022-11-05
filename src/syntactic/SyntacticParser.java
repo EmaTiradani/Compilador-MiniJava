@@ -263,6 +263,7 @@ public class SyntacticParser {
 
         TablaDeSimbolos.metodoActual = metodoActual;
         argsFormales();
+        metodoActual.insertClaseContenedora(TablaDeSimbolos.claseActual.getNombreClase());
         TablaDeSimbolos.claseActual.insertarMetodo(metodoActual);
 
         //NodoBloque bloque = bloque();
@@ -717,8 +718,6 @@ public class SyntacticParser {
         match(punt_puntoYComa); //TODO chequear esto, no cambio nada
         return nodoVarLocal;
     }
-
-
 
     private void argFormal() throws LexicalException, SyntacticException, IOException {
         Tipo tipoArgumento = tipo();

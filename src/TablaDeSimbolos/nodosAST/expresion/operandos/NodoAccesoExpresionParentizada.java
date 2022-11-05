@@ -48,6 +48,11 @@ public class NodoAccesoExpresionParentizada extends NodoAcceso{
 
     @Override
     public void generar() {
-
+        if(encadenado == null){
+            expresion.generar();
+        }else{
+            expresion.generar();
+            encadenado.generar();
+        }
     }
 }
