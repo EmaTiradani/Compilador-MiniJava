@@ -6,7 +6,7 @@ import TablaDeSimbolos.nodosAST.sentencia.NodoBloque;
 public class NodoBloquePrintln extends NodoBloque {
 
     public void generar(){
-        TablaDeSimbolos.gen("LOAD 3");
+        //TablaDeSimbolos.gen("LOAD 3");
         TablaDeSimbolos.gen("PRNLN");
     }
 }

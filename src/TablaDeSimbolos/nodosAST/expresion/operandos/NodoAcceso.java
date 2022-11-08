@@ -6,6 +6,7 @@ import TablaDeSimbolos.nodosAST.expresion.NodoOperando;
 public abstract class NodoAcceso extends NodoOperando {
 
     protected NodoEncadenado encadenado;
+    protected boolean esLadoIzquierdo;
 
     public NodoEncadenado getNodoEncadenado() {
         return encadenado;
@@ -20,5 +21,13 @@ public abstract class NodoAcceso extends NodoOperando {
     public abstract boolean esLlamable();
 
     public abstract void generar();
+
+    public void setLadoIzquierdoAsignacion(){
+        esLadoIzquierdo = true;
+    }
+
+    public boolean esLadoIzquierdoAsignacion(){
+        return esLadoIzquierdo;
+    }
 
 }

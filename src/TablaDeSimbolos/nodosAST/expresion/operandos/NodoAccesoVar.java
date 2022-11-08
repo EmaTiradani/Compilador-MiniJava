@@ -11,6 +11,8 @@ public class NodoAccesoVar extends NodoAcceso{
 
     Token idVar;
     private int offset;
+    private boolean esLadoIzqAsig;
+
 
     public NodoAccesoVar(Token idVar) {
         this.idVar = idVar;

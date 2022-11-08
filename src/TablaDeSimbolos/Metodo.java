@@ -15,6 +15,7 @@ public class Metodo {
     private boolean estatico;
     protected NodoBloque body;
     protected String claseContenedora;
+    protected int offset;
 
     public Metodo(Token idMet, TipoMetodo tipoRetorno, boolean estatico, ArrayList<Argumento> argumentos){
         this.idMet = idMet;
@@ -25,6 +26,8 @@ public class Metodo {
             this.argumentos = new ArrayList<>();
         else
             this.argumentos = argumentos;
+
+        offset = -1;
     }
 
     public Token getId(){
@@ -66,6 +69,14 @@ public class Metodo {
 
     public void insertarBloque(NodoBloque body){
         this.body = body;
+    }
+
+    public void insertOffset(int offset){
+        this.offset = offset;
+    }
+
+    public int getOffset(){
+        return offset;
     }
 
     public void checkDec() throws SemanticException {
@@ -163,6 +174,10 @@ public class Metodo {
         TablaDeSimbolos.gen("STOREFP");
         body.generar();
         TablaDeSimbolos.gen("STOREFP");
-        TablaDeSimbolos.gen("RET "+argumentos.size()); // Si el metodo es dynamic es +1
+        if(estatico){
+            TablaDeSimbolos.gen("RET "+argumentos.size());
+        }else{
+            TablaDeSimbolos.gen("RET "+argumentos.size()+1); // Si el metodo es dynamic es +1 por el this
+        }
     }
 }

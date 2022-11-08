@@ -12,9 +12,11 @@ public class NodoVarLocal extends NodoSentencia {
     Token nombre;
     NodoExpresion expresion;
     Tipo tipo;
+    int offset;
 
     public NodoVarLocal(Token nombre) {
         this.nombre = nombre;
+        offset = -1;
     }
 
     public Token getNombre() {
@@ -41,7 +43,19 @@ public class NodoVarLocal extends NodoSentencia {
 
     @Override
     public void generar() {
+        TablaDeSimbolos.gen("RMEM 1 ; Reserva memoria para la variable local");
+        if(expresion != null){
+            expresion.generar();
+            TablaDeSimbolos.gen("STORE "+offset+" ; Almacena  el valor de la expresion del tope de la pila en la variable local");
+        }
+    }
 
+    public void setOffset(int offset){
+        this.offset = offset;
+    }
+
+    public int getOffset(){
+        return offset;
     }
 
     public NodoExpresion getExpresion() {

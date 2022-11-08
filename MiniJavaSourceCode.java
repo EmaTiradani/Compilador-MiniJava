@@ -4,15 +4,20 @@ class A {
 
         System.printSln("Start");
 
-        if(false){
+        if(false || true){
             debugPrint(2);
         }else{
-            debugPrint(5);
+            //debugPrint(5);
+            System.printB(true);
         }
+
+        System.println();
 
         debugPrint(10);
 
-        System.println();
+        debugPrint(System.read());
+
+
 
     }
 

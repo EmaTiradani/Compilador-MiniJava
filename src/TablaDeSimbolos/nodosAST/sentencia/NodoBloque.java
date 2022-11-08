@@ -75,6 +75,8 @@ public class NodoBloque extends NodoSentencia{
             }
 
             TablaDeSimbolos.desapilarBloqueActual();
+
+            TablaDeSimbolos.gen("FMEM "+variablesLocales.size()+" ; Libera el espacio reservado utilizado para almacenar las variables locales");
         }
         generado = true;
     }
