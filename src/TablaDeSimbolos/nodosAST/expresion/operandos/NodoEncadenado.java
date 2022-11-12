@@ -7,6 +7,7 @@ import lexycal.Token;
 public abstract class NodoEncadenado {
 
     NodoEncadenado nodoEncadenado;
+    boolean esLadoIzquierdo;
 
 
     public NodoEncadenado getNodoEncadenado() {
@@ -36,4 +37,8 @@ public abstract class NodoEncadenado {
     public abstract Tipo chequearThis(Tipo tipoClase) throws SemanticException;
 
     public abstract void generar();
+
+    public void setLadoIzquierdoAsignacion(){
+        esLadoIzquierdo = true;
+    }
 }

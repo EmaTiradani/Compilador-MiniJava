@@ -19,6 +19,7 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
     public NodoMetodoEncadenado(Token tokenIdMet) {
         idMet = tokenIdMet;
         parametros = new ArrayList<>();
+        esLadoIzquierdo = false;
     }
 
     @Override

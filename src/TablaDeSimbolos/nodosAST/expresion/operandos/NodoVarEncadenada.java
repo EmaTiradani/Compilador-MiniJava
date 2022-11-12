@@ -16,6 +16,7 @@ public class NodoVarEncadenada extends NodoEncadenado {
 
     public NodoVarEncadenada(Token idVarEncadenada) {
         idVar = idVarEncadenada;
+        esLadoIzquierdo = false;
     }
 
     public Token getToken(){

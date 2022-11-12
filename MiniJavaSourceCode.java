@@ -2,22 +2,24 @@ class A {
 
     static void main() {
 
-        System.printSln("Start");
+        var a = false;
 
-        if(false || true){
+        var c = 5;
+
+        var b = false;
+
+        if(a){
             debugPrint(2);
-        }else{
-            //debugPrint(5);
-            System.printB(true);
+            //b = true;
         }
 
-        System.println();
+        /*if(b){
+            debugPrint(5);
+        }*/
 
-        debugPrint(10);
+        //System.println();
 
-        debugPrint(System.read());
-
-
+        //debugPrint(10);
 
     }
 

@@ -16,6 +16,7 @@ public class Metodo {
     protected NodoBloque body;
     protected String claseContenedora;
     protected int offset;
+    protected int offsetParametros;
 
     public Metodo(Token idMet, TipoMetodo tipoRetorno, boolean estatico, ArrayList<Argumento> argumentos){
         this.idMet = idMet;
@@ -28,6 +29,7 @@ public class Metodo {
             this.argumentos = argumentos;
 
         offset = -1;
+        offsetParametros = 0;
     }
 
     public Token getId(){
@@ -71,11 +73,11 @@ public class Metodo {
         this.body = body;
     }
 
-    public void insertOffset(int offset){
+    public void insertOffsetEnClase(int offset){
         this.offset = offset;
     }
 
-    public int getOffset(){
+    public int getOffsetEnClase(){
         return offset;
     }
 
@@ -155,10 +157,7 @@ public class Metodo {
     }
 
     public boolean esMain() {
-        if(estatico && idMet.getLexema().equals("main") && argumentos.size() == 0 && tipoRetorno.getType().equals("void"))
-            return true;
-        else
-            return false;
+        return estatico && idMet.getLexema().equals("main") && argumentos.size() == 0 && tipoRetorno.getType().equals("void");
     }
 
 
@@ -168,6 +167,16 @@ public class Metodo {
     }
 
     public void  generar(){
+        if(estatico){ // El offset arranca en 3, no tiene this
+            offsetParametros = 3;
+        }else{ // El offset arranca en 4 si tiene this
+            offsetParametros = 4;
+        }
+        for(int i=0; i<argumentos.size(); i++){
+            argumentos.get(argumentos.size()-i-1).setOffset(offsetParametros);
+            offsetParametros++;
+        }
+
         TablaDeSimbolos.metodoActual = this;
         TablaDeSimbolos.gen(idMet.getLexema()+": LOADFP"); // mas de 1 metodo, poner un if
         TablaDeSimbolos.gen("LOADSP");

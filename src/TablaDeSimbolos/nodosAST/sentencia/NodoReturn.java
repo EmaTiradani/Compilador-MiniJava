@@ -1,7 +1,7 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
 import TablaDeSimbolos.TablaDeSimbolos;
-import TablaDeSimbolos.Tipo;
+import TablaDeSimbolos.*;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
 import lexycal.Token;
@@ -10,6 +10,8 @@ public class NodoReturn extends NodoSentencia {
 
     Token tokenReturn;
     NodoExpresion retorno; // Puede ser null
+    int cantVariablesLocales;
+    Metodo metodoContenedor;
 
     public NodoReturn(Token retorno) {
         this.tokenReturn = retorno;
@@ -46,10 +48,32 @@ public class NodoReturn extends NodoSentencia {
                 throw new SemanticException(" la expresion no es de un tipo compatible con el retorno del metodo", tokenReturn);
             }
         }
+
+        metodoContenedor = TablaDeSimbolos.metodoActual;
+        cantVariablesLocales = TablaDeSimbolos.getBloqueActual().getVariablesLocales().size();
     }
 
     @Override
-    public void generar() {
+    public void generar(){
+        TablaDeSimbolos.gen("FMEM " + cantVariablesLocales + " ; Libera el espacio reservado para las variables locales");
+        int offsetReturn = metodoContenedor.getArgumentos().size();
+        if(metodoContenedor.getEstatico()){
+            offsetReturn += 3; // ED, PR y la primer var
+        }else{
+            offsetReturn += 4; // Idem arriba pero con this
+        }
+        // TODO lo de aca arriba lo podria pasar a la clase Metodo creo
+        if(retorno == null){
+            if(metodoContenedor.getTipoRetorno().mismoTipo(new Tipo("void"))){
+                TablaDeSimbolos.gen("STOREFP ; Actualiza el FP para que apunte al RA del llamador");
+                TablaDeSimbolos.gen("RET " + offsetReturn + " ; Retorno del metodo");
+            }else{
+                retorno.generar();
+                TablaDeSimbolos.gen("STORE " + offsetReturn + " ; Guarda el valor de la expresion retorno en el espacio reservado para el return");
+                TablaDeSimbolos.gen("STOREFP ; Actualiza el FP para que apunte al RA del llamador");
+                TablaDeSimbolos.gen("RET "+ offsetReturn + " ; Retorno del metodo");
+            }
+        }
 
     }
 }

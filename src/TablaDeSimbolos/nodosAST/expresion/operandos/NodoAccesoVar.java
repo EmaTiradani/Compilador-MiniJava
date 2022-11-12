@@ -12,6 +12,9 @@ public class NodoAccesoVar extends NodoAcceso{
     Token idVar;
     private int offset;
     private boolean esLadoIzqAsig;
+    private NodoVarLocal varLocal;
+    private Argumento argumento;
+    private Atributo atributo;
 
 
     public NodoAccesoVar(Token idVar) {
@@ -29,15 +32,15 @@ public class NodoAccesoVar extends NodoAcceso{
     @Override
     public Tipo chequear() throws SemanticException {
         Tipo tipoVar;
-        NodoVarLocal nodoVarLocal = TablaDeSimbolos.getVarLocalClaseActual(idVar.getLexema());
-        if(nodoVarLocal != null){
-            tipoVar = nodoVarLocal.getTipo();
+        varLocal = TablaDeSimbolos.getVarLocalClaseActual(idVar.getLexema());
+        if(varLocal != null){
+            tipoVar = varLocal.getTipo();
         }else{
-            Argumento argumento = TablaDeSimbolos.metodoActual.getArgumento(idVar.getLexema());
+            argumento = TablaDeSimbolos.metodoActual.getArgumento(idVar.getLexema());
             if(argumento != null){
                 tipoVar = argumento.getTipoParametro();
             }else{
-                Atributo atributo = TablaDeSimbolos.claseActual.getAtributo(idVar.getLexema());
+                atributo = TablaDeSimbolos.claseActual.getAtributo(idVar.getLexema());
                 if(atributo != null){
                     if(!TablaDeSimbolos.metodoActual.getEstatico()){
                         tipoVar = atributo.getTipo();
@@ -82,11 +85,30 @@ public class NodoAccesoVar extends NodoAcceso{
 
     @Override
     public void generar() {
-        TablaDeSimbolos.gen("RMEM 1 ; Reserva memoria para variable local");
-        if(encadenado != null){
-            encadenado.generar();
-            TablaDeSimbolos.gen("STORE " + this.offset + " ; Almaceno el tope de la pila en una variable, el valor numerico es el offset en el RA");
-            // TODO todavia ni idea como calcular el offset jajaja
+        // Hay que ver si es un Parametro formal (que yo le digo argumento porque soy un nabo), variable local o un atributo de clase y a partir de eso genero el codigo
+        if(atributo != null) {
+            if (!esLadoIzqAsig || encadenado != null) {
+                TablaDeSimbolos.gen("LOADREF " + varLocal.getOffset() + " ; Apila el valor de la variable local en el tope de la pila");
+            } else {// Si es lado izquierdo o si tiene un encadenado tengo que poner la expresion en el tope de la pila
+                TablaDeSimbolos.gen("SWAP ; Pone el valor de la expresion en el tope de la pila");
+                TablaDeSimbolos.gen("STOREREF " + varLocal.getOffset() + " ; Guarda el valor de la expresion en el atributo " + atributo.getId());
+            }
+        }else if(argumento != null){
+            if(!esLadoIzqAsig || encadenado != null){
+                TablaDeSimbolos.gen("LOAD " + argumento.getOffset() + " ; Apila al valor del parametro ");
+            }else{
+                TablaDeSimbolos.gen("STORE " + argumento.getOffset() + " ; Guardo el valor de la expresion en el parametro");
+            }
+        }else{ // Si es una variable local
+            if(!esLadoIzqAsig || encadenado != null){
+                TablaDeSimbolos.gen("LOAD " + varLocal.getOffset() + " ; Apila al valor de la variable local " + varLocal.getNombre().getLexema());
+            }else{
+                TablaDeSimbolos.gen("STORE " + varLocal.getOffset() + " ; Guardo el valor de la expresion en la variable local " + varLocal.getNombre().getLexema());
+            }
+        }
+
+        if(encadenado != null && this.esLadoIzqAsig){
+            encadenado.setLadoIzquierdoAsignacion();
         }
     }
 }

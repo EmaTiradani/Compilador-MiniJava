@@ -1,5 +1,6 @@
 package TablaDeSimbolos.nodosAST.sentencia;
 
+import TablaDeSimbolos.TablaDeSimbolos;
 import TablaDeSimbolos.Tipo;
 import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import TablaDeSimbolos.nodosAST.expresion.operandos.NodoAcceso;
@@ -35,7 +36,11 @@ public class NodoAsignacionIncremento  extends NodoAsignacion{
 
     @Override
     public void generar() {
-
+        ladoIzq.generar();
+        TablaDeSimbolos.gen("PUSH 1");
+        TablaDeSimbolos.gen("ADD ; realizamos la suma");
+        ladoIzq.setLadoIzquierdoAsignacion();
+        ladoIzq.generar();
     }
 
     public Token getTipoAsignacion() {

@@ -8,6 +8,7 @@ public class Atributo {
     private Token idVar;
     private Tipo tipo;
     private TokenId visibilidad;
+    private int offset;
 
     public Atributo(Token idVar, Tipo tipo, TokenId visibilidad){
         this.idVar = idVar;
@@ -29,8 +30,12 @@ public class Atributo {
         return visibilidad;
     }
 
-    public void checkDec(){
+    public void setOffset(int offset){
+        this.offset = offset;
+    }
 
+    public int getOffset(){
+        return offset;
     }
 
     public void print(){

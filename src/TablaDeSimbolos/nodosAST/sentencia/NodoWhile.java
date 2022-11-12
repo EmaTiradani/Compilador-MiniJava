@@ -70,7 +70,7 @@ public class NodoWhile extends NodoSentencia{
         condicion.generar();
         TablaDeSimbolos.gen("BF " + etiquetaOutWhile + " ; Salta afuera del while si la condicion es falsa");
         sentencia.generar();
-        TablaDeSimbolos.gen("JUMP " + etiquetaWhile + " ; Vuelvo a la etiqueta donde se analiza la condicion");
+        TablaDeSimbolos.gen("JUMP " + etiquetaWhile + " ; Vuelve a la etiqueta donde se analiza la condicion");
         TablaDeSimbolos.gen(etiquetaOutWhile + ": NOP");
     }
 

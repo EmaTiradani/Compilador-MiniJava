@@ -28,6 +28,9 @@ public class ClaseConcreta extends Clase{
 
     ArrayList<Constructor> constructores;
 
+    private int offsetVT;
+    private int offsetCIR;
+
     public ClaseConcreta(Token nombreClase){
         this.nombreClase = nombreClase;
         this.nombreClasePadre = "Object";
@@ -152,6 +155,9 @@ public class ClaseConcreta extends Clase{
                 consolidado = true;
             }
             checkImplementaTodosLosMetodosDeSuInterfaz();
+
+            offsetVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetVT();
+            offsetCIR = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetCIR();
         }
     }
 
@@ -333,12 +339,60 @@ public class ClaseConcreta extends Clase{
     public void generar(){
         TablaDeSimbolos.claseActual = this;
 
+        TablaDeSimbolos.gen(".DATA");
+        generarDataVT();
+
+        TablaDeSimbolos.gen(".CODE "); //TODO poner esto con un \t para que quede mas prolijo
+        generarMetodos(); // Comentado porque lo llama generarDataVT()
+        generarAtributos();
+
+    }
+
+    private void generarDataVT(){
+        String dataVT = "VT_"+this.getNombreClase();
+        if(metodos.size() == 0){
+            dataVT += " NOP";
+        }else{
+            dataVT += ": DW ";
+            //dataVT += generarMetodos();
+            for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+                Metodo metodo = listaMetodos.getValue().get(0);
+                if(metodo.getClaseContenedora().equals(this.getNombreClase())){
+                    dataVT += metodo.getId().getLexema()+this.getNombreClase(); // Esto me va a generar nombreDeMetodoNombreDeClase, Ej.: m1A
+                    dataVT += ",";
+                    metodo.insertOffsetEnClase(offsetVT); // Aprovecho que recorro los metodos para asignarles su offset correspondiente en la VT
+                    offsetVT++;
+                }
+            }
+            dataVT = dataVT.substring(0, dataVT.length()-1); // Elimino la ultima coma que queda luego de agregar el ultimo idMet
+        }
+
+        TablaDeSimbolos.gen(dataVT);
+    }
+
+    private void generarMetodos(){
         for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
             Metodo metodo = listaMetodos.getValue().get(0);
             if(metodo.getClaseContenedora().equals(this.getNombreClase())){
                 metodo.generar();
             }
         }
+    }
+
+    private void generarAtributos(){
+        for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
+            atributo.getValue().setOffset(offsetCIR);
+            offsetCIR++;
+        }
+    }
+
+
+    public int getOffsetVT(){
+        return offsetVT;
+    }
+
+    public int getOffsetCIR(){
+        return offsetCIR;
     }
 
     public void print(){

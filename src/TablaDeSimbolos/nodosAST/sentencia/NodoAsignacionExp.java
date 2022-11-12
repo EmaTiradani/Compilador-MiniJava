@@ -10,12 +10,12 @@ public class NodoAsignacionExp extends NodoAsignacion{
 
     Token tipoAsignacion;
     NodoAcceso nodoAcceso;
-    NodoExpresion nodoExpresion;
+    //NodoExpresion nodoExpresion;
 
     public NodoAsignacionExp(Token tipoAsignacion, NodoAcceso nodoAcceso) {
         this.tipoAsignacion = tipoAsignacion;
         this.nodoAcceso = nodoAcceso;
-        this.nodoExpresion = nodoExpresion;
+        //this.nodoExpresion = nodoExpresion;
     }
 
     @Override
@@ -39,7 +39,13 @@ public class NodoAsignacionExp extends NodoAsignacion{
 
     @Override
     public void generar() {
+        ladoDer.generar();
+        nodoAcceso.esLadoIzquierdoAsignacion();
+        nodoAcceso.generar();
+    }
 
+    public void setExpresion(NodoExpresion expresion){
+        this.ladoDer = expresion;
     }
 
     public Token getTipoAsignacion() {
@@ -58,8 +64,5 @@ public class NodoAsignacionExp extends NodoAsignacion{
         this.nodoAcceso = nodoAcceso;
     }
 
-    public NodoExpresion getNodoExpresion() {
-        return nodoExpresion;
-    }
 
 }
