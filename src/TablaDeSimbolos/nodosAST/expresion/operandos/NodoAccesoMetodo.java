@@ -69,11 +69,33 @@ public class NodoAccesoMetodo extends NodoAcceso{
     @Override
     public void generar() {
         if(metodo.getEstatico()){
+            if(!metodo.getTipoRetorno().mismoTipo(new Tipo("void")))
+                TablaDeSimbolos.gen("RMEM 1 ; Lugar para el retorno");
             for(NodoExpresion parametro : parametrosActuales){// TODO esto lo tendria que mandar al metodo estatico, no?
                 parametro.generar();
             }
-            TablaDeSimbolos.gen("PUSH "+metodo.getId().getLexema());
+            TablaDeSimbolos.gen("PUSH "+metodo.getId().getLexema()+metodo.getClaseContenedora());
             TablaDeSimbolos.gen("CALL");
+        }else{// Si el metodo es dinamico
+            TablaDeSimbolos.gen("LOAD 3 ; Carga el This");
+            if(!metodo.getTipoRetorno().mismoTipo(new Tipo("void"))){
+                TablaDeSimbolos.gen("RMEM 1 ; Lugar para el retorno");
+                TablaDeSimbolos.gen("SWAP ; Pone el This en el tope de la pila");
+            }
+            for(NodoExpresion parametro : parametrosActuales){
+                parametro.generar();
+                TablaDeSimbolos.gen("SWAP");// Con esta instruccion mantengo el this en el tope de la pila
+            }
+            TablaDeSimbolos.gen("DUP ; Duplica el tope de la pila, porque LOADREF consume");
+            TablaDeSimbolos.gen("LOADREF 0 ; Apila el valor de la VT");
+            TablaDeSimbolos.gen("LOADREF " +metodo.getOffsetEnClase()+ " ; Carga el metodo accediendo a la VT" );
+            TablaDeSimbolos.gen("CALL");
+        }
+
+        if(encadenado != null){
+            if(this.esLadoIzquierdoAsignacion())
+                encadenado.setLadoIzquierdoAsignacion();
+            encadenado.generar();
         }
 
     }

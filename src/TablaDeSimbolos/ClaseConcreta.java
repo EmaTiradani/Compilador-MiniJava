@@ -4,7 +4,6 @@ import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
 import lexycal.Token;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -338,30 +337,32 @@ public class ClaseConcreta extends Clase{
 
     public void generar(){
         TablaDeSimbolos.claseActual = this;
+        asignarOffsetAtributos();
 
         TablaDeSimbolos.gen(".DATA");
         generarDataVT();
 
         TablaDeSimbolos.gen(".CODE "); //TODO poner esto con un \t para que quede mas prolijo
         generarMetodos(); // Comentado porque lo llama generarDataVT()
-        generarAtributos();
 
     }
 
     private void generarDataVT(){
+        insertarOffsetMetodos();
         String dataVT = "VT_"+this.getNombreClase();
-        if(metodos.size() == 0){
-            dataVT += " NOP";
+        if(offsetVT == 0){
+            dataVT += ": NOP";
         }else{
             dataVT += ": DW ";
             //dataVT += generarMetodos();
             for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
                 Metodo metodo = listaMetodos.getValue().get(0);
                 if(metodo.getClaseContenedora().equals(this.getNombreClase())){
-                    dataVT += metodo.getId().getLexema()+this.getNombreClase(); // Esto me va a generar nombreDeMetodoNombreDeClase, Ej.: m1A
+                    if(metodo.getId().getLexema().equals("main")){
+                        dataVT += metodo.getId().getLexema(); // El main solo se llama main
+                    }else
+                        dataVT += metodo.getId().getLexema()+this.getNombreClase(); // Esto me va a generar nombreDeMetodoNombreDeClase, Ej.: m1A
                     dataVT += ",";
-                    metodo.insertOffsetEnClase(offsetVT); // Aprovecho que recorro los metodos para asignarles su offset correspondiente en la VT
-                    offsetVT++;
                 }
             }
             dataVT = dataVT.substring(0, dataVT.length()-1); // Elimino la ultima coma que queda luego de agregar el ultimo idMet
@@ -379,13 +380,22 @@ public class ClaseConcreta extends Clase{
         }
     }
 
-    private void generarAtributos(){
+    private void asignarOffsetAtributos(){
         for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
             atributo.getValue().setOffset(offsetCIR);
             offsetCIR++;
         }
     }
 
+    private void insertarOffsetMetodos(){
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            Metodo metodo = listaMetodos.getValue().get(0);
+            if(metodo.getClaseContenedora().equals(this.getNombreClase())){
+                metodo.insertOffsetEnClase(offsetVT); // Aprovecho que recorro los metodos para asignarles su offset correspondiente en la VT
+                offsetVT++;
+            }
+        }
+    }
 
     public int getOffsetVT(){
         return offsetVT;

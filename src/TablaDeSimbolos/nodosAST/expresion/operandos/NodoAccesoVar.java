@@ -88,10 +88,10 @@ public class NodoAccesoVar extends NodoAcceso{
         // Hay que ver si es un Parametro formal (que yo le digo argumento porque soy un nabo), variable local o un atributo de clase y a partir de eso genero el codigo
         if(atributo != null) {
             if (!esLadoIzqAsig || encadenado != null) {
-                TablaDeSimbolos.gen("LOADREF " + varLocal.getOffset() + " ; Apila el valor de la variable local en el tope de la pila");
+                TablaDeSimbolos.gen("LOADREF " + atributo.getOffset() + " ; Apila el valor de la variable local en el tope de la pila");
             } else {// Si es lado izquierdo o si tiene un encadenado tengo que poner la expresion en el tope de la pila
                 TablaDeSimbolos.gen("SWAP ; Pone el valor de la expresion en el tope de la pila");
-                TablaDeSimbolos.gen("STOREREF " + varLocal.getOffset() + " ; Guarda el valor de la expresion en el atributo " + atributo.getId());
+                TablaDeSimbolos.gen("STOREREF " + atributo.getOffset() + " ; Guarda el valor de la expresion en el atributo " + atributo.getId());
             }
         }else if(argumento != null){
             if(!esLadoIzqAsig || encadenado != null){

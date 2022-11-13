@@ -178,7 +178,10 @@ public class Metodo {
         }
 
         TablaDeSimbolos.metodoActual = this;
-        TablaDeSimbolos.gen(idMet.getLexema()+": LOADFP"); // mas de 1 metodo, poner un if
+        if(idMet.getLexema().equals("main")){
+            TablaDeSimbolos.gen(idMet.getLexema() + ": LOADFP"); // mas de 1 metodo, poner un if
+        }else
+            TablaDeSimbolos.gen(idMet.getLexema()+claseContenedora + ": LOADFP"); // mas de 1 metodo, poner un if
         TablaDeSimbolos.gen("LOADSP");
         TablaDeSimbolos.gen("STOREFP");
         body.generar();

@@ -1,17 +1,16 @@
 class A {
 
+    public boolean a;
+
+
     static void main() {
 
-        var a = false;
 
         var c = 5;
 
-        var b = false;
+        var b = 1;
 
-        if(a){
-            debugPrint(2);
-            //b = true;
-        }
+        new A().m1();
 
         /*if(b){
             debugPrint(5);
@@ -21,6 +20,15 @@ class A {
 
         //debugPrint(10);
 
+    }
+
+    void m1(){
+
+        a = true;
+
+        if(a){
+            debugPrint(2);
+        }
     }
 
 }

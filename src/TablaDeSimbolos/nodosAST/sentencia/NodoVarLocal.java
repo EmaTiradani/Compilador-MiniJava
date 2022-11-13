@@ -43,7 +43,7 @@ public class NodoVarLocal extends NodoSentencia {
 
     @Override
     public void generar() {
-        TablaDeSimbolos.gen("RMEM 1 ; Reserva memoria para la variable local");
+        TablaDeSimbolos.gen("RMEM 1 ; Reserva memoria para la variable local "+nombre.getLexema());
         if(expresion != null){
             expresion.generar();
             TablaDeSimbolos.gen("STORE "+offset+" ; Almacena  el valor de la expresion del tope de la pila en la variable local");
