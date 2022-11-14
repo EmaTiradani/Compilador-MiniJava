@@ -42,6 +42,7 @@ public class ClaseConcreta extends Clase{
         notHerenciaCircular = false;
 
         Constructor constructor = new Constructor(nombreClase);
+        constructor.setClaseContenedora(this);
         constructores.add(constructor);
 
         metodoMain = new Metodo(new Token(idMetVar, "main", 0), new TipoMetodo("void"), true, null);
@@ -378,6 +379,8 @@ public class ClaseConcreta extends Clase{
                 metodo.generar();
             }
         }
+        // Codigo para el constructor, cambiar en caso de hacer algun logro de constructores (no va a pasar jaja)
+        constructores.get(0).generar();
     }
 
     private void asignarOffsetAtributos(){

@@ -70,8 +70,8 @@ public class NodoAccesoThis extends NodoAcceso{
         TablaDeSimbolos.gen("LOAD 3 ; Apilo la referencia al objeto actual (this)");
 
         if(encadenado != null){
-            //encadenado
-            // Todo aca tengo que ver lo de indicar si es lado izquierdo
+            if(this.esLadoIzquierdo)
+                encadenado.setLadoIzquierdoAsignacion();
             encadenado.generar();
         }
     }

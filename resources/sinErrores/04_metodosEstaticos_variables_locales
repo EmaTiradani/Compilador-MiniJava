@@ -1,0 +1,18 @@
+class A {
+
+    static void main() {
+
+        var a = true;
+        var b = false;
+        var c = "String";
+
+        if(a || b){
+            System.printSln(c);
+            System.printBln(a);
+            System.printB(b);
+        }
+
+    }
+
+
+}

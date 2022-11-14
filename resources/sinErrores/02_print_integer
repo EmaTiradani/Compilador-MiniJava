@@ -1,7 +1,0 @@
-class A {
-
-    static void main() {
-        System.printI(42);
-    }
-
-}

@@ -179,9 +179,10 @@ public class Metodo {
 
         TablaDeSimbolos.metodoActual = this;
         if(idMet.getLexema().equals("main")){
-            TablaDeSimbolos.gen(idMet.getLexema() + ": LOADFP"); // mas de 1 metodo, poner un if
+            TablaDeSimbolos.gen(idMet.getLexema() + ":"); // mas de 1 metodo, poner un if
         }else
-            TablaDeSimbolos.gen(idMet.getLexema()+claseContenedora + ": LOADFP"); // mas de 1 metodo, poner un if
+            TablaDeSimbolos.gen(idMet.getLexema()+claseContenedora + ":"); // mas de 1 metodo, poner un if
+        TablaDeSimbolos.gen("LOADFP");
         TablaDeSimbolos.gen("LOADSP");
         TablaDeSimbolos.gen("STOREFP");
         body.generar();
@@ -191,5 +192,6 @@ public class Metodo {
         }else{
             TablaDeSimbolos.gen("RET "+argumentos.size()+1); // Si el metodo es dynamic es +1 por el this
         }
+        TablaDeSimbolos.gen("");
     }
 }

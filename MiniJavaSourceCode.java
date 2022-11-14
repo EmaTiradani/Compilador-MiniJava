@@ -1,16 +1,25 @@
 class A {
 
-    public boolean a;
+    //public boolean a;
 
 
     static void main() {
-
-
-        var c = 5;
-
-        var b = 1;
-
         new A().m1();
+
+        //new A();
+        debugPrint(5);
+        //System.printB(true);
+        /*System.printC('c');
+        System.printI(25);
+        System.printS("PrintS");
+        System.println();
+        System.printBln(false);
+        System.printCln('t');
+        System.printIln(35);
+        System.printSln("PrintS");*/
+
+
+
 
         /*if(b){
             debugPrint(5);
@@ -22,11 +31,10 @@ class A {
 
     }
 
-    void m1(){
+    dynamic void m1(){
 
-        a = true;
 
-        if(a){
+        if(true){
             debugPrint(2);
         }
     }
