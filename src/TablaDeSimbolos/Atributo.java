@@ -14,6 +14,7 @@ public class Atributo {
         this.idVar = idVar;
         this.tipo = tipo;
         this.visibilidad = visibilidad;
+        offset = -1;
     }
 
     public String getId(){

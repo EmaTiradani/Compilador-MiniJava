@@ -107,8 +107,10 @@ public class NodoAccesoVar extends NodoAcceso{
             }
         }
 
-        if(encadenado != null && this.esLadoIzqAsig){
-            encadenado.setLadoIzquierdoAsignacion();
+        if(encadenado != null){
+            if(this.esLadoIzquierdo)
+                encadenado.setLadoIzquierdoAsignacion();
+            encadenado.generar();
         }
     }
 }

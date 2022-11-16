@@ -85,10 +85,12 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
     public void generar() {
         // TODO esto lo copie del AccesoMetodo comun, claramente va a dar true la condicion del if
         if(metodo.getEstatico()){
+            if(!metodo.getTipoRetorno().mismoTipo(new Tipo("void")))
+                TablaDeSimbolos.gen("RMEM 1 ; Lugar para el retorno");
             for(NodoExpresion parametro : parametrosActuales){
                 parametro.generar();
             }
-            TablaDeSimbolos.gen("PUSH "+metodo.getId().getLexema());
+            TablaDeSimbolos.gen("PUSH "+metodo.getId().getLexema()+idClaseEstatica.getLexema());
             TablaDeSimbolos.gen("CALL");
         }
     }

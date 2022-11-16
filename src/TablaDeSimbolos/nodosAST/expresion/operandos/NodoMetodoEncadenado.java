@@ -15,6 +15,7 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
 
     protected List<NodoExpresion> parametros;
     protected Token idMet;
+    protected Metodo metodo;
 
     public NodoMetodoEncadenado(Token tokenIdMet) {
         idMet = tokenIdMet;
@@ -29,7 +30,7 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
         if(claseContenedora == null)
             claseContenedora = TablaDeSimbolos.getInterfaz(tipoEncadenadoLadoIzq.getType());
         if(claseContenedora != null){
-            Metodo metodo = claseContenedora.getMetodoQueConformaParametros(idMet, parametros);
+            metodo = claseContenedora.getMetodoQueConformaParametros(idMet, parametros);
             if(metodo == null){
                 throw new SemanticException("El metodo "+idMet.getLexema()+" no es accesible en la clase "+claseContenedora.getNombreClase(), idMet);
             }else{
@@ -75,7 +76,35 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
 
     @Override
     public void generar() {
+        if(metodo.getEstatico()){
+            if(!metodo.getTipoRetorno().mismoTipo(new Tipo("void")))
+                TablaDeSimbolos.gen("RMEM 1 ; Lugar para el retorno");
+            for(NodoExpresion parametro : parametros){// TODO esto lo tendria que mandar al metodo estatico, no?
+                parametro.generar();
+            }
+            TablaDeSimbolos.gen("PUSH "+metodo.getId().getLexema()+metodo.getClaseContenedora());
+            TablaDeSimbolos.gen("CALL");
+        }else{// Si el metodo es dinamico
+            //TablaDeSimbolos.gen("LOAD 3 ; Carga el This");
+            if(!metodo.getTipoRetorno().mismoTipo(new Tipo("void"))){
+                TablaDeSimbolos.gen("RMEM 1 ; Lugar para el retorno");
+                TablaDeSimbolos.gen("SWAP ; Pone el This en el tope de la pila");
+            }
+            for(NodoExpresion parametro : parametros){
+                parametro.generar();
+                TablaDeSimbolos.gen("SWAP");// Con esta instruccion mantengo el this en el tope de la pila
+            }
+            TablaDeSimbolos.gen("DUP ; Duplica el tope de la pila, porque LOADREF consume");
+            TablaDeSimbolos.gen("LOADREF 0 ; Apila el valor de la VT");
+            TablaDeSimbolos.gen("LOADREF " +metodo.getOffsetEnClase()+ " ; Carga el metodo accediendo a la VT" );
+            TablaDeSimbolos.gen("CALL");
+        }
 
+        if(nodoEncadenado != null){
+            if(this.esLadoIzquierdoAsignacion())
+                nodoEncadenado.setLadoIzquierdoAsignacion();
+            nodoEncadenado.generar();
+        }
     }
 
 

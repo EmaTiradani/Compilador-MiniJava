@@ -16,7 +16,7 @@ public class NodoVarLocal extends NodoSentencia {
 
     public NodoVarLocal(Token nombre) {
         this.nombre = nombre;
-        offset = -1;
+        offset = 1;
     }
 
     public Token getNombre() {

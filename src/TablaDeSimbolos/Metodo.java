@@ -17,6 +17,7 @@ public class Metodo {
     protected String claseContenedora;
     protected int offset;
     protected int offsetParametros;
+    protected ArrayList<ClaseConcreta> clasesQueDefinen;
 
     public Metodo(Token idMet, TipoMetodo tipoRetorno, boolean estatico, ArrayList<Argumento> argumentos){
         this.idMet = idMet;
@@ -160,6 +161,14 @@ public class Metodo {
         return estatico && idMet.getLexema().equals("main") && argumentos.size() == 0 && tipoRetorno.getType().equals("void");
     }
 
+    public void insertClaseQueDefine(ClaseConcreta clase){
+        clasesQueDefinen.add(clase);
+    }
+
+    public ArrayList<ClaseConcreta> getClasesQueDefinen(){
+        return clasesQueDefinen;
+    }
+
 
     public void checkSentencias() throws SemanticException {
         TablaDeSimbolos.metodoActual = this;
@@ -190,7 +199,7 @@ public class Metodo {
         if(estatico){
             TablaDeSimbolos.gen("RET "+argumentos.size());
         }else{
-            TablaDeSimbolos.gen("RET "+argumentos.size()+1); // Si el metodo es dynamic es +1 por el this
+            TablaDeSimbolos.gen("RET "+(argumentos.size()+1)); // Si el metodo es dynamic es +1 por el this
         }
         TablaDeSimbolos.gen("");
     }

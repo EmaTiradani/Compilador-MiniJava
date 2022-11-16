@@ -56,7 +56,10 @@ public final class TablaDeSimbolos {
     }
 
     public static NodoBloque getBloqueActual(){
-        return pilaDeBloques.get(0); //Retorno el ultimo bloque agregado, asi funciona como una pila la lista
+        if(pilaDeBloques.size() == 0)
+            return null;
+        else
+            return pilaDeBloques.get(0); //Retorno el ultimo bloque agregado, asi funciona como una pila la lista
     }
 
     public static ClaseConcreta getClase(String name){
@@ -283,6 +286,7 @@ public final class TablaDeSimbolos {
         listaInstrucciones.add("STOREHL ; Mueve el heap limit (hl). Expande el heap");
         listaInstrucciones.add("STOREFP");
         listaInstrucciones.add("RET 1	; Retorna eliminando el parámetro)");
+        listaInstrucciones.add("");
         // System
 
         // Object

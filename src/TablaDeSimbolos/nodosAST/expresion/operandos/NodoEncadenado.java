@@ -26,6 +26,10 @@ public abstract class NodoEncadenado {
         this.nodoEncadenado = tokenNodoEncadenado;
     }
 
+    public boolean esLadoIzquierdoAsignacion(){
+        return esLadoIzquierdo;
+    }
+
     public abstract Tipo chequear(Tipo tipo) throws SemanticException;
 
     public abstract Token getToken();

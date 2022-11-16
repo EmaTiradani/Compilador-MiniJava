@@ -13,6 +13,7 @@ public class NodoBloque extends NodoSentencia{
     Map<String, NodoVarLocal> variablesLocales;
     boolean chequeado;
     boolean generado;
+    int offsetVarsLocales;
 
     public NodoBloque(){
         sentencias = new ArrayList<NodoSentencia>();
@@ -51,11 +52,16 @@ public class NodoBloque extends NodoSentencia{
         if(TablaDeSimbolos.getVarLocalClaseActual(variableLocal.getNombre().getLexema())!= null){
             throw new SemanticException(" Ya habia una variable local con este identificador", variableLocal.getNombre());
         }
+
+        variableLocal.setOffset(offsetVarsLocales++);
         this.variablesLocales.put(variableLocal.getNombre().getLexema(), variableLocal);
     }
 
     @Override
     public void chequear() throws SemanticException {
+        // Lo tengo que hacer antes de apilar este bloque, asi sigo el offset del bloque contenedor
+        setOffsetInicialVarsLocales();
+
         if(!chequeado){
             TablaDeSimbolos.apilarBloque(this);
             for(NodoSentencia sentencia : sentencias){
@@ -79,5 +85,17 @@ public class NodoBloque extends NodoSentencia{
             TablaDeSimbolos.gen("FMEM "+variablesLocales.size()+" ; Libera el espacio reservado utilizado para almacenar las variables locales");
         }
         generado = true;
+    }
+
+    private void setOffsetInicialVarsLocales(){
+        if(TablaDeSimbolos.getBloqueActual() == null){
+            offsetVarsLocales = 0;
+        }else{
+            offsetVarsLocales = TablaDeSimbolos.getBloqueActual().getOffsetVarsLocales();
+        }
+    }
+
+    public int getOffsetVarsLocales(){
+        return offsetVarsLocales;
     }
 }

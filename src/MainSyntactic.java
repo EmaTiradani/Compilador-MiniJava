@@ -21,8 +21,8 @@ public class MainSyntactic {
         try {
             //FileManager fileManager = new FileManager(sourceCodeFile);
             // Lo de abajo son cables para testing
-            //FileManager fileManager = new FileManager("C:\\Users\\ema_c\\Desktop\\Compiladores\\Etapa 1\\Compilador\\MiniJavaSourceCode.java"); //Cable
-            FileManager fileManager = new FileManager("C:\\Users\\default.LAPTOP-9ASHTB0Q\\Desktop\\Lenguajes\\Proyecto\\proyecto-ldp\\Compilador-MiniJava\\MiniJavaSourceCode.java");
+            FileManager fileManager = new FileManager("C:\\Users\\ema_c\\Desktop\\Compiladores\\Etapa 1\\Compilador\\MiniJavaSourceCode.java"); //Cable
+            //FileManager fileManager = new FileManager("C:\\Users\\default.LAPTOP-9ASHTB0Q\\Desktop\\Lenguajes\\Proyecto\\proyecto-ldp\\Compilador-MiniJava\\MiniJavaSourceCode.java");
 
             AnalizadorLexico analizadorLexico = new AnalizadorLexico(fileManager);
             syntacticParser = new SyntacticParser(analizadorLexico);

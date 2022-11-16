@@ -16,6 +16,8 @@ public class Interfaz extends Clase{
 
     boolean consolidado, notHerenciaCircular;
 
+    private int offset;
+
 
     public Interfaz(Token nombreInterface){
         this.nombreInterface = nombreInterface;
@@ -25,6 +27,7 @@ public class Interfaz extends Clase{
 
         consolidado = false;
         notHerenciaCircular = false;
+        offset = 0;
     }
 
     public Token getToken(){
@@ -37,6 +40,10 @@ public class Interfaz extends Clase{
     }
 
     public boolean herenciaCircular(){ return notHerenciaCircular;}
+
+    public int getOffset(){
+        return offset;
+    }
 
     @Override
     public ArrayList<String> getAncestros() {
@@ -122,12 +129,29 @@ public class Interfaz extends Clase{
         }
     }
 
-    @Override
-    public void consolidar() throws SemanticException {
+    private void setOffsetDeAncestros(){
+        int offsetDeLosAncestros = 0;
         for(String interfaceAncestra : listaInterfaces) {
             Interfaz ancestro = TablaDeSimbolos.getInterfaz(interfaceAncestra);
-            ancestro.checkExtends();// mmmm TODO
             if(ancestro.consolidado){
+                offset = ancestro.getOffset();
+                consolidado = true;
+            }else{
+                ancestro.consolidar();
+                importarMetodosDePadre(ancestro);
+                consolidado = true;
+            }
+        }
+        this.offset = offsetDeLosAncestros;
+    }
+
+    public void consolidar() throws SemanticException {
+        setOffsetDeAncestros();
+        for(String interfaceAncestra : listaInterfaces) {
+            Interfaz ancestro = TablaDeSimbolos.getInterfaz(interfaceAncestra);
+            ancestro.checkExtends();
+            if(ancestro.consolidado){
+                offset = ancestro.getOffset();
                 importarMetodosDePadre(ancestro);
                 consolidado = true;
             }else{
