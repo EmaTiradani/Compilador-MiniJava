@@ -16,7 +16,12 @@ public class Interfaz extends Clase{
 
     boolean consolidado, notHerenciaCircular;
 
-    private int offset;
+    private int offsetFinal;
+    private int cantMetodosSinConflictos;
+
+    private boolean generado;
+
+    //public int offsetActualVT;
 
 
     public Interfaz(Token nombreInterface){
@@ -27,7 +32,10 @@ public class Interfaz extends Clase{
 
         consolidado = false;
         notHerenciaCircular = false;
-        offset = 0;
+
+        offsetFinal = 0;
+        cantMetodosSinConflictos = 0;
+        generado = false;
     }
 
     public Token getToken(){
@@ -42,7 +50,7 @@ public class Interfaz extends Clase{
     public boolean herenciaCircular(){ return notHerenciaCircular;}
 
     public int getOffset(){
-        return offset;
+        return offsetFinal;
     }
 
     @Override
@@ -54,6 +62,15 @@ public class Interfaz extends Clase{
             ancestros.addAll(TablaDeSimbolos.getInterfaz(clase).getAncestros());
         }
         return ancestros;
+    }
+
+    @Override
+    public int getCantMetodosSinConflictos() {
+        return cantMetodosSinConflictos;
+    }
+
+    public int getOffsetActualVT(){ // Aunque no tenga VT, es el offset de los metodos
+        return offsetActualVT;
     }
 
     public void insertarAtributo(Atributo atributo) throws SemanticException {
@@ -129,7 +146,7 @@ public class Interfaz extends Clase{
         }
     }
 
-    private void setOffsetDeAncestros(){
+    /*private void setOffsetDeAncestros(){
         int offsetDeLosAncestros = 0;
         for(String interfaceAncestra : listaInterfaces) {
             Interfaz ancestro = TablaDeSimbolos.getInterfaz(interfaceAncestra);
@@ -143,15 +160,15 @@ public class Interfaz extends Clase{
             }
         }
         this.offset = offsetDeLosAncestros;
-    }
+    }*/
 
     public void consolidar() throws SemanticException {
-        setOffsetDeAncestros();
+        //offsetActualVT = maxOffsetFinalPadres
         for(String interfaceAncestra : listaInterfaces) {
             Interfaz ancestro = TablaDeSimbolos.getInterfaz(interfaceAncestra);
             ancestro.checkExtends();
             if(ancestro.consolidado){
-                offset = ancestro.getOffset();
+                //offset = ancestro.getOffset();
                 importarMetodosDePadre(ancestro);
                 consolidado = true;
             }else{
@@ -183,11 +200,18 @@ public class Interfaz extends Clase{
             }
             if(puedeSerInsertado){
                 metodos.get(metodo.getId().getLexema()).add(metodo);
+                if(!metodo.getEstatico()) {
+                    metodo.insertOffsetEnClase(-1); // En caso de que haya un conflicto no le asigno ningun offset, lo hago despues de finalizar la consolidacion
+                    metodo.insertClaseQueDefine(this);
+                }
             }
         }else{
             ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
             listaMetodos.add(metodo);
             metodos.put(metodo.getId().getLexema(), listaMetodos);
+            if(!metodo.getEstatico()){
+                cantMetodosSinConflictos++;
+            }
         }
     }
 
@@ -205,6 +229,53 @@ public class Interfaz extends Clase{
 
     public void insertarAncestro(Interfaz interfaz){
         listaInterfaces.add(interfaz.getNombreClase());
+    }
+
+    public void generarOffsets(){
+        if(!generado){
+            if(listaInterfaces.size() == 0){
+                offsetActualVT = 0;
+                asignarOffsetMetodosEnConflicto();
+                for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()) {
+                    for (Metodo metodo : listaMetodos.getValue()) {
+                        if (!metodo.getConflictoSolucionado()) {// Si no tienen el conflicto solucionado es que nunca estuvieron en conflicto
+                            metodo.insertOffsetEnClase(offsetActualVT);
+                            offsetActualVT++;
+                        }
+                    }
+                }
+            }
+            else{
+                for(String interfaz : listaInterfaces){
+                    TablaDeSimbolos.getInterfaz(interfaz).generarOffsets();
+                    if(TablaDeSimbolos.getInterfaz(interfaz).getOffset() > offsetActualVT)
+                        offsetActualVT = TablaDeSimbolos.getInterfaz(interfaz).getOffset();
+                }
+                asignarOffsetMetodosEnConflicto();
+                for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()) {
+                    for (Metodo metodo : listaMetodos.getValue()) {
+                        if (!metodo.getConflictoSolucionado()) {// Si no tienen el conflicto solucionado es que nunca estuvieron en conflicto
+                            metodo.insertOffsetEnClase(offsetActualVT);
+                            offsetActualVT++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void asignarOffsetMetodosEnConflicto(){
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            for(Metodo metodo : listaMetodos.getValue()){
+                if(!metodo.getEstatico() && metodo.getOffsetEnClase() == -1){
+                    metodo.setConflictoSolucionado();
+                    int offsetConflictos = metodo.getOffsetConflictos();
+                    if(offsetConflictos > offsetFinal)
+                        offsetFinal = offsetConflictos;
+                    metodo.insertOffsetEnClase(offsetConflictos);
+                }
+            }
+        }
     }
 
     public void print(){

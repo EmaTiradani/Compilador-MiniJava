@@ -21,13 +21,14 @@ public class ClaseConcreta extends Clase{
     private HashMap<String, ArrayList<Metodo>> metodos;
 
     boolean consolidado;
+    boolean generado;
     boolean notHerenciaCircular;
 
     private Metodo metodoMain;
 
     ArrayList<Constructor> constructores;
 
-    private int offsetActualVT; // Offset para insertar metodos sin conflictos
+    //private int offsetActualVT; // Offset para insertar metodos sin conflictos
 
     // Numero del ultimo offset, ya que algunos quedaran en 0, sirve para cuando se necesite saber el offset final del padre para armar el offset de una clase hija
     private int offsetFinalVT;
@@ -54,6 +55,8 @@ public class ClaseConcreta extends Clase{
         metodoMain = new Metodo(new Token(idMetVar, "main", 0), new TipoMetodo("void"), true, null);
 
         offsetCIR = 1;
+        offsetActualVT = 1;
+        cantMetodosSinConflictos = 0;
 
     }
 
@@ -139,7 +142,17 @@ public class ClaseConcreta extends Clase{
     }
 
     public int getCantMetodosSinConflictos(){
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            for(Metodo metodo : listaMetodos.getValue()){
+                if(metodo.getOffsetEnClase() != -1)
+                    cantMetodosSinConflictos++;
+            }
+        }
         return cantMetodosSinConflictos;
+    }
+
+    public int getOffsetFinal(){
+        return offsetFinalVT;
     }
 
 
@@ -158,8 +171,8 @@ public class ClaseConcreta extends Clase{
     }
 
     public void consolidar() throws SemanticException {
-        offsetActualVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetActualVT();
-        //offsetFinalVT = TablaDeSimbolos.getClase(nombreClasePadre).
+        //offsetActualVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetActualVT();
+        //offsetActualVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetFinal();
         if(!consolidado){
             if(TablaDeSimbolos.getClase(nombreClasePadre).consolidado){
                 insertarMetodoYAtributosDePadre();
@@ -218,10 +231,10 @@ public class ClaseConcreta extends Clase{
             listaMetodos.add(metodo);
             metodos.put(metodo.getId().getLexema(), listaMetodos);
             if(!metodo.getEstatico()) {
-                metodo.insertOffsetEnClase(offsetActualVT);
+                //metodo.insertOffsetEnClase(offsetActualVT);
                 mapeoMetodosDinamicos.put(offsetActualVT, metodo);
-                cantMetodosSinConflictos++;
-                offsetActualVT++;
+                //cantMetodosSinConflictos++;
+                //offsetActualVT++;
             }
         }
         if(metodo.esMain() && metodo.getId().getLinea()>metodoMain.getId().getLinea())
@@ -308,22 +321,14 @@ public class ClaseConcreta extends Clase{
         }
     }
 
-    private void checkAtributosBienDeclarados() throws SemanticException {
-        for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
-            Tipo tipoAtributo = atributo.getValue().getTipo();
-            if(!tipoAtributo.isPrimitive && !TablaDeSimbolos.existeClase(tipoAtributo.getType()) && !TablaDeSimbolos.existeInterfaz(tipoAtributo.getType())){
-                throw new SemanticException(" El atributo: "+atributo.getValue().getId()+
-                        "es de un tipo clase "+tipoAtributo.getType()+" que no esta declarado", new Token(idClase, tipoAtributo.id, atributo.getValue().getToken().getLinea()));
-            }
-        }
-    }
-
     private void interfaceImplementada(Interfaz interfaz) throws SemanticException {
         for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : interfaz.metodos.entrySet()){
             for(Metodo metodo : listaMetodos.getValue()){
                 if(!estaImplementado(metodo))
                     throw new SemanticException(" El metodo "+ metodo.getId().getLexema()+" de la interfaz "+interfaz.getNombreClase() +
                             " no está implementado en la clase "+nombreClase.getLexema(), new Token(idClase, interfaz.getNombreClase(), nombreClase.getLinea()));
+                metodo.insertOffsetEnClase(-1); // Asumo todos los metodos entre interfaces y clases como en conflicto
+
             }
         }
     }
@@ -336,6 +341,16 @@ public class ClaseConcreta extends Clase{
             }
         }
         return false;
+    }
+
+    private void checkAtributosBienDeclarados() throws SemanticException {
+        for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
+            Tipo tipoAtributo = atributo.getValue().getTipo();
+            if(!tipoAtributo.isPrimitive && !TablaDeSimbolos.existeClase(tipoAtributo.getType()) && !TablaDeSimbolos.existeInterfaz(tipoAtributo.getType())){
+                throw new SemanticException(" El atributo: "+atributo.getValue().getId()+
+                        "es de un tipo clase "+tipoAtributo.getType()+" que no esta declarado", new Token(idClase, tipoAtributo.id, atributo.getValue().getToken().getLinea()));
+            }
+        }
     }
 
     public Metodo getMetodoQueConformaParametros(Token idMet, List<NodoExpresion> parametros) throws SemanticException {
@@ -366,20 +381,32 @@ public class ClaseConcreta extends Clase{
     }
 
     public void generar(){
-        TablaDeSimbolos.claseActual = this;
-        asignarOffsetAtributos();
-        asignarOffsetMetodosEnConflicto();
+        if(!generado){
+            // Aca capaz haya que ver si es la clase Object, y cuidado con System
+            // Ver que onda con las interfaces que esto implementa, hay que subir hasta buscar la inicial y ahi sacar el offset
+            offsetActualVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetFinal();
+            if(TablaDeSimbolos.getClase(nombreClasePadre).generado){
+                TablaDeSimbolos.claseActual = this;
+                asignarOffsetAtributos();
+                asignarOffsetMetodosEnConflicto();
+                asignarOffsetMetodosSinConflictos(); // Capaz esto vaya mas al fondo
 
-        TablaDeSimbolos.gen(".DATA");
-        generarDataVT();
+                TablaDeSimbolos.gen(".DATA");
+                generarDataVT();
 
-        TablaDeSimbolos.gen(".CODE "); //TODO poner esto con un \t para que quede mas prolijo
-        generarMetodos(); // Comentado porque lo llama generarDataVT()
+                TablaDeSimbolos.gen(".CODE "); //TODO poner esto con un \t para que quede mas prolijo
+                generarMetodos(); // Comentado porque lo llama generarDataVT()
+                generado = true;
+            }else{
+                TablaDeSimbolos.getClase(nombreClasePadre).generar();
+                generar();
+                generado = true;
+            }
+        }
 
     }
 
     private void generarDataVT(){
-        //insertarOffsetMetodos();
         String dataVT = "VT_"+this.getNombreClase();
         if(offsetActualVT == 0){
             dataVT += ": NOP";
@@ -388,7 +415,7 @@ public class ClaseConcreta extends Clase{
             //dataVT += generarMetodos();
             for(int i = 0; i< offsetActualVT; i++){
                 Metodo metodo = mapeoMetodosDinamicos.get(i);
-                if(metodo.getClasesQueDefinen().contains(this))
+                if(metodo.getClasesEnConflicto().contains(this))
                     dataVT += metodo.getId().getLexema()+this.getNombreClase(); // Esto me va a generar nombreDeMetodoNombreDeClase, Ej.: m1A
                 else
                     dataVT += metodo.getId().getLexema()+metodo.getClaseContenedora();
@@ -420,25 +447,35 @@ public class ClaseConcreta extends Clase{
         }
     }
 
-
     // Este metodo se llama luego de haberle asignado el offset a los metodos que no estan en conflicto, es decir, los que son exclusivos de esta clase
     private void asignarOffsetMetodosEnConflicto(){
         for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
             Metodo metodo = listaMetodos.getValue().get(0);
 
-            // -1 porque significa que no tiene offset asignado aun
+            // -1 porque significa que es un metodo con conflictos
             if(!metodo.getEstatico() && metodo.getOffsetEnClase() == -1){
-                metodo.getOffsetConflictos();
-                //setearOffsetMaximo(metodo);
-                /*metodo.insertOffsetEnClase(offsetVT);
-                offsetVT++;*/
+                metodo.setConflictoSolucionado();
+                int offsetConflictos = metodo.getOffsetConflictos();
+                if(offsetConflictos > offsetFinalVT)
+                    offsetFinalVT = offsetConflictos;
+                metodo.insertOffsetEnClase(offsetConflictos);
+            }
+        }
+    }
+
+    private void asignarOffsetMetodosSinConflictos(){
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            Metodo metodo = listaMetodos.getValue().get(0);
+            if(!metodo.getEstatico() && !metodo.getConflictoSolucionado()){
+                metodo.insertOffsetEnClase(offsetActualVT);
+                offsetActualVT++;
             }
         }
     }
 
     private void setearOffsetMaximo(Metodo metodo){
         int offsetMaximo = 1;
-        for(ClaseConcreta clase : metodo.getClasesQueDefinen()){
+        for(Clase clase : metodo.getClasesEnConflicto()){
             if(clase.getOffsetActualVT() > offsetMaximo){
                 offsetMaximo = clase.getOffsetActualVT();
             }

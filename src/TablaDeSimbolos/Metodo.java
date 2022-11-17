@@ -17,7 +17,8 @@ public class Metodo {
     protected String claseContenedora;
     protected int offset;
     protected int offsetParametros;
-    protected ArrayList<ClaseConcreta> clasesQueDefinen;
+    protected ArrayList<Clase> clasesEnConflicto;
+    private boolean conflictoSolucionado;
 
     public Metodo(Token idMet, TipoMetodo tipoRetorno, boolean estatico, ArrayList<Argumento> argumentos){
         this.idMet = idMet;
@@ -31,6 +32,7 @@ public class Metodo {
 
         offset = -1;
         offsetParametros = 0;
+        conflictoSolucionado = false;
     }
 
     public Token getId(){
@@ -80,6 +82,14 @@ public class Metodo {
 
     public int getOffsetEnClase(){
         return offset;
+    }
+
+    public boolean getConflictoSolucionado(){
+        return conflictoSolucionado;
+    }
+
+    public void setConflictoSolucionado(){
+        conflictoSolucionado = true;
     }
 
     public void checkDec() throws SemanticException {
@@ -161,17 +171,17 @@ public class Metodo {
         return estatico && idMet.getLexema().equals("main") && argumentos.size() == 0 && tipoRetorno.getType().equals("void");
     }
 
-    public void insertClaseQueDefine(ClaseConcreta clase){
-        clasesQueDefinen.add(clase);
+    public void insertClaseQueDefine(Clase clase){
+        clasesEnConflicto.add(clase);
     }
 
-    public ArrayList<ClaseConcreta> getClasesQueDefinen(){
-        return clasesQueDefinen;
+    public ArrayList<Clase> getClasesEnConflicto(){
+        return clasesEnConflicto;
     }
 
     public int getOffsetConflictos(){// Recorre las clases en conflicto, y retorna mayor cantidad de metodos sin conflictos que haya en una clase
         int offsetConflictos = 0;
-        for(ClaseConcreta clase : clasesQueDefinen){
+        for(Clase clase : clasesEnConflicto){
             if(clase.getCantMetodosSinConflictos()>offsetConflictos)
                 offsetConflictos = clase.getCantMetodosSinConflictos();
         }

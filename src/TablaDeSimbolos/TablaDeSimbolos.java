@@ -106,6 +106,13 @@ public final class TablaDeSimbolos {
         for (Map.Entry<String, Interfaz> interfaz : interfaces.entrySet()){
             interfaz.getValue().consolidar();
         }
+
+        /*// Esto lo hago para que luego de consolidar las clases e interfaces, se le puedan asignar correctamente los offsets correctamente
+        for (Map.Entry<String, ClaseConcreta> clase : clases.entrySet()){
+            if(clase.getValue().getNombreClase() != "Object"){
+                clase.getValue().consolidar();
+            }
+        }*/
     }
 
     public static void checkSentencias() throws SemanticException {

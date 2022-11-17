@@ -20,6 +20,8 @@ public abstract class Clase {
     boolean consolidado;
     boolean notHerenciaCircular;
 
+    public int offsetActualVT;
+
     public Clase(){
         atributos = new HashMap<>();
         metodos = new HashMap<>();
@@ -68,4 +70,7 @@ public abstract class Clase {
         return null;
     }
 
+    public abstract int getCantMetodosSinConflictos();
+
+    protected abstract int getOffsetActualVT();
 }
