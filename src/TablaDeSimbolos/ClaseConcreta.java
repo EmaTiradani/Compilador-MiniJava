@@ -27,8 +27,12 @@ public class ClaseConcreta extends Clase{
 
     ArrayList<Constructor> constructores;
 
-    private int offsetActualVT;
+    private int offsetActualVT; // Offset para insertar metodos sin conflictos
+
+    // Numero del ultimo offset, ya que algunos quedaran en 0, sirve para cuando se necesite saber el offset final del padre para armar el offset de una clase hija
     private int offsetFinalVT;
+    private int cantMetodosSinConflictos;
+
     private int offsetCIR;
     private Map<Integer, Metodo> mapeoMetodosDinamicos;
 
@@ -134,6 +138,10 @@ public class ClaseConcreta extends Clase{
         return nombreClasePadre;
     }
 
+    public int getCantMetodosSinConflictos(){
+        return cantMetodosSinConflictos;
+    }
+
 
     public boolean estaBienDeclarada() throws SemanticException {
         boolean tengoMain = false;
@@ -151,7 +159,7 @@ public class ClaseConcreta extends Clase{
 
     public void consolidar() throws SemanticException {
         offsetActualVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetActualVT();
-        offsetFinalVT = TablaDeSimbolos.getClase(nombreClasePadre).
+        //offsetFinalVT = TablaDeSimbolos.getClase(nombreClasePadre).
         if(!consolidado){
             if(TablaDeSimbolos.getClase(nombreClasePadre).consolidado){
                 insertarMetodoYAtributosDePadre();
@@ -212,6 +220,7 @@ public class ClaseConcreta extends Clase{
             if(!metodo.getEstatico()) {
                 metodo.insertOffsetEnClase(offsetActualVT);
                 mapeoMetodosDinamicos.put(offsetActualVT, metodo);
+                cantMetodosSinConflictos++;
                 offsetActualVT++;
             }
         }
@@ -411,20 +420,23 @@ public class ClaseConcreta extends Clase{
         }
     }
 
+
+    // Este metodo se llama luego de haberle asignado el offset a los metodos que no estan en conflicto, es decir, los que son exclusivos de esta clase
     private void asignarOffsetMetodosEnConflicto(){
         for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
             Metodo metodo = listaMetodos.getValue().get(0);
 
             // -1 porque significa que no tiene offset asignado aun
             if(!metodo.getEstatico() && metodo.getOffsetEnClase() == -1){
-                setearOffsetMaximo(metodo);
+                metodo.getOffsetConflictos();
+                //setearOffsetMaximo(metodo);
                 /*metodo.insertOffsetEnClase(offsetVT);
                 offsetVT++;*/
             }
         }
     }
 
-    private int setearOffsetMaximo(Metodo metodo){
+    private void setearOffsetMaximo(Metodo metodo){
         int offsetMaximo = 1;
         for(ClaseConcreta clase : metodo.getClasesQueDefinen()){
             if(clase.getOffsetActualVT() > offsetMaximo){
@@ -433,10 +445,10 @@ public class ClaseConcreta extends Clase{
             clase.offsetActualVT++;
         }
         for(String nombreInterfaz : listaInterfaces){
-            Interfaz interfaz = TablaDeSimbolos.getInterfaz(interfaz.getNombreClase());
-            if(interfaz.metodos.containsKey(metodo.getId().getLexema()){
-                if(interfaz.getOffsetMetodos() > offsetMaximo)
-                    offsetMaximo = interfaz.getOffserMetodos();
+            Interfaz interfaz = TablaDeSimbolos.getInterfaz(nombreInterfaz);
+            if(interfaz.metodos.containsKey(metodo.getId().getLexema())){
+                if(interfaz.getOffset() > offsetMaximo)
+                    offsetMaximo = interfaz.getOffset();
             }
         }
         metodo.insertOffsetEnClase(offsetMaximo);

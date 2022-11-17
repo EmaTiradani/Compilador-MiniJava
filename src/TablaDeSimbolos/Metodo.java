@@ -169,6 +169,15 @@ public class Metodo {
         return clasesQueDefinen;
     }
 
+    public int getOffsetConflictos(){// Recorre las clases en conflicto, y retorna mayor cantidad de metodos sin conflictos que haya en una clase
+        int offsetConflictos = 0;
+        for(ClaseConcreta clase : clasesQueDefinen){
+            if(clase.getCantMetodosSinConflictos()>offsetConflictos)
+                offsetConflictos = clase.getCantMetodosSinConflictos();
+        }
+        return offsetConflictos;
+    }
+
 
     public void checkSentencias() throws SemanticException {
         TablaDeSimbolos.metodoActual = this;
