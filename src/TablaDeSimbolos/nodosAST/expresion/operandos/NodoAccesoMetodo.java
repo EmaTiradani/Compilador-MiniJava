@@ -88,7 +88,7 @@ public class NodoAccesoMetodo extends NodoAcceso{
             }
             TablaDeSimbolos.gen("DUP ; Duplica el tope de la pila, porque LOADREF consume");
             TablaDeSimbolos.gen("LOADREF 0 ; Apila el valor de la VT");
-            TablaDeSimbolos.gen("LOADREF " +metodo.getOffsetEnClase()+ " ; Carga el metodo accediendo a la VT" );
+            TablaDeSimbolos.gen("LOADREF " +metodo.getOffsetEnClase()+ " ; Carga el metodo "+metodo.getId().getLexema()+" accediendo a la VT" );
             TablaDeSimbolos.gen("CALL");
         }
 

@@ -57,22 +57,19 @@ public class NodoReturn extends NodoSentencia {
     public void generar(){
         TablaDeSimbolos.gen("FMEM " + cantVariablesLocales + " ; Libera el espacio reservado para las variables locales");
         int offsetReturn = metodoContenedor.getArgumentos().size();
-        if(metodoContenedor.getEstatico()){
-            offsetReturn += 3; // ED, PR y la primer var
-        }else{
-            offsetReturn += 4; // Idem arriba pero con this
-        }
+        if(!metodoContenedor.getEstatico())
+            offsetReturn++; // Suma 1 por el this
+
         // TODO lo de aca arriba lo podria pasar a la clase Metodo creo
-        if(retorno == null){
-            if(metodoContenedor.getTipoRetorno().mismoTipo(new Tipo("void"))){
-                TablaDeSimbolos.gen("STOREFP ; Actualiza el FP para que apunte al RA del llamador");
-                TablaDeSimbolos.gen("RET " + offsetReturn + " ; Retorno del metodo");
-            }else{
-                retorno.generar();
-                TablaDeSimbolos.gen("STORE " + offsetReturn + " ; Guarda el valor de la expresion retorno en el espacio reservado para el return");
-                TablaDeSimbolos.gen("STOREFP ; Actualiza el FP para que apunte al RA del llamador");
-                TablaDeSimbolos.gen("RET "+ offsetReturn + " ; Retorno del metodo");
-            }
+
+        if(metodoContenedor.getTipoRetorno().mismoTipo(new Tipo("void"))){
+            TablaDeSimbolos.gen("STOREFP ; Actualiza el FP para que apunte al RA del llamador");
+            TablaDeSimbolos.gen("RET " + offsetReturn + " ; Retorno del metodo");
+        }else{
+            retorno.generar();
+            TablaDeSimbolos.gen("STORE " + offsetReturn + " ; Guarda el valor de la expresion retorno en el espacio reservado para el return");
+            TablaDeSimbolos.gen("STOREFP ; Actualiza el FP para que apunte al RA del llamador");
+            TablaDeSimbolos.gen("RET "+ offsetReturn + " ; Retorno del metodo");
         }
 
     }

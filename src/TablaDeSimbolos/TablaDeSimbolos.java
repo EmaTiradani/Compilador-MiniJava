@@ -157,6 +157,7 @@ public final class TablaDeSimbolos {
     private void crearClaseSystem() throws SemanticException {
         ClaseConcreta system = new ClaseConcreta(new Token(idClase, "System", 0));
         crearMetodosSystem(system);
+        system.generado = true;
         clases.put("System", system);
     }
 
@@ -170,6 +171,7 @@ public final class TablaDeSimbolos {
         debugPrint.insertClaseContenedora("Object");
         object.noTieneHerenciaCircular();
         object.consolidado = true;
+        object.generado = true;
         clases.put("Object", object);
     }
 
@@ -297,6 +299,21 @@ public final class TablaDeSimbolos {
         // System
 
         // Object
+        listaInstrucciones.add(".DATA");
+        listaInstrucciones.add("VT_Object: NOP");
+        listaInstrucciones.add("");
+        listaInstrucciones.add(".CODE");
+        listaInstrucciones.add("debugPrintObject:");
+        listaInstrucciones.add("LOADFP");
+        listaInstrucciones.add("LOADSP");
+        listaInstrucciones.add("STOREFP");
+        listaInstrucciones.add("LOAD 3 ; Carga el primer parametro");
+        listaInstrucciones.add("IPRINT");
+        listaInstrucciones.add("PRNLN");
+        listaInstrucciones.add("STOREFP");
+        listaInstrucciones.add("RET 1 ; Retorno de debug print");
+        listaInstrucciones.add("");
+        listaInstrucciones.add("");
 
     }
 

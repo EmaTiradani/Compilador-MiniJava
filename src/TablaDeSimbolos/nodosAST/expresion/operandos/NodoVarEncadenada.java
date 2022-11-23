@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class NodoVarEncadenada extends NodoEncadenado {
 
     public Token idVar;
+    public Atributo atributo;
 
 
     public NodoVarEncadenada(Token idVarEncadenada) {
@@ -28,7 +29,7 @@ public class NodoVarEncadenada extends NodoEncadenado {
         Tipo tipoAtributo;
         Clase claseContenedora = TablaDeSimbolos.getClase(tipoClase.getType());
         if(claseContenedora != null){
-            Atributo atributo = claseContenedora.getAtributo(idVar.getLexema());
+            atributo = claseContenedora.getAtributo(idVar.getLexema());
             if(atributo != null){
                 // DONE poner el chequeo de que el padre no tenga el atributo privado para poder acceder a mis privados que esta en NodoAccesoThis
                 if(atributo.getVisibilidad() == TokenId.kw_public || claseContenedora.getNombreClase().equals(TablaDeSimbolos.claseActual.getNombreClase())){
@@ -74,6 +75,18 @@ public class NodoVarEncadenada extends NodoEncadenado {
 
     @Override
     public void generar() {
+        if(!esLadoIzquierdo || nodoEncadenado != null){
+            TablaDeSimbolos.gen("LOADREF "+ atributo.getOffset() +" ; Apila el valor del atributo");
+        }else{
+            TablaDeSimbolos.gen("SWAP ; Apila el valor de la expresion a asignar, encima del CIR");
+            TablaDeSimbolos.gen("STOREREF "+atributo.getOffset()+" ; Guarda el valor de la expresion en el atributo"+atributo.getId());
+        }
+
+        if(nodoEncadenado != null){
+            if(this.esLadoIzquierdo)
+                nodoEncadenado.setLadoIzquierdoAsignacion();
+            nodoEncadenado.generar();
+        }
 
     }
 

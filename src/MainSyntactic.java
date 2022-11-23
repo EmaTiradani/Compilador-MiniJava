@@ -15,6 +15,7 @@ public class MainSyntactic {
     public static void main(String[] args){
 
         //String sourceCodeFile = args[0];
+        //String outputFileName = args[1];
 
         SyntacticParser syntacticParser = null;
 
@@ -27,14 +28,18 @@ public class MainSyntactic {
             AnalizadorLexico analizadorLexico = new AnalizadorLexico(fileManager);
             syntacticParser = new SyntacticParser(analizadorLexico);
             TablaDeSimbolos tablaDeSimbolos = new TablaDeSimbolos();
-            syntacticParser.startAnalysis(); // Primera pasada
-            // Segunda pasada
+
+            // Primera pasada sintactica
+            syntacticParser.startAnalysis();
+            // Segunda pasada sintactica
             TablaDeSimbolos.checkDec();
             TablaDeSimbolos.consolidar();
+
             // Chequeo de sentencias
             TablaDeSimbolos.checkSentencias();
 
-
+            // Generacion de codigo intermedio
+            //generate(outputFileName);
             generate(null);
 
             System.out.println("Compilacion exitosa\n\n[SinErrores]");
@@ -68,7 +73,7 @@ public class MainSyntactic {
             bufferedWriter = new BufferedWriter(writer);
             printWriter = new PrintWriter(bufferedWriter);
 
-            //writer.write("Hola");
+
 
             for(String instruction : TablaDeSimbolos.listaInstrucciones){
                 writer.write(instruction);

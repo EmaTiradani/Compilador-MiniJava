@@ -23,7 +23,6 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
         esLadoIzquierdo = false;
     }
 
-    @Override
     public Tipo chequear(Tipo tipoEncadenadoLadoIzq) throws SemanticException {
         Tipo tipoMetodo;
         Clase claseContenedora = TablaDeSimbolos.getClase(tipoEncadenadoLadoIzq.getType());
@@ -77,6 +76,8 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
     @Override
     public void generar() {
         if(metodo.getEstatico()){
+            // LO PRIMERO QUE HAGO ES UN POP Y DESPUES PREGUNTO SI TENGO VOID
+            TablaDeSimbolos.gen("POP ; Eliminamos el valor de la referencia, ya que es estatico y no sirve");
             if(!metodo.getTipoRetorno().mismoTipo(new Tipo("void")))
                 TablaDeSimbolos.gen("RMEM 1 ; Lugar para el retorno");
             for(NodoExpresion parametro : parametros){// TODO esto lo tendria que mandar al metodo estatico, no?
@@ -96,7 +97,8 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
             }
             TablaDeSimbolos.gen("DUP ; Duplica el tope de la pila, porque LOADREF consume");
             TablaDeSimbolos.gen("LOADREF 0 ; Apila el valor de la VT");
-            TablaDeSimbolos.gen("LOADREF " +metodo.getOffsetEnClase()+ " ; Carga el metodo accediendo a la VT" );
+            //TablaDeSimbolos.gen("LOADREF " +metodo.getClaseQueDefine().getMetodos().get(metodo.getId().getLexema()).get(0).getOffsetEnClase()+ " ; Carga el metodo "+idMet.getLexema()+" accediendo a la VT" );
+            TablaDeSimbolos.gen("LOADREF " +metodo.getOffsetEnClase()+ " ; Carga el metodo "+idMet.getLexema()+" accediendo a la VT" );
             TablaDeSimbolos.gen("CALL");
         }
 

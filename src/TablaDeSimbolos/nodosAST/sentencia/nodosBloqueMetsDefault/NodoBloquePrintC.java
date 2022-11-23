@@ -6,7 +6,15 @@ import TablaDeSimbolos.nodosAST.sentencia.NodoBloque;
 public class NodoBloquePrintC extends NodoBloque {
 
     public void generar(){
+
+        TablaDeSimbolos.gen("LOADFP");
+        TablaDeSimbolos.gen("LOADSP");
+        TablaDeSimbolos.gen("STOREFP");
+
         TablaDeSimbolos.gen("LOAD 3");
         TablaDeSimbolos.gen("CPRINT");
+
+        TablaDeSimbolos.gen("STOREFP");
+        TablaDeSimbolos.gen("RET " + 1 + " ; Retorno del metodo");
     }
 }

@@ -6,6 +6,7 @@ import lexycal.Token;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Metodo {
 
@@ -19,6 +20,7 @@ public class Metodo {
     protected int offsetParametros;
     protected ArrayList<Clase> clasesEnConflicto;
     private boolean conflictoSolucionado;
+    private ClaseConcreta claseQueDefine;
 
     public Metodo(Token idMet, TipoMetodo tipoRetorno, boolean estatico, ArrayList<Argumento> argumentos){
         this.idMet = idMet;
@@ -30,9 +32,11 @@ public class Metodo {
         else
             this.argumentos = argumentos;
 
-        offset = -1;
+        offset = 0;
         offsetParametros = 0;
         conflictoSolucionado = false;
+        clasesEnConflicto = new ArrayList<>();
+        claseQueDefine = TablaDeSimbolos.getClase(claseContenedora);
     }
 
     public Token getId(){
@@ -58,6 +62,7 @@ public class Metodo {
 
     public void insertClaseContenedora(String claseContenedora){
         this.claseContenedora = claseContenedora;
+        this.claseQueDefine = TablaDeSimbolos.getClase(claseContenedora);
     }
 
     public String getClaseContenedora(){
@@ -81,6 +86,7 @@ public class Metodo {
     }
 
     public int getOffsetEnClase(){
+        //return TablaDeSimbolos.getClase(claseContenedora).getMetodos().get(this.getId().getLexema()).get(0).getOffsetEnClase();
         return offset;
     }
 
@@ -171,8 +177,21 @@ public class Metodo {
         return estatico && idMet.getLexema().equals("main") && argumentos.size() == 0 && tipoRetorno.getType().equals("void");
     }
 
-    public void insertClaseQueDefine(Clase clase){
-        clasesEnConflicto.add(clase);
+    public void setClaseQueDefine(ClaseConcreta clase){
+        claseQueDefine = clase;
+    }
+
+    public ClaseConcreta getClaseQueDefine(){
+        return claseQueDefine;
+    }
+
+    public void insertClaseEnConflicto(Clase clase){
+        if(!clasesEnConflicto.contains(clase))
+            clasesEnConflicto.add(clase);
+    }
+
+    public void setClasesEnConflicto(ArrayList<Clase> clasesEnConflicto){
+        this.clasesEnConflicto = clasesEnConflicto;
     }
 
     public ArrayList<Clase> getClasesEnConflicto(){
@@ -185,7 +204,14 @@ public class Metodo {
             if(clase.getCantMetodosSinConflictos()>offsetConflictos)
                 offsetConflictos = clase.getCantMetodosSinConflictos();
         }
-        return offsetConflictos;
+        return offsetConflictos+1;
+    }
+
+    public void expandirOffset(int offset){
+        for(Clase clase : clasesEnConflicto){
+            Map<Integer, Metodo> map = clase.getMetodosDinamicos();
+            map.put(offset, clase.getMetodos().get(this.getId().getLexema()).get(0));
+        }
     }
 
 

@@ -83,7 +83,7 @@ public class NodoAccesoMetodoEstatico extends NodoAcceso{
 
     @Override
     public void generar() {
-        // TODO esto lo copie del AccesoMetodo comun, claramente va a dar true la condicion del if
+        // TODO esto lo saque del AccesoMetodo comun, claramente va a dar true la condicion del if
         if(metodo.getEstatico()){
             if(!metodo.getTipoRetorno().mismoTipo(new Tipo("void")))
                 TablaDeSimbolos.gen("RMEM 1 ; Lugar para el retorno");

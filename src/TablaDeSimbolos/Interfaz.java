@@ -21,6 +21,8 @@ public class Interfaz extends Clase{
 
     private boolean generado;
 
+    private Map<Integer, Metodo> mapeoMetodosDinamicos;
+
     //public int offsetActualVT;
 
 
@@ -29,6 +31,7 @@ public class Interfaz extends Clase{
         clasesQueExtiende = new ArrayList<>();
         listaInterfaces = new ArrayList<>();
         metodos = new HashMap<>();
+        mapeoMetodosDinamicos = new HashMap<>();
 
         consolidado = false;
         notHerenciaCircular = false;
@@ -45,6 +48,11 @@ public class Interfaz extends Clase{
     @Override
     public String getNombreClase() {
         return nombreInterface.getLexema();
+    }
+
+    @Override
+    public HashMap<String, ArrayList<Metodo>> getMetodos() {
+        return metodos;
     }
 
     public boolean herenciaCircular(){ return notHerenciaCircular;}
@@ -73,6 +81,21 @@ public class Interfaz extends Clase{
         return offsetActualVT;
     }
 
+    @Override
+    public Map<Integer, Metodo> getMetodosDinamicos() {
+        return mapeoMetodosDinamicos;
+    }
+
+
+    public void propagarConflicto(Metodo metodo, Clase clase) {
+        if(metodos.containsKey(metodo.getId().getLexema())) {
+            metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(clase);
+            for (String interfaceQueImplementa : listaInterfaces) {
+                TablaDeSimbolos.getInterfaz(interfaceQueImplementa).propagarConflicto(metodo, clase);
+            }
+        }
+    }
+
     public void insertarAtributo(Atributo atributo) throws SemanticException {
         // Aca no deberia entrar nunca
     }
@@ -96,6 +119,7 @@ public class Interfaz extends Clase{
                 ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
                 listaMetodos.add(metodo);
                 metodos.put(metodo.getId().getLexema(), listaMetodos);
+                //mapeoMetodosDinamicos.put(offsetActualVT, metodo);
             }
         }else{
             throw new SemanticException("Metodo estatico en una interfaz", metodo.getId());
@@ -202,7 +226,7 @@ public class Interfaz extends Clase{
                 metodos.get(metodo.getId().getLexema()).add(metodo);
                 if(!metodo.getEstatico()) {
                     metodo.insertOffsetEnClase(-1); // En caso de que haya un conflicto no le asigno ningun offset, lo hago despues de finalizar la consolidacion
-                    metodo.insertClaseQueDefine(this);
+                    metodo.insertClaseEnConflicto(this);
                 }
             }
         }else{
@@ -229,6 +253,10 @@ public class Interfaz extends Clase{
 
     public void insertarAncestro(Interfaz interfaz){
         listaInterfaces.add(interfaz.getNombreClase());
+    }
+
+    public ArrayList<Clase> getClasesEnConflicto(String nombreMetodo){
+        return metodos.get(nombreMetodo).get(0).getClasesEnConflicto();
     }
 
     public void generarOffsets(){
@@ -262,6 +290,7 @@ public class Interfaz extends Clase{
                 }
             }
         }
+        generado = true;
     }
 
     private void asignarOffsetMetodosEnConflicto(){

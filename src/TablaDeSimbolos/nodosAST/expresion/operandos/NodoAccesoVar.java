@@ -11,7 +11,7 @@ public class NodoAccesoVar extends NodoAcceso{
 
     Token idVar;
     private int offset;
-    private boolean esLadoIzqAsig;
+    //private boolean esLadoIzqAsig;
     private NodoVarLocal varLocal;
     private Argumento argumento;
     private Atributo atributo;
@@ -87,20 +87,21 @@ public class NodoAccesoVar extends NodoAcceso{
     public void generar() {
         // Hay que ver si es un Parametro formal (que yo le digo argumento porque soy un nabo), variable local o un atributo de clase y a partir de eso genero el codigo
         if(atributo != null) {
-            if (!esLadoIzqAsig || encadenado != null) {
+            TablaDeSimbolos.gen("LOAD 3; Apila this");
+            if (!esLadoIzquierdo || encadenado != null) {
                 TablaDeSimbolos.gen("LOADREF " + atributo.getOffset() + " ; Apila el valor de la variable local en el tope de la pila");
             } else {// Si es lado izquierdo o si tiene un encadenado tengo que poner la expresion en el tope de la pila
                 TablaDeSimbolos.gen("SWAP ; Pone el valor de la expresion en el tope de la pila");
                 TablaDeSimbolos.gen("STOREREF " + atributo.getOffset() + " ; Guarda el valor de la expresion en el atributo " + atributo.getId());
             }
         }else if(argumento != null){
-            if(!esLadoIzqAsig || encadenado != null){
+            if(!esLadoIzquierdo || encadenado != null){
                 TablaDeSimbolos.gen("LOAD " + argumento.getOffset() + " ; Apila al valor del parametro ");
             }else{
                 TablaDeSimbolos.gen("STORE " + argumento.getOffset() + " ; Guardo el valor de la expresion en el parametro");
             }
         }else{ // Si es una variable local
-            if(!esLadoIzqAsig || encadenado != null){
+            if(!esLadoIzquierdo || encadenado != null){
                 TablaDeSimbolos.gen("LOAD " + varLocal.getOffset() + " ; Apila al valor de la variable local " + varLocal.getNombre().getLexema());
             }else{
                 TablaDeSimbolos.gen("STORE " + varLocal.getOffset() + " ; Guardo el valor de la expresion en la variable local " + varLocal.getNombre().getLexema());

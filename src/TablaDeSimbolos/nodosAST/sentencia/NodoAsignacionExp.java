@@ -9,29 +9,29 @@ import lexycal.Token;
 public class NodoAsignacionExp extends NodoAsignacion{
 
     Token tipoAsignacion;
-    NodoAcceso nodoAcceso;
+    //NodoAcceso nodoAcceso;
     //NodoExpresion nodoExpresion;
 
     public NodoAsignacionExp(Token tipoAsignacion, NodoAcceso nodoAcceso) {
         this.tipoAsignacion = tipoAsignacion;
-        this.nodoAcceso = nodoAcceso;
+        this.ladoIzq = nodoAcceso;
         //this.nodoExpresion = nodoExpresion;
     }
 
     @Override
     public void chequear() throws SemanticException {
 
-        if (!nodoAcceso.esAsignable()) {
+        if (!ladoIzq.esAsignable()) {
             throw new SemanticException("Lado izquierdo incompatible, se esperaba una variable ",tipoAsignacion);
         }
 
-        Tipo tipoAcceso = nodoAcceso.chequear();
+        Tipo tipoAcceso = ladoIzq.chequear();
 
         if(!tipoAcceso.tipoCompatible(tipoAcceso)){
             throw new SemanticException(" la expresion no es de un tipo compatible", tipoAsignacion);
         }
 
-        if(!nodoAcceso.chequear().checkSubtipo(ladoDer.chequear())){
+        if(!ladoIzq.chequear().checkSubtipo(ladoDer.chequear())){
             throw new SemanticException(" La expresion no es de un tipo compatible", tipoAsignacion);
         }
 
@@ -40,8 +40,8 @@ public class NodoAsignacionExp extends NodoAsignacion{
     @Override
     public void generar() {
         ladoDer.generar();
-        nodoAcceso.esLadoIzquierdoAsignacion();
-        nodoAcceso.generar();
+        ladoIzq.setLadoIzquierdoAsignacion();
+        ladoIzq.generar();
     }
 
     public void setExpresion(NodoExpresion expresion){
@@ -57,11 +57,11 @@ public class NodoAsignacionExp extends NodoAsignacion{
     }
 
     public NodoAcceso getNodoAcceso() {
-        return nodoAcceso;
+        return ladoIzq;
     }
 
     public void setNodoAcceso(NodoAcceso nodoAcceso) {
-        this.nodoAcceso = nodoAcceso;
+        this.ladoIzq = nodoAcceso;
     }
 
 

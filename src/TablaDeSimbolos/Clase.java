@@ -7,6 +7,7 @@ import lexycal.Token;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Clase {
 
@@ -16,6 +17,7 @@ public abstract class Clase {
 
     public HashMap<String, Atributo> atributos;
     public HashMap<String, ArrayList<Metodo>> metodos;
+
 
     boolean consolidado;
     boolean notHerenciaCircular;
@@ -31,6 +33,8 @@ public abstract class Clase {
     public abstract Token getToken();
 
     public abstract String getNombreClase();
+
+    public abstract HashMap<String,ArrayList<Metodo>> getMetodos();
 
     public abstract void insertarAtributo(Atributo atributo)throws SemanticException;
 
@@ -72,5 +76,9 @@ public abstract class Clase {
 
     public abstract int getCantMetodosSinConflictos();
 
-    protected abstract int getOffsetActualVT();
+    public abstract int getOffsetActualVT();
+
+    public abstract Map<Integer, Metodo> getMetodosDinamicos();
+
+    public abstract void propagarConflicto(Metodo metodo, Clase clase);
 }
