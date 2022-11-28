@@ -19,6 +19,8 @@ public class ClaseConcreta extends Clase{
 
     private HashMap<String, Atributo> atributos;
     private HashMap<String, ArrayList<Metodo>> metodos;
+    private HashMap<String, ArrayList<Metodo>> metodosIniciales;
+
 
     boolean consolidado;
     boolean generado;
@@ -43,6 +45,7 @@ public class ClaseConcreta extends Clase{
         atributos = new HashMap<>();
         listaInterfaces = new ArrayList<>();
         metodos = new HashMap<>();
+        metodosIniciales = new HashMap<>();
         constructores = new ArrayList<>();
         mapeoMetodosDinamicos = new HashMap<>();
 
@@ -116,11 +119,13 @@ public class ClaseConcreta extends Clase{
             }
             if(puedeSerInsertado){
                 metodos.get(metodo.getId().getLexema()).add(metodo);
+                metodo.setClaseQueDefine(this);
             }
         }else{
             ArrayList<Metodo> listaMetodos = new ArrayList<Metodo>();
             listaMetodos.add(metodo);
             metodos.put(metodo.getId().getLexema(), listaMetodos);
+            metodo.setClaseQueDefine(this);
         }
         if(metodo.esMain() && metodo.getId().getLinea()>metodoMain.getId().getLinea())
             metodoMain = metodo;
@@ -181,7 +186,9 @@ public class ClaseConcreta extends Clase{
     public void consolidar() throws SemanticException {
         //offsetActualVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetActualVT();
         //offsetActualVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetFinal();
+
         if(!consolidado){
+            metodosIniciales = metodos; // Me guardo los metodos que define esta clase
             if(TablaDeSimbolos.getClase(nombreClasePadre).consolidado){
                 insertarMetodoYAtributosDePadre();
                 consolidado = true;
@@ -246,8 +253,6 @@ public class ClaseConcreta extends Clase{
             listaMetodos.add(metodo);
             metodos.put(metodo.getId().getLexema(), listaMetodos);
             if(!metodo.getEstatico()) {
-                //metodo.insertOffsetEnClase(offsetActualVT);
-                //mapeoMetodosDinamicos.put(offsetActualVT, metodo);
                 metodo.insertOffsetEnClase(-1); // En caso de que haya un conflicto no le asigno ningun offset, lo hago despues de finalizar la consolidacion
                 metodo.insertClaseEnConflicto(this);
                 metodo.insertClaseEnConflicto(TablaDeSimbolos.getClase(nombreClasePadre));
@@ -479,8 +484,7 @@ public class ClaseConcreta extends Clase{
                     if (metodo.getClaseContenedora().equals(this.nombreClase.getLexema())){
                         dataVT += metodo.getId().getLexema() + this.getNombreClase(); // Esto me va a generar nombreDeMetodoNombreDeClase, Ej.: m1A
                         metodos.get(metodo.getId().getLexema()).get(0).insertOffsetEnClase(i);
-                    }
-                    else{
+                    } else{
                         dataVT += metodo.getId().getLexema() + metodo.getClaseQueDefine().getNombreClase();
                         metodos.get(metodo.getId().getLexema()).get(0).insertOffsetEnClase(i);
                     }
@@ -495,15 +499,20 @@ public class ClaseConcreta extends Clase{
     }
 
     private void generarMetodos(){
-        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+        /*for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
             Metodo metodo = listaMetodos.getValue().get(0);
+            boolean metodoHeredado = (TablaDeSimbolos.getClase(nombreClasePadre).getMetodos().get(metodo.getId().getLexema()) != null);
 
-            if(!metodo.getId().getLexema().equals("debugPrint"))
+            if(!metodo.getId().getLexema().equals("debugPrint") && metodo.getClaseQueDefine().getNombreClase().equals(nombreClase.getLexema()))
+                metodo.generar();
+        }*/
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodosIniciales.entrySet()){
+            Metodo metodo = listaMetodos.getValue().get(0);
+            //boolean metodoHeredado = (TablaDeSimbolos.getClase(nombreClasePadre).getMetodos().get(metodo.getId().getLexema()) != null);
+
+            if(!metodo.getId().getLexema().equals("debugPrint")/* && metodo.getClaseQueDefine().getNombreClase().equals(nombreClase.getLexema())*/)
                 metodo.generar();
         }
-        /*if(checkMain()) {
-            metodoMain.generar();
-        }*/
         // Codigo para el constructor, cambiar en caso de hacer algun logro de constructores (no va a pasar jaja)
         constructores.get(0).generar();
     }
@@ -512,8 +521,10 @@ public class ClaseConcreta extends Clase{
         if(!nombreClasePadre.equals("Object"))// Si la clase padre es object, comienza en 1
             offsetCIR = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetCIR();
         for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
-            atributo.getValue().setOffset(offsetCIR);
-            offsetCIR++;
+            if(!TablaDeSimbolos.getClase(nombreClasePadre).getAtributos().containsValue(atributo.getValue())) {
+                atributo.getValue().setOffset(offsetCIR);
+                offsetCIR++;
+            }
         }
     }
 

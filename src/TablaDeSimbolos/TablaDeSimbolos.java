@@ -32,11 +32,13 @@ public final class TablaDeSimbolos {
         clases = new HashMap<String, ClaseConcreta>();
         interfaces = new HashMap<String, Interfaz>();
         pilaDeBloques = new ArrayList<>();
+        listaInstrucciones = new ArrayList<>();
+
         crearClaseObject();
         crearClaseSystem();
         crearClaseString();
 
-        listaInstrucciones = new ArrayList<>();
+
     }
 
     public static void insertClass(String name, ClaseConcreta clase) throws SemanticException {
@@ -157,7 +159,9 @@ public final class TablaDeSimbolos {
     private void crearClaseSystem() throws SemanticException {
         ClaseConcreta system = new ClaseConcreta(new Token(idClase, "System", 0));
         crearMetodosSystem(system);
-        system.generado = true;
+        system.consolidar();
+        //system.generar();
+        //system.generado = true;
         clases.put("System", system);
     }
 
@@ -313,6 +317,14 @@ public final class TablaDeSimbolos {
         listaInstrucciones.add("STOREFP");
         listaInstrucciones.add("RET 1 ; Retorno de debug print");
         listaInstrucciones.add("");
+        // Constructor de object
+        listaInstrucciones.add("Object:");
+        listaInstrucciones.add("LOADFP");
+        listaInstrucciones.add("LOADSP");
+        listaInstrucciones.add("STOREFP");
+        listaInstrucciones.add("FMEM 0");
+        listaInstrucciones.add("STOREFP");
+        listaInstrucciones.add("RET 1");
         listaInstrucciones.add("");
 
     }

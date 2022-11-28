@@ -59,7 +59,11 @@ public class NodoReturn extends NodoSentencia {
         int offsetReturn = metodoContenedor.getArgumentos().size();
         if(!metodoContenedor.getEstatico())
             offsetReturn++; // Suma 1 por el this
-
+        int offsetValorReturn = metodoContenedor.getArgumentos().size() +1;
+        if(metodoContenedor.getEstatico())
+            offsetValorReturn += 2;
+        else
+            offsetValorReturn += 3; // +3 por el this
         // TODO lo de aca arriba lo podria pasar a la clase Metodo creo
 
         if(metodoContenedor.getTipoRetorno().mismoTipo(new Tipo("void"))){
@@ -67,7 +71,7 @@ public class NodoReturn extends NodoSentencia {
             TablaDeSimbolos.gen("RET " + offsetReturn + " ; Retorno del metodo");
         }else{
             retorno.generar();
-            TablaDeSimbolos.gen("STORE " + offsetReturn + " ; Guarda el valor de la expresion retorno en el espacio reservado para el return");
+            TablaDeSimbolos.gen("STORE " + offsetValorReturn + " ; Guarda el valor de la expresion retorno en el espacio reservado para el return");
             TablaDeSimbolos.gen("STOREFP ; Actualiza el FP para que apunte al RA del llamador");
             TablaDeSimbolos.gen("RET "+ offsetReturn + " ; Retorno del metodo");
         }
