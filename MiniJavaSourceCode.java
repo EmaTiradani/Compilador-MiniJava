@@ -1,10 +1,14 @@
 class Init{
-    static void main()
-    {
-        System.printS("No_anda");
-        var x = 4;
-        x = 10;
-        debugPrint(x);
+    static void main() {
+        var a = 11;
+        if (a != 0) {
+            var b = 18;
+            var c = 15;
+            var d = 13;
+            System.printI(b);
+        }
+        else
+            System.printI(a);
     }
 }
 

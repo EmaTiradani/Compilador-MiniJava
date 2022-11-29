@@ -37,7 +37,8 @@ public class NodoAsignacionIncremento  extends NodoAsignacion{
     @Override
     public void generar() {
         ladoIzq.generar();
-        TablaDeSimbolos.gen("PUSH 1");
+        ladoDer.generar();
+        //TablaDeSimbolos.gen("PUSH 1");
         TablaDeSimbolos.gen("ADD ; realizamos la suma");
         ladoIzq.setLadoIzquierdoAsignacion();
         ladoIzq.generar();

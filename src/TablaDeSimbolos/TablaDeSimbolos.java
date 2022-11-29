@@ -27,12 +27,14 @@ public final class TablaDeSimbolos {
 
     public static ArrayList<String> listaInstrucciones;
     public static String stringInstrucciones;
+    public static int stringsCounter;
 
     public TablaDeSimbolos() throws SemanticException {
         clases = new HashMap<String, ClaseConcreta>();
         interfaces = new HashMap<String, Interfaz>();
         pilaDeBloques = new ArrayList<>();
         listaInstrucciones = new ArrayList<>();
+        stringsCounter = 1;
 
         crearClaseObject();
         crearClaseSystem();

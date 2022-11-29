@@ -39,9 +39,14 @@ public class NodoString extends NodoOperando {
         int offset = getOffset();
         TablaDeSimbolos.gen(".DATA"); // Es necesario este .data?
         String lexemaSinComillas = sacarComillasInicioFinLexema(stringLit.getLexema());
-        TablaDeSimbolos.gen("litString_"+offset+lexemaSinComillas+": DW \""+lexemaSinComillas+"\",0");
+        /*TablaDeSimbolos.gen("litString_"+offset+lexemaSinComillas+": DW \""+lexemaSinComillas+"\",0");
         TablaDeSimbolos.gen(".CODE");
-        TablaDeSimbolos.gen("PUSH litstring_"+offset+lexemaSinComillas);
+        TablaDeSimbolos.gen("PUSH litstring_"+offset+lexemaSinComillas);*/
+        TablaDeSimbolos.gen("string_" + TablaDeSimbolos.stringsCounter + ": DW \""+lexemaSinComillas+"\",0");
+        TablaDeSimbolos.gen(".CODE");
+        TablaDeSimbolos.gen("PUSH string_"+TablaDeSimbolos.stringsCounter);
+        TablaDeSimbolos.stringsCounter++;
+
     }
 
     private String sacarComillasInicioFinLexema(String lex){

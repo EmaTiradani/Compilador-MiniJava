@@ -15,7 +15,7 @@ class A {
         var booleano = true;
 
         booleano = false;
-        System.printBln(booleno);
+        System.printBln(booleano);
         entero = 2022;
         System.printIln(entero);
         entero += 1;

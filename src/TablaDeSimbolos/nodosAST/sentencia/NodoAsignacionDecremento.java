@@ -10,21 +10,21 @@ import lexycal.Token;
 public class NodoAsignacionDecremento extends NodoAsignacion{
 
     Token tipoAsignacion;
-    NodoAcceso nodoAcceso;
+    //NodoAcceso nodoAcceso;
 
     public NodoAsignacionDecremento(Token tipoAsignacion, NodoAcceso nodoAcceso) {
         this.tipoAsignacion = tipoAsignacion;
-        this.nodoAcceso = nodoAcceso;
+        this.ladoIzq = nodoAcceso;
     }
 
     @Override
     public void chequear() throws SemanticException {
-        Tipo tipoAcceso = nodoAcceso.chequear();
+        Tipo tipoAcceso = ladoIzq.chequear();
 
         if(!tipoAcceso.mismoTipo(new Tipo("int"))){
             throw new SemanticException(" se esperaba un entero", tipoAsignacion);
         }
-        if (!nodoAcceso.esAsignable()) {
+        if (!ladoIzq.esAsignable()) {
             throw new SemanticException("Lado izquierdo incompatible, se esperaba una variable ",tipoAsignacion);
         }
 
@@ -36,8 +36,14 @@ public class NodoAsignacionDecremento extends NodoAsignacion{
 
     @Override
     public void generar() {
-        ladoIzq.generar();
+        /*ladoIzq.generar();
         TablaDeSimbolos.gen("PUSH 1");
+        TablaDeSimbolos.gen("SUB ; realizamos la resta");
+        ladoIzq.setLadoIzquierdoAsignacion();
+        ladoIzq.generar();*/
+        ladoIzq.generar();
+        ladoDer.generar();
+        //TablaDeSimbolos.gen("PUSH 1");
         TablaDeSimbolos.gen("SUB ; realizamos la resta");
         ladoIzq.setLadoIzquierdoAsignacion();
         ladoIzq.generar();
@@ -53,10 +59,10 @@ public class NodoAsignacionDecremento extends NodoAsignacion{
     }
 
     public NodoAcceso getNodoAcceso() {
-        return nodoAcceso;
+        return ladoIzq;
     }
 
     public void setNodoAcceso(NodoAcceso nodoAcceso) {
-        this.nodoAcceso = nodoAcceso;
+        this.ladoIzq = nodoAcceso;
     }
 }
