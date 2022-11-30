@@ -59,12 +59,7 @@ public final class TablaDeSimbolos {
         }
     }
 
-    public static NodoBloque getBloqueActual(){
-        if(pilaDeBloques.size() == 0)
-            return null;
-        else
-            return pilaDeBloques.get(0); //Retorno el ultimo bloque agregado, asi funciona como una pila la lista
-    }
+
 
     public static ClaseConcreta getClase(String name){
         return clases.get(name);
@@ -260,6 +255,13 @@ public final class TablaDeSimbolos {
 
     public static void desapilarBloqueActual(){
         pilaDeBloques.remove(0); // Como un pop
+    }
+
+    public static NodoBloque getBloqueActual(){
+        if(pilaDeBloques.size() == 0)
+            return null;
+        else
+            return pilaDeBloques.get(0); //Retorno el ultimo bloque agregado, asi funciona como una pila la lista
     }
 
     public static NodoVarLocal getVarLocalClaseActual(String idVar){

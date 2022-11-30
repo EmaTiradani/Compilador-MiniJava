@@ -8,6 +8,7 @@ class A {
 
         var a = new A();
         a.met();
+        System.printB(buleano);
 
     }
 

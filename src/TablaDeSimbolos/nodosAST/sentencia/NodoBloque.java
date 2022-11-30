@@ -34,6 +34,10 @@ public class NodoBloque extends NodoSentencia{
         this.sentencias = sentencias;
     }
 
+    public void setOffsetVarsLocales(int offsetVarsLocales){
+        this.offsetVarsLocales = offsetVarsLocales;
+    }
+
     public Map<String, NodoVarLocal> getVariablesLocales() {
         return variablesLocales;
     }
@@ -89,7 +93,7 @@ public class NodoBloque extends NodoSentencia{
         generado = true;
     }
 
-    private void setOffsetInicialVarsLocales(){
+    public void setOffsetInicialVarsLocales(){
         if(TablaDeSimbolos.getBloqueActual() == null){
             offsetVarsLocales = 0;
         }else{

@@ -54,6 +54,7 @@ public class NodoIf extends NodoSentencia {
 
             // Meto un bloque artificial del if para tener el scope aca, sino se va a agregar en el bloque que contiene al if
             NodoBloque bloqueIf = new NodoBloque();
+            bloqueIf.setOffsetInicialVarsLocales();
             TablaDeSimbolos.apilarBloque(bloqueIf);
 
             sentenciaIf.chequear();

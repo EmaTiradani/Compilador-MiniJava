@@ -4,6 +4,7 @@ import TablaDeSimbolos.nodosAST.expresion.NodoExpresion;
 import exceptions.SemanticException;
 import lexycal.Token;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -188,7 +189,8 @@ public class ClaseConcreta extends Clase{
         //offsetActualVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetFinal();
 
         if(!consolidado){
-            metodosIniciales = metodos; // Me guardo los metodos que define esta clase
+            guardarMetodosIniciales();// Me guardo los metodos que define esta clase
+            //metodosIniciales = metodos;
             if(TablaDeSimbolos.getClase(nombreClasePadre).consolidado){
                 insertarMetodoYAtributosDePadre();
                 consolidado = true;
@@ -203,6 +205,15 @@ public class ClaseConcreta extends Clase{
             calculateMetodosSinConflictos();
         }
 
+    }
+
+    private void guardarMetodosIniciales(){
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            Metodo metodo = listaMetodos.getValue().get(0);
+            ArrayList<Metodo> metodosConElMismoNombre = new ArrayList<Metodo>();
+            metodosConElMismoNombre.add(metodo);
+            metodosIniciales.put(metodo.getId().getLexema(), metodosConElMismoNombre);
+        }
     }
 
     private void insertarMetodoYAtributosDePadre() throws SemanticException {
