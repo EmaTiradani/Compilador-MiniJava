@@ -94,8 +94,12 @@ public class Metodo {
         return conflictoSolucionado;
     }
 
-    public void setConflictoSolucionado(){
+    public void setConflictoSolucionado(Clase claseSolucionado){
         conflictoSolucionado = true;
+        for(Clase clase : clasesEnConflicto){
+            if(clase != claseSolucionado)
+                clase.conflictoSolucionado();
+        }
     }
 
     public void checkDec() throws SemanticException {
@@ -211,6 +215,8 @@ public class Metodo {
         for(Clase clase : clasesEnConflicto){
             Map<Integer, Metodo> map = clase.getMetodosDinamicos();
             map.put(offset, clase.getMetodos().get(this.getId().getLexema()).get(0));
+            clase.getMetodos().get(idMet.getLexema()).get(0).insertOffsetEnClase(offset);
+            clase.offsetInicialConflictos++;
         }
     }
 

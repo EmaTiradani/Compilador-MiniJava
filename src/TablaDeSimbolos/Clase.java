@@ -18,6 +18,8 @@ public abstract class Clase {
     public HashMap<String, Atributo> atributos;
     public HashMap<String, ArrayList<Metodo>> metodos;
 
+    protected int offsetInicialConflictos;
+
 
     boolean consolidado;
     boolean notHerenciaCircular;
@@ -28,6 +30,7 @@ public abstract class Clase {
         atributos = new HashMap<>();
         metodos = new HashMap<>();
         listaInterfaces = new ArrayList<>();
+        offsetInicialConflictos = 0;
     }
 
     public abstract Token getToken();
@@ -81,4 +84,8 @@ public abstract class Clase {
     public abstract Map<Integer, Metodo> getMetodosDinamicos();
 
     public abstract void propagarConflicto(Metodo metodo, Clase clase);
+
+    public void conflictoSolucionado(){
+        offsetInicialConflictos++;
+    }
 }

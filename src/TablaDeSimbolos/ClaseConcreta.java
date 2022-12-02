@@ -23,6 +23,8 @@ public class ClaseConcreta extends Clase{
     private HashMap<String, ArrayList<Metodo>> metodosIniciales;
 
 
+
+
     boolean consolidado;
     boolean generado;
     boolean notHerenciaCircular;
@@ -62,6 +64,7 @@ public class ClaseConcreta extends Clase{
         offsetCIR = 1;
         offsetActualVT = 1;
         cantMetodosSinConflictos = 0;
+        offsetInicialConflictos = 0;
 
     }
 
@@ -270,15 +273,11 @@ public class ClaseConcreta extends Clase{
                 metodos.get(metodo.getId().getLexema()).get(0).insertOffsetEnClase(-1);
                 metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(this);
                 metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(TablaDeSimbolos.getClase(nombreClasePadre));
-                //metodos.get(metodo.getId().getLexema()).get(0).setClaseQueDefine(this);
                 metodo.insertClaseEnConflicto(this);
                 TablaDeSimbolos.getClase(nombreClasePadre).propagarConflicto(metodo, this);
-                //cantMetodosSinConflictos++;
-                //offsetActualVT++;
+
             }
         }
-        /*if(metodo.esMain() && metodo.getId().getLinea()>metodoMain.getId().getLinea())
-            metodoMain = metodo;*/
     }
 
     public void propagarConflicto(Metodo metodo, Clase clase){
@@ -387,6 +386,12 @@ public class ClaseConcreta extends Clase{
                 metodo.insertClaseEnConflicto(this);
                 metodo.setClaseQueDefine(this);
                 metodos.get(metodo.getId().getLexema()).get(0).setClaseQueDefine(this);
+                // Tambien seteo esto para el metodo que esta implementado en esta clase
+                Metodo metodoImplementado = metodos.get(metodo.getId().getLexema()).get(0);
+                metodoImplementado.insertOffsetEnClase(-1);
+                metodoImplementado.insertClaseEnConflicto(interfaz);
+                metodoImplementado.insertClaseEnConflicto(this);
+                metodoImplementado.setClaseQueDefine(this);
 
             }
         }
@@ -544,22 +549,34 @@ public class ClaseConcreta extends Clase{
         traerMayorConjuntoClasesEnConflicto();// agarrar el metodo con mayor cant de clases en conflicto
         int conflictosSolucionados = 0;
 
+
         for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
             Metodo metodo = listaMetodos.getValue().get(0);
 
             // -1 porque significa que es un metodo con conflictos
             if(!metodo.getEstatico() && metodo.getOffsetEnClase() == -1){
-                metodo.setConflictoSolucionado();
                 int offsetConflictos = metodo.getOffsetConflictos();
-                if(offsetConflictos > offsetFinalVT)
-                    offsetFinalVT = offsetConflictos;
-                metodo.insertOffsetEnClase(offsetConflictos+conflictosSolucionados);
-                metodo.expandirOffset(offsetConflictos+conflictosSolucionados);
-                mapeoMetodosDinamicos.put(offsetConflictos+conflictosSolucionados, metodo);
+                if(offsetConflictos > offsetInicialConflictos)
+                    offsetInicialConflictos = offsetConflictos;
+            }
+        }
+
+        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
+            Metodo metodo = listaMetodos.getValue().get(0);
+
+            // -1 porque significa que es un metodo con conflictos
+            if(!metodo.getEstatico() && metodo.getOffsetEnClase() == -1){
+                metodo.setConflictoSolucionado(this);
+                //int offsetConflictos = metodo.getOffsetConflictos();
+                /*if(offsetConflictos > offsetFinalVT)
+                    offsetFinalVT = offsetConflictos;*/
+                metodo.insertOffsetEnClase(offsetInicialConflictos+conflictosSolucionados);
+                metodo.expandirOffset(offsetInicialConflictos+conflictosSolucionados);
+                mapeoMetodosDinamicos.put(offsetInicialConflictos+conflictosSolucionados, metodo);
                 conflictosSolucionados++;
             }
         }
-        offsetFinalVT += conflictosSolucionados;
+        offsetFinalVT += (offsetInicialConflictos+conflictosSolucionados);
     }
 
     private void traerMayorConjuntoClasesEnConflicto(){

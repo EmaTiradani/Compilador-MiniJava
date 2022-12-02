@@ -1,6 +1,6 @@
 class Init{
     static void main()
     {
-        System.printS("No anda");
+        System.printS("Si anda");
     }
 }

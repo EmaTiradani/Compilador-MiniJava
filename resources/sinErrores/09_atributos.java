@@ -8,7 +8,9 @@ class A {
 
         var a = new A();
         a.met();
-        System.printB(buleano);
+        System.printB(a.buleano);
+        a.met2();
+        System.printB(a.buleano);
 
     }
 
@@ -22,6 +24,10 @@ class A {
             b.atributo = new C();
             b.atributo.numero = num;
         }
+    }
+
+    void met2(){
+        buleano = false;
     }
 
 }

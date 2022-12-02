@@ -1,45 +1,42 @@
-class A {
+class Init {
 
-    public boolean buleano;
-    public int num;
-    public B b;
-
-    static void main() {
-
-        var a = new A();
-        a.met();
-        System.printB(a.buleano);
-        a.met2();
-        System.printB(a.buleano);
-
+    static void main(){
+        new B().met();
     }
+}
 
-    void met(){
-        var b = new B();
+class A{
 
-        buleano = true;
-        num = 5;
+    public int a1;
+    public int a2;
+    public int a3;
+    public int a4;
+    public int a5;
+    public int a6;
 
-        if(buleano){
-            b.atributo = new C();
-            b.atributo.numero = num;
-        }
-    }
-
-    void met2(){
-        buleano = false;
-    }
 
 }
 
-class B {
+class B extends A{
 
-    public C atributo;
+    public int a7;
 
-}
-
-class C {
-
-    public int numero;
-
+    void met() {
+        var v1 = 7;
+        var v2 = 8;
+        a1 = 1;
+        a2 = 2;
+        a3 = 3;
+        a4 = 4;
+        a5 = 5;
+        a6 = v2;
+        a7 = v1;
+        System.printIln(a1);
+        System.printIln(a2);
+        System.printIln(a3);
+        System.printIln(a4);
+        System.printIln(a5);
+        System.printIln(a6);
+        System.printIln(a7);
+    }
 }
