@@ -10,7 +10,6 @@ import lexycal.Token;
 public class NodoAsignacionIncremento  extends NodoAsignacion{
 
     Token tipoAsignacion;
-    //NodoAcceso nodoAcceso;
 
     public NodoAsignacionIncremento(Token tipoAsignacion, NodoAcceso nodoAcceso) {
         this.tipoAsignacion = tipoAsignacion;
@@ -38,7 +37,6 @@ public class NodoAsignacionIncremento  extends NodoAsignacion{
     public void generar() {
         ladoIzq.generar();
         ladoDer.generar();
-        //TablaDeSimbolos.gen("PUSH 1");
         TablaDeSimbolos.gen("ADD ; realizamos la suma");
         ladoIzq.setLadoIzquierdoAsignacion();
         ladoIzq.generar();

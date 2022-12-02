@@ -29,7 +29,6 @@ public class NodoVarLocal extends NodoSentencia {
 
     @Override
     public void chequear() throws SemanticException {
-        //tipo.checkExistencia(nombre.getLinea()); // TODO preguntar que onda con los tipos
 
         TablaDeSimbolos.getBloqueActual().insertarVariableLocal(this);// Lanza error si ya hay otra variable con este mismo nombre
 

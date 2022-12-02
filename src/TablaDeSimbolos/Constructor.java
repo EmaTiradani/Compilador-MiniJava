@@ -30,11 +30,6 @@ public class Constructor extends Metodo{
         return argumentos;
     }
 
-    /*public Token getToken(){
-        return token;
-    }*/
-
-
     public void checkDec() throws SemanticException {
         for(Argumento arg : argumentos){
             arg.checkDec();

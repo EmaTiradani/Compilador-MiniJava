@@ -11,7 +11,6 @@ public class NodoBloquePrintCln extends NodoBloque {
         TablaDeSimbolos.gen("CPRINT");
         TablaDeSimbolos.gen("PRNLN");
 
-/*        TablaDeSimbolos.gen("STOREFP");
-        TablaDeSimbolos.gen("RET " + 1 + " ; Retorno del metodo");*/
+
     }
 }

@@ -57,8 +57,6 @@ public class NodoBloque extends NodoSentencia{
             throw new SemanticException(" Ya habia una variable local con este identificador", variableLocal.getNombre());
         }
 
-        //offsetVarsLocales = variablesLocales.size();
-
         variableLocal.setOffset(offsetVarsLocales--);
         this.variablesLocales.put(variableLocal.getNombre().getLexema(), variableLocal);
     }

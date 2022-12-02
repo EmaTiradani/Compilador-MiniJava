@@ -50,6 +50,7 @@ public class NodoWhile extends NodoSentencia{
 
             // Lo de los bloques es lo mismo que lo del if
             NodoBloque bloqueWhile = new NodoBloque();
+            bloqueWhile.setOffsetInicialVarsLocales();
             TablaDeSimbolos.apilarBloque(bloqueWhile);
 
             sentencia.chequear();

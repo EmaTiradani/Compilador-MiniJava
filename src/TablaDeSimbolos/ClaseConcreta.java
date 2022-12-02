@@ -22,9 +22,6 @@ public class ClaseConcreta extends Clase{
     private HashMap<String, ArrayList<Metodo>> metodos;
     private HashMap<String, ArrayList<Metodo>> metodosIniciales;
 
-
-
-
     boolean consolidado;
     boolean generado;
     boolean notHerenciaCircular;
@@ -32,8 +29,6 @@ public class ClaseConcreta extends Clase{
     private Metodo metodoMain;
 
     ArrayList<Constructor> constructores;
-
-    //private int offsetActualVT; // Offset para insertar metodos sin conflictos
 
     // Numero del ultimo offset, ya que algunos quedaran en 0, sirve para cuando se necesite saber el offset final del padre para armar el offset de una clase hija
     private int offsetFinalVT;
@@ -188,12 +183,10 @@ public class ClaseConcreta extends Clase{
     }
 
     public void consolidar() throws SemanticException {
-        //offsetActualVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetActualVT();
-        //offsetActualVT = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetFinal();
 
         if(!consolidado){
             guardarMetodosIniciales();// Me guardo los metodos que define esta clase
-            //metodosIniciales = metodos;
+
             if(TablaDeSimbolos.getClase(nombreClasePadre).consolidado){
                 insertarMetodoYAtributosDePadre();
                 consolidado = true;
@@ -228,8 +221,6 @@ public class ClaseConcreta extends Clase{
                 insertarMetodoPadre(metodo);
             }
         }
-        /*// Primero le pongo los offsets a los metodos que ya tiene esta clase
-        insertarOffsetMetodos();*/
         // Inserto los atributos del padre
         HashMap<String,Atributo> atributosClasePadre = TablaDeSimbolos.getClase(nombreClasePadre).getAtributos();
         for(Map.Entry<String, Atributo> atributo : atributosClasePadre.entrySet()){
@@ -567,9 +558,6 @@ public class ClaseConcreta extends Clase{
             // -1 porque significa que es un metodo con conflictos
             if(!metodo.getEstatico() && metodo.getOffsetEnClase() == -1){
                 metodo.setConflictoSolucionado(this);
-                //int offsetConflictos = metodo.getOffsetConflictos();
-                /*if(offsetConflictos > offsetFinalVT)
-                    offsetFinalVT = offsetConflictos;*/
                 metodo.insertOffsetEnClase(offsetInicialConflictos+conflictosSolucionados);
                 metodo.expandirOffset(offsetInicialConflictos+conflictosSolucionados);
                 mapeoMetodosDinamicos.put(offsetInicialConflictos+conflictosSolucionados, metodo);

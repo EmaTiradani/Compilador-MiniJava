@@ -7,7 +7,7 @@ public class NodoBloqueRead extends NodoBloque {
 
     public void generar(){
         TablaDeSimbolos.gen("LOAD 3");
-        TablaDeSimbolos.gen("READ"); //TODO anda?
+        TablaDeSimbolos.gen("READ"); //TODO xq no anda?
 
     }
 }

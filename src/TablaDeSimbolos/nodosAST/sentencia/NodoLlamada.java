@@ -30,7 +30,6 @@ public class NodoLlamada extends NodoSentencia{
     public void generar() {
         acceso.generar();
 
-        //TODO preguntar, que pasa si el acceso retorna void?
         if(!tipoLlamada.mismoTipo(new Tipo("void"))){
             //Hago un pop de la ultima instruccion si no se guarda en ningun lado, sino explota el stack
             TablaDeSimbolos.gen("POP");

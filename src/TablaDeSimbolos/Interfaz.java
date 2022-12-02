@@ -170,29 +170,12 @@ public class Interfaz extends Clase{
         }
     }
 
-    /*private void setOffsetDeAncestros(){
-        int offsetDeLosAncestros = 0;
-        for(String interfaceAncestra : listaInterfaces) {
-            Interfaz ancestro = TablaDeSimbolos.getInterfaz(interfaceAncestra);
-            if(ancestro.consolidado){
-                offset = ancestro.getOffset();
-                consolidado = true;
-            }else{
-                ancestro.consolidar();
-                importarMetodosDePadre(ancestro);
-                consolidado = true;
-            }
-        }
-        this.offset = offsetDeLosAncestros;
-    }*/
-
     public void consolidar() throws SemanticException {
         //offsetActualVT = maxOffsetFinalPadres
         for(String interfaceAncestra : listaInterfaces) {
             Interfaz ancestro = TablaDeSimbolos.getInterfaz(interfaceAncestra);
             ancestro.checkExtends();
             if(ancestro.consolidado){
-                //offset = ancestro.getOffset();
                 importarMetodosDePadre(ancestro);
                 consolidado = true;
             }else{
@@ -314,28 +297,13 @@ public class Interfaz extends Clase{
             // -1 porque significa que es un metodo con conflictos
             if(!metodo.getEstatico() && metodo.getOffsetEnClase() == -1){
                 metodo.setConflictoSolucionado(this);
-                //int offsetConflictos = metodo.getOffsetConflictos();
-                /*if(offsetConflictos > offsetFinalVT)
-                    offsetFinalVT = offsetConflictos;*/
                 metodo.insertOffsetEnClase(offsetInicialConflictos+conflictosSolucionados);
                 metodo.expandirOffset(offsetInicialConflictos+conflictosSolucionados);
                 mapeoMetodosDinamicos.put(offsetInicialConflictos+conflictosSolucionados, metodo);
                 conflictosSolucionados++;
             }
         }
-        //offsetFinalVT += (offsetInicialConflictos+conflictosSolucionados);
 
-        /*for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
-            for(Metodo metodo : listaMetodos.getValue()){
-                if(!metodo.getEstatico() && metodo.getOffsetEnClase() == -1){
-                    metodo.setConflictoSolucionado(this);
-                    int offsetConflictos = metodo.getOffsetConflictos();
-                    if(offsetConflictos > offsetFinal)
-                        offsetFinal = offsetConflictos;
-                    metodo.insertOffsetEnClase(offsetConflictos);
-                }
-            }
-        }*/
     }
 
     private void traerMayorConjuntoClasesEnConflicto(){

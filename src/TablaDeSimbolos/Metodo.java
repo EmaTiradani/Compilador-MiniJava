@@ -86,7 +86,6 @@ public class Metodo {
     }
 
     public int getOffsetEnClase(){
-        //return TablaDeSimbolos.getClase(claseContenedora).getMetodos().get(this.getId().getLexema()).get(0).getOffsetEnClase();
         return offset;
     }
 

@@ -10,7 +10,5 @@ public class NodoBloquePrintI extends NodoBloque {
         TablaDeSimbolos.gen("LOAD 3");
         TablaDeSimbolos.gen("IPRINT");
 
-/*        TablaDeSimbolos.gen("STOREFP");
-        TablaDeSimbolos.gen("RET " + 1 + " ; Retorno del metodo");*/
     }
 }

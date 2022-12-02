@@ -9,13 +9,11 @@ import lexycal.Token;
 public class NodoAsignacionExp extends NodoAsignacion{
 
     Token tipoAsignacion;
-    //NodoAcceso nodoAcceso;
-    //NodoExpresion nodoExpresion;
 
     public NodoAsignacionExp(Token tipoAsignacion, NodoAcceso nodoAcceso) {
         this.tipoAsignacion = tipoAsignacion;
         this.ladoIzq = nodoAcceso;
-        //this.nodoExpresion = nodoExpresion;
+
     }
 
     @Override
