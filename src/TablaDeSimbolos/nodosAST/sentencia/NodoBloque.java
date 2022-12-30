@@ -46,7 +46,6 @@ public class NodoBloque extends NodoSentencia{
         return variablesLocales.get(idVar);
     }
 
-    //DONE realizar el chequeo a ver si ya tengo una
     public void insertarVariableLocal(NodoVarLocal variableLocal) throws SemanticException {
         // Chequeo que no haya otra var con ese id
         if(TablaDeSimbolos.metodoActual.getArgumento(variableLocal.getNombre().getLexema()) != null){

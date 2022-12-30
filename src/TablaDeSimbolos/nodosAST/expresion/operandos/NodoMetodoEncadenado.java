@@ -86,7 +86,6 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
             TablaDeSimbolos.gen("PUSH "+metodo.getId().getLexema()+metodo.getClaseContenedora());
             TablaDeSimbolos.gen("CALL");
         }else{// Si el metodo es dinamico
-            //TablaDeSimbolos.gen("LOAD 3 ; Carga el This");
             if(!metodo.getTipoRetorno().mismoTipo(new Tipo("void"))){
                 TablaDeSimbolos.gen("RMEM 1 ; Lugar para el retorno");
                 TablaDeSimbolos.gen("SWAP ; Pone el This en el tope de la pila");
@@ -97,7 +96,6 @@ public class NodoMetodoEncadenado extends NodoEncadenado {
             }
             TablaDeSimbolos.gen("DUP ; Duplica el tope de la pila, porque LOADREF consume");
             TablaDeSimbolos.gen("LOADREF 0 ; Apila el valor de la VT");
-            //TablaDeSimbolos.gen("LOADREF " +metodo.getClaseQueDefine().getMetodos().get(metodo.getId().getLexema()).get(0).getOffsetEnClase()+ " ; Carga el metodo "+idMet.getLexema()+" accediendo a la VT" );
             TablaDeSimbolos.gen("LOADREF " +metodo.getOffsetEnClase()+ " ; Carga el metodo "+idMet.getLexema()+" accediendo a la VT" );
             TablaDeSimbolos.gen("CALL");
         }
