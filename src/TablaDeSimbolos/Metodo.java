@@ -32,7 +32,7 @@ public class Metodo {
         else
             this.argumentos = argumentos;
 
-        offset = 0;
+        offset = -1; // Esto indica que el metodo aun no tiene un offset asignado
         offsetParametros = 0;
         conflictoSolucionado = false;
         clasesEnConflicto = new ArrayList<>();
@@ -210,14 +210,14 @@ public class Metodo {
         return offsetConflictos+1;
     }
 
-    public void expandirOffset(int offset){
+    /*public void expandirOffset(int offset){
         for(Clase clase : clasesEnConflicto){
             Map<Integer, Metodo> map = clase.getMetodosDinamicos();
             map.put(offset, clase.getMetodos().get(this.getId().getLexema()).get(0));
             clase.getMetodos().get(idMet.getLexema()).get(0).insertOffsetEnClase(offset);
             clase.offsetInicialConflictos++;
         }
-    }
+    }*/
 
 
     public void checkSentencias() throws SemanticException {

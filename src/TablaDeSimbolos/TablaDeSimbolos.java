@@ -6,6 +6,8 @@ import TablaDeSimbolos.nodosAST.sentencia.NodoVarLocal;
 import TablaDeSimbolos.nodosAST.sentencia.nodosBloqueMetsDefault.*;
 import exceptions.SemanticException;
 import lexycal.Token;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,17 +31,22 @@ public final class TablaDeSimbolos {
     public static String stringInstrucciones;
     public static int stringsCounter;
 
+    // V2 A partir de aca la idea de una lista de metodos global
+    public static Map<String, ArrayList<Clase>> methods;
+    public static int conflictingMethodsOffset;
+
     public TablaDeSimbolos() throws SemanticException {
         clases = new HashMap<String, ClaseConcreta>();
         interfaces = new HashMap<String, Interfaz>();
         pilaDeBloques = new ArrayList<>();
         listaInstrucciones = new ArrayList<>();
+        methods = new HashMap<>();
         stringsCounter = 1;
+        conflictingMethodsOffset = 0;
 
         crearClaseObject();
         crearClaseSystem();
         crearClaseString();
-
 
     }
 
@@ -59,8 +66,6 @@ public final class TablaDeSimbolos {
         }
     }
 
-
-
     public static ClaseConcreta getClase(String name){
         return clases.get(name);
     }
@@ -76,8 +81,6 @@ public final class TablaDeSimbolos {
     public static boolean existeInterfaz(String nombreClase){
         return interfaces.containsKey(nombreClase);
     }
-
-
 
     public static void checkDec() throws SemanticException {
         boolean hayMain = false;
@@ -121,7 +124,6 @@ public final class TablaDeSimbolos {
             }
         }
     }
-
 
     private void insertarMetodosYAtributosDeAncestros(ClaseConcreta clase) throws SemanticException {
         if(clase.getNombreClasePadre().equals("Object")){
@@ -278,6 +280,60 @@ public final class TablaDeSimbolos {
         generarInicial();
         for(ClaseConcreta clase : clases.values()){
             clase.generar();
+        }
+        //generateMethodsOffsets();
+        setConflictingMethodsOffset();
+        setNonConflictingMethodsOffsets();
+    }
+
+    // TODO no se si es necesario esto todavia
+    /*public static void generateMethodsOffsets(){
+        for(ClaseConcreta clase : clases.values()){
+            clase.
+        }
+    }*/
+
+    //TODO esto es para que las clases reporten cada uno de sus metodos
+    public static void addMethod(Metodo method, Clase definingClass){
+        if(methods.get(method.getId().getLexema()) == null){
+            ArrayList definingClasses = new ArrayList<Clase>();
+            definingClasses.add(definingClass);
+            methods.put(method.getId().getLexema(), definingClasses);
+        }else{
+            methods.get(method.getId().getLexema()).add(definingClass);
+        }
+    }
+
+    public static void setConflictingMethodsOffset(){
+        for(Map.Entry<String, ArrayList<Clase>> entrada : methods.entrySet()){
+            if(conflictingMethod(entrada.getKey())){
+                setMethodOffset(entrada.getKey(), conflictingMethodsOffset);
+                conflictingMethodsOffset++;
+            }
+        }
+    }
+
+    public static boolean conflictingMethod(String methodName){
+        if(methods.get(methodName).size() > 1)
+            return true;
+        else
+            return false;
+    }
+
+    public static void setNonConflictingMethodsOffsets(){
+
+        for(ClaseConcreta clase : clases.values()){
+            clase.setNonConflictingMethodsOffsets();
+        }
+        for(Interfaz interfaz : interfaces.values()){
+            interfaz.setNonConflictingMethodsOffsets();
+        }
+    }
+
+    public static void setMethodOffset(String methodName, int offset){
+        ArrayList<Clase> classes = methods.get(methodName);
+        for(Clase classContainingMethod : classes){
+            classContainingMethod.setMethodOffset(methodName, offset);
         }
     }
 

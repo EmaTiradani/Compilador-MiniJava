@@ -96,6 +96,10 @@ public class Interfaz extends Clase{
         }
     }
 
+    public void setMethodOffset(String methodName, int methodOffset) {
+        metodos.get(methodName).get(0).insertOffsetEnClase(methodOffset);
+    }
+
     public void insertarAtributo(Atributo atributo) throws SemanticException {
         // Aca no deberia entrar nunca
     }
@@ -246,7 +250,7 @@ public class Interfaz extends Clase{
         if(!generado){
             if(listaInterfaces.size() == 0){
                 offsetActualVT = 0;
-                asignarOffsetMetodosEnConflicto();
+                //asignarOffsetMetodosEnConflicto();
                 for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()) {
                     for (Metodo metodo : listaMetodos.getValue()) {
                         if (!metodo.getConflictoSolucionado()) {// Si no tienen el conflicto solucionado es que nunca estuvieron en conflicto
@@ -262,7 +266,7 @@ public class Interfaz extends Clase{
                     if(TablaDeSimbolos.getInterfaz(interfaz).getOffset() > offsetActualVT)
                         offsetActualVT = TablaDeSimbolos.getInterfaz(interfaz).getOffset();
                 }
-                asignarOffsetMetodosEnConflicto();
+                //asignarOffsetMetodosEnConflicto();
                 for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()) {
                     for (Metodo metodo : listaMetodos.getValue()) {
                         if (!metodo.getConflictoSolucionado()) {// Si no tienen el conflicto solucionado es que nunca estuvieron en conflicto
@@ -276,7 +280,7 @@ public class Interfaz extends Clase{
         generado = true;
     }
 
-    private void asignarOffsetMetodosEnConflicto(){
+/*    private void asignarOffsetMetodosEnConflicto(){
         traerMayorConjuntoClasesEnConflicto();
         int conflictosSolucionados = 0;
 
@@ -304,7 +308,7 @@ public class Interfaz extends Clase{
             }
         }
 
-    }
+    }*/
 
     private void traerMayorConjuntoClasesEnConflicto(){
 

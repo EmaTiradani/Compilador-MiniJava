@@ -59,7 +59,7 @@ public class ClaseConcreta extends Clase{
         offsetCIR = 1;
         offsetActualVT = 1;
         cantMetodosSinConflictos = 0;
-        offsetInicialConflictos = 0;
+        //offsetInicialConflictos = 0;
 
     }
 
@@ -150,6 +150,11 @@ public class ClaseConcreta extends Clase{
         return nombreClasePadre;
     }
 
+    public void setMethodOffset(String methodName, int methodOffset) {
+        metodos.get(methodName).get(0).insertOffsetEnClase(methodOffset);
+        //offsetInicialConflictos++;
+    }
+
     public int getCantMetodosSinConflictos(){
         return cantMetodosSinConflictos;
     }
@@ -185,7 +190,7 @@ public class ClaseConcreta extends Clase{
     public void consolidar() throws SemanticException {
 
         if(!consolidado){
-            guardarMetodosIniciales();// Me guardo los metodos que define esta clase
+            guardarMetodosIniciales();// Me guardo los metodos que define esta clase (V2 modified)
 
             if(TablaDeSimbolos.getClase(nombreClasePadre).consolidado){
                 insertarMetodoYAtributosDePadre();
@@ -197,18 +202,22 @@ public class ClaseConcreta extends Clase{
             }
             checkImplementaTodosLosMetodosDeSuInterfaz();
 
-
             calculateMetodosSinConflictos();
         }
 
     }
 
     private void guardarMetodosIniciales(){
+
+
         for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
             Metodo metodo = listaMetodos.getValue().get(0);
             ArrayList<Metodo> metodosConElMismoNombre = new ArrayList<Metodo>();
             metodosConElMismoNombre.add(metodo);
             metodosIniciales.put(metodo.getId().getLexema(), metodosConElMismoNombre);
+
+            // V2 Ahora esto lo que hace es "reportar" a la tabla de simbolos los metodos definidos por esta clase
+            TablaDeSimbolos.addMethod(metodo, this);
         }
     }
 
@@ -444,8 +453,8 @@ public class ClaseConcreta extends Clase{
 
                 TablaDeSimbolos.claseActual = this;
                 asignarOffsetAtributos();
-                asignarOffsetMetodosEnConflicto();
-                asignarOffsetMetodosSinConflictos();
+                //asignarOffsetMetodosEnConflicto();
+                //asignarOffsetMetodosSinConflictos();
 
                 TablaDeSimbolos.gen(".DATA");
                 generarDataVT();
@@ -458,8 +467,8 @@ public class ClaseConcreta extends Clase{
                 if(nombreClasePadre == "Object"){
                     TablaDeSimbolos.claseActual = this;
                     asignarOffsetAtributos();
-                    asignarOffsetMetodosEnConflicto();
-                    asignarOffsetMetodosSinConflictos();
+                    //asignarOffsetMetodosEnConflicto();
+                    //asignarOffsetMetodosSinConflictos();
 
                     TablaDeSimbolos.gen(".DATA");
                     generarDataVT();
@@ -536,7 +545,7 @@ public class ClaseConcreta extends Clase{
     }
 
     // Este metodo se llama luego de haberle asignado el offset a los metodos que no estan en conflicto, es decir, los que son exclusivos de esta clase
-    private void asignarOffsetMetodosEnConflicto(){
+    /*private void asignarOffsetMetodosEnConflicto(){
         traerMayorConjuntoClasesEnConflicto();// agarrar el metodo con mayor cant de clases en conflicto
         int conflictosSolucionados = 0;
 
@@ -565,7 +574,7 @@ public class ClaseConcreta extends Clase{
             }
         }
         offsetFinalVT += (offsetInicialConflictos+conflictosSolucionados);
-    }
+    }*/
 
     private void traerMayorConjuntoClasesEnConflicto(){
 

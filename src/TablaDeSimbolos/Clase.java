@@ -18,7 +18,7 @@ public abstract class Clase {
     public HashMap<String, Atributo> atributos;
     public HashMap<String, ArrayList<Metodo>> metodos;
 
-    protected int offsetInicialConflictos;
+    protected int offsetConflictos;
 
 
     boolean consolidado;
@@ -30,7 +30,7 @@ public abstract class Clase {
         atributos = new HashMap<>();
         metodos = new HashMap<>();
         listaInterfaces = new ArrayList<>();
-        offsetInicialConflictos = 0;
+        offsetConflictos = 0;
     }
 
     public abstract Token getToken();
@@ -86,6 +86,17 @@ public abstract class Clase {
     public abstract void propagarConflicto(Metodo metodo, Clase clase);
 
     public void conflictoSolucionado(){
-        offsetInicialConflictos++;
+        offsetConflictos++;
+    }
+
+    public abstract void setMethodOffset(String methodName, int methodOffset);
+
+    public void setNonConflictingMethodsOffsets(){
+        for(Map.Entry<String, ArrayList<Metodo>> metodo : metodos.entrySet()){
+            if(!TablaDeSimbolos.conflictingMethod(metodo.getKey())) {
+                metodo.getValue().get(0).insertOffsetEnClase(offsetConflictos);
+                offsetConflictos++;
+            }
+        }
     }
 }
