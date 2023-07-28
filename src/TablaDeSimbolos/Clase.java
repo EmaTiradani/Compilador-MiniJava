@@ -99,4 +99,16 @@ public abstract class Clase {
             }
         }
     }
+
+    public void setNonConflictingMethodsOffsetsTableVersion(){
+        int offset = 0;
+        for(Map.Entry<String, ArrayList<Metodo>> metodo : metodos.entrySet()){
+            if(metodo.getValue().get(0).getOffsetEnClase() == -1) {
+                metodo.getValue().get(0).insertOffsetEnClase(offset);
+            }
+            offset++;
+        }
+
+
+    }
 }

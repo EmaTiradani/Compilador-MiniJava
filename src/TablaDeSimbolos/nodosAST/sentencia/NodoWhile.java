@@ -75,6 +75,11 @@ public class NodoWhile extends NodoSentencia{
         TablaDeSimbolos.gen(etiquetaOutWhile + ": NOP");
     }
 
+    @Override
+    public boolean isReturn() {
+        return false;
+    }
+
     private String nuevaEtiquetaWhile(){
         String nuevaEtiquetaWhile = "label_while" + contadorEtiquetaWhile;
         contadorEtiquetaWhile++;

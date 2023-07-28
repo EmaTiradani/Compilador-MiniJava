@@ -8,6 +8,7 @@ import TablaDeSimbolos.nodosAST.sentencia.NodoBloque;
 import exceptions.SemanticException;
 import lexycal.Token;
 
+import java.util.Collections;
 import java.util.List;
 
 public class NodoAccesoMetodo extends NodoAcceso{
@@ -82,6 +83,7 @@ public class NodoAccesoMetodo extends NodoAcceso{
                 TablaDeSimbolos.gen("RMEM 1 ; Lugar para el retorno");
                 TablaDeSimbolos.gen("SWAP ; Pone el This en el tope de la pila");
             }
+            Collections.reverse(parametrosActuales);
             for(NodoExpresion parametro : parametrosActuales){
                 parametro.generar();
                 TablaDeSimbolos.gen("SWAP");// Con esta instruccion mantengo el this en el tope de la pila

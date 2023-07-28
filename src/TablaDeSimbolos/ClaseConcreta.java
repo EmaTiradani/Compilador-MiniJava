@@ -254,9 +254,9 @@ public class ClaseConcreta extends Clase{
                     metodo.insertClaseEnConflicto(this);
                     metodo.insertClaseEnConflicto(TablaDeSimbolos.getClase(nombreClasePadre));
                     metodos.get(metodo.getId().getLexema()).get(0).insertOffsetEnClase(-1);
-                    metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(this);
-                    metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(TablaDeSimbolos.getClase(nombreClasePadre));
-                    metodos.get(metodo.getId().getLexema()).get(0).setClaseQueDefine(this);
+                    //metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(this);
+                    //metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(TablaDeSimbolos.getClase(nombreClasePadre));
+                    //metodos.get(metodo.getId().getLexema()).get(0).setClaseQueDefine(this);
                     TablaDeSimbolos.getClase(nombreClasePadre).propagarConflicto(metodo, this);
                 }
                 metodos.get(metodo.getId().getLexema()).add(metodo);
@@ -457,7 +457,9 @@ public class ClaseConcreta extends Clase{
                 //asignarOffsetMetodosSinConflictos();
 
                 TablaDeSimbolos.gen(".DATA");
-                generarDataVT();
+                //generarDataVT();
+                System.out.println("if Clase: "+ this.getNombreClase() + metodos.size());
+                generarDataVTTablesVersion();
 
                 TablaDeSimbolos.gen(".CODE ");
                 generarMetodos();
@@ -471,7 +473,9 @@ public class ClaseConcreta extends Clase{
                     //asignarOffsetMetodosSinConflictos();
 
                     TablaDeSimbolos.gen(".DATA");
-                    generarDataVT();
+                    //generarDataVT();
+                    System.out.println("else Clase: "+ this.getNombreClase() + metodos.size());
+                    generarDataVTTablesVersion();
 
                     TablaDeSimbolos.gen(".CODE ");
                     generarMetodos();
@@ -483,6 +487,67 @@ public class ClaseConcreta extends Clase{
                 }
             }
         }
+    }
+
+    private void generarDataVTTablesVersion(){
+        String dataVT = "VT_"+this.getNombreClase();
+        int maximoOffsetClase = 0;
+        if(metodos.size() == 0){
+            dataVT += ": NOP";
+        }else {
+            for (ArrayList<Metodo> listaMetodo : metodos.values()) {
+                Metodo metodo = listaMetodo.get(0);
+                if (!metodo.getEstatico()) {
+                    if (metodo.getOffsetEnClase() == -1) {
+                        metodo.insertOffsetEnClase(proximoOffsetDisponible());
+                    }
+                    System.out.println("Clase: " + this.getNombreClase() + " metodo: " + metodo.getId().getLexema() + " offset: " + metodo.getOffsetEnClase());
+                    if (metodo.getOffsetEnClase() > maximoOffsetClase)
+                        maximoOffsetClase = metodo.getOffsetEnClase();
+                }
+            }
+            dataVT += ": DW ";
+
+            for (int i = 0; i <= maximoOffsetClase; i++) {
+                Metodo metodo = getMethodByOffset(i);
+                if (metodo == null) {
+                    dataVT += "0,";
+                } else {
+                    if (metodo.getClaseContenedora().equals(this.nombreClase.getLexema())) {
+                        dataVT += metodo.getId().getLexema() + this.getNombreClase(); // Esto me va a generar nombreDeMetodoNombreDeClase, Ej.: m1A
+                        //metodos.get(metodo.getId().getLexema()).get(0).insertOffsetEnClase(i);
+                    } else {
+                        dataVT += metodo.getId().getLexema() + metodo.getClaseQueDefine().getNombreClase();
+                        //metodos.get(metodo.getId().getLexema()).get(0).insertOffsetEnClase(i);
+                    }
+                    dataVT += ",";
+
+                }
+            }
+                dataVT = dataVT.substring(0, dataVT.length() - 1); // Elimino la ultima coma que queda luego de agregar el ultimo idMet
+
+        }
+
+        TablaDeSimbolos.gen(dataVT);
+    }
+
+    private int proximoOffsetDisponible(){
+        int offset = -1;
+        for(int i=0; i<metodos.size(); i++) {
+            if(getMethodByOffset(i) == null)
+                return i;
+        }
+        return offset;
+    }
+
+    private Metodo getMethodByOffset(int offset){
+        for (ArrayList<Metodo> listaMetodo : metodos.values()) {
+            Metodo metodo = listaMetodo.get(0);
+            if (!metodo.getEstatico() && metodo.getOffsetEnClase() == offset) {
+                return metodo;
+            }
+        }
+        return null;
     }
 
     private void generarDataVT(){

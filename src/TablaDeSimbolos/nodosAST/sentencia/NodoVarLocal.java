@@ -49,6 +49,11 @@ public class NodoVarLocal extends NodoSentencia {
         }
     }
 
+    @Override
+    public boolean isReturn() {
+        return false;
+    }
+
     public void setOffset(int offset){
         this.offset = offset;
     }

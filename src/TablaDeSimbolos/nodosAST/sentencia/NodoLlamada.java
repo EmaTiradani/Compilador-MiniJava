@@ -36,6 +36,11 @@ public class NodoLlamada extends NodoSentencia{
         }
     }
 
+    @Override
+    public boolean isReturn() {
+        return false;
+    }
+
     public Token getTokenLlamada() {
         return tokenLlamada;
     }

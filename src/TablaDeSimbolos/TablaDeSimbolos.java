@@ -278,13 +278,87 @@ public final class TablaDeSimbolos {
 
     public static void generar(){
         generarInicial();
+        setAllMethodsOffsets();
         for(ClaseConcreta clase : clases.values()){
             clase.generar();
         }
         //generateMethodsOffsets();
-        setConflictingMethodsOffset();
-        setNonConflictingMethodsOffsets();
+        //setConflictingMethodsOffset();
+        //setNonConflictingMethodsOffsets();
+
+
     }
+
+    /*
+        TABLES VERSION --> Se ponen primero los metodos en conflicto
+     */
+    public static void setAllMethodsOffsets(){
+        createMethodsList(); // Crea una lista con todos los metodos de TODAS las clases e interfaces
+        /* Establece a partir de que indice se colocan los metodos sin conflicto
+           Esto es, a partir de la cantidad de metodos en conflicto que haya
+
+         */
+        //setConflictingMethodsIndex(); // A partir de la cantidad de metodos en conflicto
+
+        //System.out.println(metodosEnConflicto.size());
+
+        for(String metodoEnConflicto : metodosEnConflicto){
+            System.out.println(metodoEnConflicto);
+        }
+
+        setConflictingMethodsOffsetsTableVersion();
+        setNonConflictingMethodsOffsetsTableVersion();
+
+        System.out.println(conflictingMethodsIndex);
+
+    }
+
+    public static ArrayList<String> metodosTableVersion = new ArrayList();
+    public static int conflictingMethodsIndex = 0;
+    public static ArrayList<String> metodosEnConflicto = new ArrayList<>();
+
+    private static void createMethodsList(){
+        for(ClaseConcreta clase : clases.values()){
+            for(String metodo : clase.getMetodos().keySet()){
+                //System.out.println(metodo + " de clase: " + clase.getNombreClase());
+                if(!metodo.equals("debugPrint") && metodosTableVersion.contains(metodo)) {
+                    metodosEnConflicto.add(metodo);
+                }
+                else
+                    metodosTableVersion.add(metodo);
+            }
+        }
+        for(Interfaz interfaz : interfaces.values()){
+            for(String metodo : interfaz.getMetodos().keySet()){
+                if(!metodo.equals("debugPrint") && !metodosTableVersion.contains(metodo))
+                    metodosTableVersion.add(metodo);
+            }
+        }
+    }
+
+    public static void setConflictingMethodsOffsetsTableVersion(){
+        for(String metodoEnConflicto : metodosEnConflicto){
+            for(ClaseConcreta clase : clases.values()){
+                if(clase.getMetodos().containsKey(metodoEnConflicto))
+                    clase.setMethodOffset(metodoEnConflicto, conflictingMethodsIndex);
+            }
+            for(Interfaz interfaz : interfaces.values()){
+                if(interfaz.getMetodos().containsKey(metodoEnConflicto))
+                    interfaz.setMethodOffset(metodoEnConflicto, conflictingMethodsIndex);
+            }
+            conflictingMethodsIndex++;
+        }
+    }
+
+    public static void setNonConflictingMethodsOffsetsTableVersion(){
+        for(ClaseConcreta clase : clases.values()){
+            clase.setNonConflictingMethodsOffsetsTableVersion();
+        }
+        for(Interfaz interfaz : interfaces.values()){
+            interfaz.setNonConflictingMethodsOffsetsTableVersion();
+        }
+    }
+
 
     // TODO no se si es necesario esto todavia
     /*public static void generateMethodsOffsets(){

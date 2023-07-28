@@ -69,6 +69,7 @@ public class NodoBloque extends NodoSentencia{
             TablaDeSimbolos.apilarBloque(this);
             for(NodoSentencia sentencia : sentencias){
                 sentencia.chequear();
+                chequearCodigoMuerto(sentencia);
             }
 
             TablaDeSimbolos.desapilarBloqueActual();
@@ -88,6 +89,24 @@ public class NodoBloque extends NodoSentencia{
             TablaDeSimbolos.gen("FMEM "+variablesLocales.size()+" ; Libera el espacio reservado utilizado para almacenar las variables locales");
         }
         generado = true;
+    }
+
+    @Override
+    public boolean isReturn() {
+        if(sentencias.size() != 0)
+            return getUltimaSentencia().isReturn();
+        else return false;
+    }
+
+    public void chequearCodigoMuerto(NodoSentencia sentencia) throws SemanticException{
+        if(sentencia.isReturn() && !sentencia.equals(getUltimaSentencia())){
+             throw new SemanticException("Código inalcanzable en el método " + TablaDeSimbolos.metodoActual.getId().getLexema()
+                     + " en la linea " + TablaDeSimbolos.metodoActual.getId().getLinea());
+        }
+    }
+
+    private NodoSentencia getUltimaSentencia(){
+        return sentencias.get(sentencias.size()-1);
     }
 
     public void setOffsetInicialVarsLocales(){

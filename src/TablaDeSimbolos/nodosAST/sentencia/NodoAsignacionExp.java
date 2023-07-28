@@ -42,6 +42,11 @@ public class NodoAsignacionExp extends NodoAsignacion{
         ladoIzq.generar();
     }
 
+    @Override
+    public boolean isReturn() {
+        return false;
+    }
+
     public void setExpresion(NodoExpresion expresion){
         this.ladoDer = expresion;
     }

@@ -97,6 +97,14 @@ public class NodoIf extends NodoSentencia {
         }
     }
 
+    @Override
+    public boolean isReturn() {
+        if(sentenciaElse == null){
+            return false;
+        }else
+            return (sentenciaIf.isReturn() && sentenciaElse.isReturn());
+    }
+
     private String nuevaEtiquetaIf(){
         String nuevaEtiquetaIf = "label_outIf" + contadorEtiquetaIf;
         contadorEtiquetaIf++;

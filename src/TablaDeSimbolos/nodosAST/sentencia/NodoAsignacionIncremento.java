@@ -42,6 +42,11 @@ public class NodoAsignacionIncremento  extends NodoAsignacion{
         ladoIzq.generar();
     }
 
+    @Override
+    public boolean isReturn() {
+        return false;
+    }
+
     public Token getTipoAsignacion() {
         return tipoAsignacion;
     }

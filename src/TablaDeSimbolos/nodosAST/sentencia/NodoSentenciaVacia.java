@@ -15,4 +15,9 @@ public class NodoSentenciaVacia extends NodoSentencia{
     public void generar() {
 
     }
+
+    @Override
+    public boolean isReturn() {
+        return false;
+    }
 }

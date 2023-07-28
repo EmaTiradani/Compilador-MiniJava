@@ -77,4 +77,9 @@ public class NodoReturn extends NodoSentencia {
         }
 
     }
+
+    @Override
+    public boolean isReturn() {
+        return true;
+    }
 }
