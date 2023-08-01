@@ -59,7 +59,6 @@ public class ClaseConcreta extends Clase{
         offsetCIR = 1;
         offsetActualVT = 1;
         cantMetodosSinConflictos = 0;
-        //offsetInicialConflictos = 0;
 
     }
 
@@ -152,7 +151,6 @@ public class ClaseConcreta extends Clase{
 
     public void setMethodOffset(String methodName, int methodOffset) {
         metodos.get(methodName).get(0).insertOffsetEnClase(methodOffset);
-        //offsetInicialConflictos++;
     }
 
     public int getCantMetodosSinConflictos(){
@@ -208,8 +206,6 @@ public class ClaseConcreta extends Clase{
     }
 
     private void guardarMetodosIniciales(){
-
-
         for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
             Metodo metodo = listaMetodos.getValue().get(0);
             ArrayList<Metodo> metodosConElMismoNombre = new ArrayList<Metodo>();
@@ -254,9 +250,6 @@ public class ClaseConcreta extends Clase{
                     metodo.insertClaseEnConflicto(this);
                     metodo.insertClaseEnConflicto(TablaDeSimbolos.getClase(nombreClasePadre));
                     metodos.get(metodo.getId().getLexema()).get(0).insertOffsetEnClase(-1);
-                    //metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(this);
-                    //metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(TablaDeSimbolos.getClase(nombreClasePadre));
-                    //metodos.get(metodo.getId().getLexema()).get(0).setClaseQueDefine(this);
                     TablaDeSimbolos.getClase(nombreClasePadre).propagarConflicto(metodo, this);
                 }
                 metodos.get(metodo.getId().getLexema()).add(metodo);
@@ -270,10 +263,6 @@ public class ClaseConcreta extends Clase{
                 metodo.insertOffsetEnClase(-1); // En caso de que haya un conflicto no le asigno ningun offset, lo hago despues de finalizar la consolidacion
                 metodo.insertClaseEnConflicto(this);
                 metodo.insertClaseEnConflicto(TablaDeSimbolos.getClase(nombreClasePadre));
-                metodos.get(metodo.getId().getLexema()).get(0).insertOffsetEnClase(-1);
-                metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(this);
-                metodos.get(metodo.getId().getLexema()).get(0).insertClaseEnConflicto(TablaDeSimbolos.getClase(nombreClasePadre));
-                metodo.insertClaseEnConflicto(this);
                 TablaDeSimbolos.getClase(nombreClasePadre).propagarConflicto(metodo, this);
 
             }
@@ -452,14 +441,10 @@ public class ClaseConcreta extends Clase{
             if(TablaDeSimbolos.getClase(nombreClasePadre).generado){
 
                 TablaDeSimbolos.claseActual = this;
-                asignarOffsetAtributos();
-                //asignarOffsetMetodosEnConflicto();
-                //asignarOffsetMetodosSinConflictos();
 
                 TablaDeSimbolos.gen(".DATA");
-                //generarDataVT();
-                System.out.println("if Clase: "+ this.getNombreClase() + metodos.size());
-                generarDataVTTablesVersion();
+                //System.out.println("if Clase: "+ this.getNombreClase() + metodos.size());
+                generarDataVTTableVersion();
 
                 TablaDeSimbolos.gen(".CODE ");
                 generarMetodos();
@@ -468,14 +453,10 @@ public class ClaseConcreta extends Clase{
             }else{
                 if(nombreClasePadre == "Object"){
                     TablaDeSimbolos.claseActual = this;
-                    asignarOffsetAtributos();
-                    //asignarOffsetMetodosEnConflicto();
-                    //asignarOffsetMetodosSinConflictos();
 
                     TablaDeSimbolos.gen(".DATA");
-                    //generarDataVT();
-                    System.out.println("else Clase: "+ this.getNombreClase() + metodos.size());
-                    generarDataVTTablesVersion();
+                    //System.out.println("else Clase: "+ this.getNombreClase() + metodos.size());
+                    generarDataVTTableVersion();
 
                     TablaDeSimbolos.gen(".CODE ");
                     generarMetodos();
@@ -489,10 +470,10 @@ public class ClaseConcreta extends Clase{
         }
     }
 
-    private void generarDataVTTablesVersion(){
+    private void generarDataVTTableVersion(){
         String dataVT = "VT_"+this.getNombreClase();
         int maximoOffsetClase = 0;
-        if(metodos.size() == 0){
+        if(obtenerCantMetodosDinamicos() == 0 || (obtenerCantMetodosDinamicos() == 1 && metodos.containsKey("debugPrint"))){
             dataVT += ": NOP";
         }else {
             for (ArrayList<Metodo> listaMetodo : metodos.values()) {
@@ -501,7 +482,7 @@ public class ClaseConcreta extends Clase{
                     if (metodo.getOffsetEnClase() == -1) {
                         metodo.insertOffsetEnClase(proximoOffsetDisponible());
                     }
-                    System.out.println("Clase: " + this.getNombreClase() + " metodo: " + metodo.getId().getLexema() + " offset: " + metodo.getOffsetEnClase());
+                    //System.out.println("Clase: " + this.getNombreClase() + " metodo: " + metodo.getId().getLexema() + " offset: " + metodo.getOffsetEnClase());
                     if (metodo.getOffsetEnClase() > maximoOffsetClase)
                         maximoOffsetClase = metodo.getOffsetEnClase();
                 }
@@ -515,10 +496,8 @@ public class ClaseConcreta extends Clase{
                 } else {
                     if (metodo.getClaseContenedora().equals(this.nombreClase.getLexema())) {
                         dataVT += metodo.getId().getLexema() + this.getNombreClase(); // Esto me va a generar nombreDeMetodoNombreDeClase, Ej.: m1A
-                        //metodos.get(metodo.getId().getLexema()).get(0).insertOffsetEnClase(i);
                     } else {
                         dataVT += metodo.getId().getLexema() + metodo.getClaseQueDefine().getNombreClase();
-                        //metodos.get(metodo.getId().getLexema()).get(0).insertOffsetEnClase(i);
                     }
                     dataVT += ",";
 
@@ -529,6 +508,17 @@ public class ClaseConcreta extends Clase{
         }
 
         TablaDeSimbolos.gen(dataVT);
+    }
+
+    private int obtenerCantMetodosDinamicos(){
+        int cant = 0;
+        for (ArrayList<Metodo> listaMetodo : metodos.values()) {
+            Metodo metodo = listaMetodo.get(0);
+            if (!metodo.getEstatico()) {
+                cant++;
+            }
+        }
+        return cant;
     }
 
     private int proximoOffsetDisponible(){
@@ -550,7 +540,7 @@ public class ClaseConcreta extends Clase{
         return null;
     }
 
-    private void generarDataVT(){
+    private void generarDataVT(){ // Deprecated, now using Table Version
         String dataVT = "VT_"+this.getNombreClase();
         //offsetFinalVT +=
         if(offsetFinalVT == 0){
@@ -580,16 +570,8 @@ public class ClaseConcreta extends Clase{
     }
 
     private void generarMetodos(){
-        /*for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
-            Metodo metodo = listaMetodos.getValue().get(0);
-            boolean metodoHeredado = (TablaDeSimbolos.getClase(nombreClasePadre).getMetodos().get(metodo.getId().getLexema()) != null);
-
-            if(!metodo.getId().getLexema().equals("debugPrint") && metodo.getClaseQueDefine().getNombreClase().equals(nombreClase.getLexema()))
-                metodo.generar();
-        }*/
         for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodosIniciales.entrySet()){
             Metodo metodo = listaMetodos.getValue().get(0);
-            //boolean metodoHeredado = (TablaDeSimbolos.getClase(nombreClasePadre).getMetodos().get(metodo.getId().getLexema()) != null);
 
             if(!metodo.getId().getLexema().equals("debugPrint")/* && metodo.getClaseQueDefine().getNombreClase().equals(nombreClase.getLexema())*/)
                 metodo.generar();
@@ -598,7 +580,7 @@ public class ClaseConcreta extends Clase{
         constructores.get(0).generar();
     }
 
-    private void asignarOffsetAtributos(){
+    public void asignarOffsetAtributos(){
         if(!nombreClasePadre.equals("Object"))// Si la clase padre es object, comienza en 1
             offsetCIR = TablaDeSimbolos.getClase(nombreClasePadre).getOffsetCIR();
         for(Map.Entry<String, Atributo> atributo : atributos.entrySet()){
@@ -608,38 +590,6 @@ public class ClaseConcreta extends Clase{
             }
         }
     }
-
-    // Este metodo se llama luego de haberle asignado el offset a los metodos que no estan en conflicto, es decir, los que son exclusivos de esta clase
-    /*private void asignarOffsetMetodosEnConflicto(){
-        traerMayorConjuntoClasesEnConflicto();// agarrar el metodo con mayor cant de clases en conflicto
-        int conflictosSolucionados = 0;
-
-
-        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
-            Metodo metodo = listaMetodos.getValue().get(0);
-
-            // -1 porque significa que es un metodo con conflictos
-            if(!metodo.getEstatico() && metodo.getOffsetEnClase() == -1){
-                int offsetConflictos = metodo.getOffsetConflictos();
-                if(offsetConflictos > offsetInicialConflictos)
-                    offsetInicialConflictos = offsetConflictos;
-            }
-        }
-
-        for(Map.Entry<String,ArrayList<Metodo>> listaMetodos : metodos.entrySet()){
-            Metodo metodo = listaMetodos.getValue().get(0);
-
-            // -1 porque significa que es un metodo con conflictos
-            if(!metodo.getEstatico() && metodo.getOffsetEnClase() == -1){
-                metodo.setConflictoSolucionado(this);
-                metodo.insertOffsetEnClase(offsetInicialConflictos+conflictosSolucionados);
-                metodo.expandirOffset(offsetInicialConflictos+conflictosSolucionados);
-                mapeoMetodosDinamicos.put(offsetInicialConflictos+conflictosSolucionados, metodo);
-                conflictosSolucionados++;
-            }
-        }
-        offsetFinalVT += (offsetInicialConflictos+conflictosSolucionados);
-    }*/
 
     private void traerMayorConjuntoClasesEnConflicto(){
 

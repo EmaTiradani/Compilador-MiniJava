@@ -266,8 +266,6 @@ public class SyntacticParser {
         metodoActual.insertClaseContenedora(TablaDeSimbolos.claseActual.getNombreClase());
         TablaDeSimbolos.claseActual.insertarMetodo(metodoActual);
 
-        //NodoBloque bloque = bloque();
-        //metodoActual.insertarBloque(bloque);
     }
 
     private boolean estaticoOpt() throws LexicalException, SyntacticException, IOException {
@@ -322,8 +320,10 @@ public class SyntacticParser {
     private NodoBloque bloque() throws LexicalException, SyntacticException, IOException {
         match(punt_llaveIzq);
         NodoBloque nodoBloque = new NodoBloque();
+        TablaDeSimbolos.apilarBloque(nodoBloque);
         listaSentencias(nodoBloque);
         match(punt_llaveDer);
+        TablaDeSimbolos.desapilarBloqueActual();
 
         return nodoBloque;
     }
@@ -360,7 +360,9 @@ public class SyntacticParser {
         }else if(firsts.isFirst("Acceso", tokenActual)){
             NodoAcceso nodoAcceso = acceso();
             return asignacionOLlamada(nodoAcceso);
-        }else throw new SyntacticException("; o Sentencia", tokenActual);
+        }else if(firsts.isFirst("TipoPrimitivo", tokenActual) || tokenActual.getTokenId() == idClase){
+            return varLocalClasicaOMetodoEstatico();
+        } else throw new SyntacticException("; o Sentencia", tokenActual);
     }
 
     private NodoSentencia asignacionOLlamada(NodoAcceso nodoAcceso) throws LexicalException, SyntacticException, IOException {
@@ -442,7 +444,6 @@ public class SyntacticParser {
         }else{
             throw new SyntacticException(" Operador Binario", tokenOperacion);
         }
-        //matchFirsts("OperadorBinario");
     }
 
     private NodoExpresion expresionUnaria() throws LexicalException, SyntacticException, IOException {
@@ -493,7 +494,6 @@ public class SyntacticParser {
         }else{
             throw new SyntacticException(" literal", tokenActual);
         }
-        //matchFirsts("Literal"); // Sacar este final, tiene que haber 1 por caso
     }
 
     private Token operadorUnario() throws LexicalException, SyntacticException, IOException {
@@ -717,6 +717,65 @@ public class SyntacticParser {
         nodoVarLocal.setExpresion(expresion());
         match(punt_puntoYComa); //TODO chequear esto, no cambio nada
         return nodoVarLocal;
+    }
+
+    private NodoSentencia varLocalClasicaOMetodoEstatico() throws LexicalException, SyntacticException, IOException {
+        if(firsts.isFirst("TipoPrimitivo", tokenActual)) {
+            Tipo tipo = tipoPrimitivo();
+            varLocalClasica(tipo);
+            return null;
+        }else if(tokenActual.getTokenId() == idClase){
+            Token id = tokenActual;
+            Tipo tipo = tipo();
+            return varOMetEstaticoFact(id, tipo);
+        }else throw new SyntacticException("TipoAsignacion", tokenActual);
+    }
+
+    private NodoSentencia varOMetEstaticoFact(Token idC, Tipo tipo) throws LexicalException, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == idMetVar){
+            varLocalClasica(tipo);
+            return null;
+        }else if(tokenActual.getTokenId() == punt_punto){
+            match(punt_punto);
+            Token idMet = tokenActual;
+            match(idMetVar);
+            List<NodoExpresion> parametros = argsActuales();
+            NodoAccesoMetodoEstatico accesoMetodoEstatico = new NodoAccesoMetodoEstatico(idC, idMet, parametros);
+            accesoMetodoEstatico.setNodoEncadenado(encadenadoOpt());
+            return asignacionOLlamada(accesoMetodoEstatico);
+        }else throw new SyntacticException("Se esperaba var local o metodo estatico", tokenActual);
+    }
+
+    private void varLocalClasica(Tipo tipo) throws LexicalException, SyntacticException, IOException{
+        Token idVar = tokenActual;
+        match(idMetVar);
+        NodoSentencia varLocal = asignacionOpt(tipo, idVar);
+        if(varLocal != null)
+            TablaDeSimbolos.getBloqueActual().getSentencias().add(varLocal);
+        varLocalClasicaFact(tipo);
+    }
+
+    private void varLocalClasicaFact(Tipo tipo) throws LexicalException, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == punt_coma){
+            match(punt_coma);
+            varLocalClasica(tipo);
+        }else{
+            // Epsilon
+        }
+    }
+
+    private NodoSentencia asignacionOpt(Tipo tipo, Token idVar) throws LexicalException, SyntacticException, IOException {
+        if(tokenActual.getTokenId() == asignacion){
+            match(asignacion);
+            NodoExpresion expresion = expresion();
+            NodoVarLocal varLocal = new NodoVarLocal(idVar);
+            varLocal.setTipo(tipo);
+            varLocal.setExpresion(expresion);
+            return varLocal;
+        }else{
+            // Epsilon
+            return null;
+        }
     }
 
     private void argFormal() throws LexicalException, SyntacticException, IOException {

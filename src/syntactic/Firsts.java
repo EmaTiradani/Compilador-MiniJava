@@ -96,6 +96,11 @@ public class Firsts {
         map.get("Miembro").add(idClase);
         map.get("Atributo").add(kw_public);
         map.get("Atributo").add(kw_private);
+        /*map.get("Atributo").add(kw_int);
+        map.get("Atributo").add(kw_boolean);
+        map.get("Atributo").add(kw_char);
+        map.get("Atributo").add(idClase);*/
+
         map.get("ListaArgsFormales").add(kw_boolean);
         map.get("ListaArgsFormales").add(kw_char);
         map.get("ListaArgsFormales").add(kw_int);
@@ -140,7 +145,12 @@ public class Firsts {
         map.get("Sentencia").add(kw_new);
         map.get("Sentencia").add(idClase);
         map.get("Sentencia").add(punt_parentIzq);
-        map.get("Sentencia").add(kw_var);
+        map.get("Sentencia").add(kw_var); // ?Eliminamos este porque ya tenemos variables locales clasicas
+        map.get("Sentencia").add(kw_boolean);
+        map.get("Sentencia").add(kw_char);
+        map.get("Sentencia").add(kw_int);
+        map.get("Sentencia").add(idClase);
+
         map.get("Sentencia").add(kw_return);
         map.get("Sentencia").add(kw_if);
         map.get("Sentencia").add(kw_while);
